@@ -2233,6 +2233,7 @@ $("#fileOne").addEventListener("change", async e => {
   const ok = await storeClip(importOneKey, f);
   status(ok ? `Imported ${clipName(importOneKey)}.` : `Couldn’t read ${f.name}.`);
   refreshClipRow(importOneKey);
+  if (guide) { renderGuide(); const g = $("#gStatus"); if (g) g.textContent = ok ? "Added. Play it back to check." : `Couldn’t read ${f.name}.`; }
 });
 /* Backups: the whole game (players, settings and every recording), or just one voice (herald or narrator), so
    two people can record on different devices and combine their voices. */
@@ -2281,6 +2282,19 @@ $("#fileBackup").addEventListener("change", async e => {
 });
 
 /* ================= grown-up panel ================= */
+/* Confirmations live in the page: some viewers (a Claude artifact link) never show the browser's confirm box. */
+function askConfirm(msg, ok = "Yes", cancel = "Cancel"){
+  return new Promise(res => {
+    const box = document.createElement("div"); box.className = "gmode";
+    box.innerHTML = `<div class="gcard" role="alertdialog" aria-modal="true" aria-label="Please confirm"><p style="margin:0;font-size:16px;line-height:1.45">${esc(msg)}</p>
+      <div class="gacts"><button class="btn" data-a="no">${esc(cancel)}</button><button class="btn primary" data-a="yes">${esc(ok)}</button></div></div>`;
+    $("#parent").appendChild(box); box.querySelector('[data-a="yes"]').focus();
+    box.addEventListener("click", e => { const b = e.target.closest("[data-a]"); if (!b) return; box.remove(); res(b.dataset.a === "yes"); });
+  });
+}
+/* Some page viewers refuse the microphone outright; then recordings come in as files instead. */
+const MIC_OK = (() => { const fp = document.permissionsPolicy || document.featurePolicy;
+  return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) && !(fp && fp.allowsFeature && !fp.allowsFeature("microphone")); })();
 let recFilter = "all";
 function status(msg){ const s = $("#recStatus"); if (s) s.textContent = msg; }
 function openParent(){ stopSpeech(); G.session++; stopMusic(); G.locked = false; G.sittings = 0; G.practice = null; if (!profById(state.editId)) state.editId = state.profiles[0].id; renderParent(); show("parent"); $("#parent").scrollTop = 0; }
@@ -2302,7 +2316,7 @@ function clipRow(k){
     <div class="lbl">${label}<code>${k}</code>${c.hint ? `<small>${esc(c.hint)}</small>` : ""}${st ? `<small>Recorded for ${state.clipVariant[k] === "aunt" ? "Aunt Grimhilda" : "Uncle Grimbald"}; re-record it for the story as set now.</small>` : ""}</div>
     <div class="acts">
       <button class="ic" data-act="play" aria-label="Play">${ICON.play}</button>
-      <button class="ic" data-act="rec" aria-label="Record">${ICON.rec}</button>
+      ${MIC_OK ? `<button class="ic" data-act="rec" aria-label="Record">${ICON.rec}</button>` : ""}
       <button class="ic" data-act="file" aria-label="Import a file for this clip">${ICON.file}</button>
       ${has ? `<button class="ic" data-act="del" aria-label="Delete recording">${ICON.del}</button>` : ""}
     </div></div>`;
@@ -2399,10 +2413,11 @@ function renderParent(){
   <div class="sec">
     <h2>Voices</h2>
     <p class="note">Two voices, which can be two people. <b>Buckleberry the herald</b> gives every command; anything not recorded uses the device's robot voice. <b>The narrator</b> tells the story; lines not recorded stay silent while their caption shows, so a grown-up can read them aloud. Recordings stay on this device, so save a backup when you're done. Each voice can be saved and added on its own, so two people can record on two devices.</p>
+    ${MIC_OK ? "" : `<p class="note"><b>Recording isn't available in this viewer.</b> Record clips with any voice recorder (a phone's voice memo app works), name each file by its code (for example <code>num_3.m4a</code> or <code>st1_1_05.m4a</code>) and add them with Import files. Opening the game file directly in a browser lets you record here.</p>`}
     ${storeOk === false ? `<p class="note" style="color:var(--red)">This browser isn’t letting the game save anything when it’s opened this way, so recordings and progress will be lost when the page closes. Open the game from a web address instead.</p>` : ""}
     <div class="rec-tools">
       <button class="btn primary" id="importMany">Import files</button>
-      <button class="btn" id="micTest">Test microphone</button>
+      ${MIC_OK ? `<button class="btn" id="micTest">Test microphone</button>` : ""}
       ${canBackup() ? `<button class="btn" data-backup="herald">Save herald voice</button><button class="btn" data-backup="narrator">Save narrator voice</button><button class="btn" data-backup="">Save full backup</button>` : ""}
       <button class="btn" id="restoreBtn">Restore or add a file</button>
     </div>
@@ -2442,7 +2457,7 @@ $("#pBody").addEventListener("click", async e => {
         const lines = Object.keys(CLIPS).filter(k => CLIPS[k].steward && recorded(k));
         const from = state.steward === "aunt" ? "Aunt Grimhilda" : "Uncle Grimbald", to = v === "aunt" ? "Aunt Grimhilda" : "Uncle Grimbald";
         if (lines.some(k => (state.clipVariant[k] || "uncle") !== v) &&
-            !confirm(lines.length === 1 ? `1 recorded story line mentions ${from}. It will need re-recording for ${to}; until then it stays silent (its caption still shows). Switch to ${to}?`
+            !await askConfirm(lines.length === 1 ? `1 recorded story line mentions ${from}. It will need re-recording for ${to}; until then it stays silent (its caption still shows). Switch to ${to}?`
                        : `${lines.length} recorded story lines mention ${from}. They'll need re-recording for ${to}; until then they stay silent (their captions still show). Switch to ${to}?`)) return;
         state.steward = v;
       }
@@ -2450,7 +2465,7 @@ $("#pBody").addEventListener("click", async e => {
     else if (name === "startCh") {
       const ci = +v;
       if (ci !== E.ch || E.stop || E.blocked) {
-        if ((E.stop || E.party.length) && !confirm(`Move ${E.name || "this player"} to the start of chapter ${CHAPTERS[ci].n}? The army and treasures are kept.`)) return;
+        if ((E.stop || E.party.length) && !await askConfirm(`Move ${E.name || "this player"} to the start of chapter ${CHAPTERS[ci].n}? The army and treasures are kept.`)) return;
         E.ch = ci; E.stop = 0; E.blocked = false; E.camped = false; E.level = CHAPTERS[ci].level; E.recent = []; E.guessy = [];
         if (ci > 0) { E.metGoblins = true; E.firstTapDone = true; }
         for (let c = 0; c < ci; c++) CHAPTERS[c].stops.forEach(s => { if (s.kind !== "siege" && !E.freed.includes(s.id)) E.freed.push(s.id); });
@@ -2492,12 +2507,12 @@ $("#pBody").addEventListener("click", async e => {
   const id = e.target.id;
   if (id === "addProf") { const p = newProfile("", state.profiles.length); fixProfile(p); state.profiles.push(p); state.editId = p.id; save(); renderParent(); setTimeout(() => $("#nameIn").focus(), 50); }
   else if (id === "delProf") {
-    if (!confirm(`Remove ${E.name || "this player"} and their progress?`)) return;
+    if (!await askConfirm(`Remove ${E.name || "this player"} and their progress?`)) return;
     if (E.slug && !state.profiles.some(p => p !== E && p.slug === E.slug)) await deleteClip("child_" + E.slug);
     state.profiles = state.profiles.filter(p => p !== E); state.editId = state.profiles[0].id; P = state.profiles[0]; buildClips(); save(); renderParent();
   }
   else if (id === "resetStats") {
-    if (!confirm(`Start the whole campaign over for ${E.name || "this player"}? The army, treasures and progress are cleared.`)) return;
+    if (!await askConfirm(`Start the whole campaign over for ${E.name || "this player"}? The army, treasures and progress are cleared.`)) return;
     const fresh = newProfile(E.name); for (const k of ["title","banner","skin","hair","id"]) fresh[k] = E[k];
     Object.assign(E, fresh); fixProfile(E); save(); renderParent();
   }
@@ -2529,7 +2544,7 @@ function renderGuide(){
     <div class="gacts">
       <button class="btn" data-g="prev" ${guide.i ? "" : "disabled"}>Back</button>
       <button class="btn" data-g="play">${hasClip(k) ? "Play" : narr ? "Play" : "Hear robot"}</button>
-      <button class="btn primary grec" data-g="rec">Record</button>
+      ${MIC_OK ? `<button class="btn primary grec" data-g="rec">Record</button>` : `<button class="btn primary" data-g="file">Import a file</button>`}
       <button class="btn" data-g="next">${last ? "Finish" : "Next"}</button>
     </div></div>`;
   drawWave(k);
@@ -2559,6 +2574,7 @@ $("#parent").addEventListener("click", async e => {
     guide.i += a === "next" ? 1 : -1; renderGuide(); return;
   }
   if (a === "play") { ensureAudio(); playAny(k); return; }
+  if (a === "file") { importOneKey = k; $("#fileOne").click(); return; }
   if (a === "rec") {
     if (rec && recKey === k) { rec.stop(); return; }
     if (rec || b.dataset.counting) return;
