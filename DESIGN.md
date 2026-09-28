@@ -48,7 +48,7 @@ the play space opens up from a single road, to forks, to a full campaign map.
 | Voices | A **herald** (commands, praise, gentle "not quite"s; robot voice if not recorded) and an optional **narrator** (story; silent if not recorded, text always shown). Each can be recorded by a different person |
 | Art | Simple custom SVG |
 | Herald | **Buckleberry**, a round, cheerful trumpet herald: fanfare before each command, a sad little "wah-wah" toot for a miss |
-| Names | The kingdom of Brightvale · Buckleberry the herald · the steward Uncle Grimbald **or** Aunt Grimhilda (a grown-up setting) · the goblin chief Snagglenose |
+| Names | The kingdom of Brightvale · Buckleberry the herald · the steward Uncle Grimbald **or** Aunt Grimhilda (a grown-up setting) · the goblin chief Snagglenose · the Goblin King Grubbins the Great |
 | Narration | The narrator says **"our hero"**, never the name, so one recording fits every player. Only the herald says the hero's name |
 | First tap | A brand-new player's very first task: if nothing is tapped for 4 s, the right card glows softly. Once only |
 | Build order | Linear → forks → full map. Get the linear game really dialled in first |
@@ -145,7 +145,7 @@ appears. The next sitting opens with "Wake up! The march goes on!".
 - **Fort siege (chapter end).** Two or more sets at one stop:
   - *Arc 1 (goblin stockade):* build **ladders** (each right answer leans another ladder against the wall), then
     **assault**. Minimum: 2 ladders *(proposal)*.
-  - *Arc 2 (troll keep):* build **ladders** (minimum 2), then a **battering ram** (each right answer adds a part:
+  - *Arc 1 finale (the Great Stockade) and arc 2 (troll keep):* build **ladders** (minimum 2), then a **battering ram** (each right answer adds a part:
     log, wheels, roof, iron head; minimum log + wheels), then **assault**.
   - If a build round ends short of the minimum, the herald calls "We need one more ladder!" and a fresh build round
     follows. With at least one piece per round, that's rarely more than one extra round.
@@ -162,8 +162,20 @@ appears. The next sitting opens with "Wake up! The march goes on!".
 - **Camp.** See §4.
 
 **Chapter shapes** vary: each chapter is hand-made, with its own mix of villages, skirmishes, a special stop and a
-closing siege, and about 10 sets in all. Chapter 1 is written out in full in
-[`chapters/1-1-the-border-road.md`](chapters/1-1-the-border-road.md).
+closing siege, and about 10 sets in all. Arc 1 is written out in full:
+[1 The Border Road](chapters/1-1-the-border-road.md) ·
+[2 The Whispering Woods](chapters/1-2-the-whispering-woods.md) ·
+[3 The Marsh Villages](chapters/1-3-the-marsh-villages.md) ·
+[4 The Goblin King's Stockade](chapters/1-4-the-goblin-kings-stockade.md).
+
+**Camp treasures.** Each special stop gives a fixed treasure: the sheepdog puppy (ch. 1), a lantern (ch. 2), a
+little boat (ch. 3) and an apple cart (ch. 4). The arc's victory feast adds a feast table and the Border Medal. Raids
+give the next treasure from this list, in order: a flag · a drum · bunting · a goat · a bigger tent · a cooking
+pot · a bench · a banner pole · a pony · hay bales · a scarecrow · a chicken · a cat · a bell · a weathervane ·
+flower pots · a birdhouse · a kite. After the last one, the list starts again, as extra flags and bunting.
+
+**After arc 1** (until arc 2 exists): snow blocks the path to the Troll Hills. Every stop is then a raid on any
+village freed in arc 1, and the level stays capped at 4.
 
 ### 5.3 Task types (arcs 1–2)
 
@@ -269,7 +281,7 @@ recordable, importable by file name, and backed up. **Two roles:**
 
 ## 8. Carried over from Letter Hunt
 
-One self-contained offline HTML file (renamed to `number-knights.html` when building starts), with fonts embedded.
+One self-contained offline HTML file, `Number-Game.html`, with fonts embedded.
 It keeps:
 - The start screen that unlocks audio and full screen.
 - Player cards on the home screen (a hero portrait and chapter progress).
