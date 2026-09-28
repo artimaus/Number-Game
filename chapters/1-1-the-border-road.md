@@ -12,10 +12,11 @@ goblins at stop 3, and ends with the first siege.
 - **H:** herald. Plays the recording if there is one, the robot voice if not.
 - `key`: the clip name, used for recording and for importing files (e.g. `h_onward.m4a`).
 - **[Hero]** = the title clip plus the name clip: `title_prince` + `child_leo` → "Prince Leo". Only the herald
-  says the hero's name. **The narrator always says "our hero"** *(proposal)*, so one narration recording fits every
-  player, prince or princess, siblings included.
-- Names *(proposals)*: the kingdom of **Brightvale**, **Pip** the herald, **Uncle Grimbald**, the goblin chief
-  **Snagglenose**.
+  says the hero's name. **The narrator always says "our hero"**, so one narration recording fits every player,
+  prince or princess, siblings included.
+- Names: the kingdom of **Brightvale**, **Buckleberry** the herald, the goblin chief **Snagglenose**, and the steward,
+  **Uncle Grimbald** or **Aunt Grimhilda** (a grown-up setting). Lines that mention the steward are written
+  {uncle|aunt}. The caption and recording guide show the version picked; the clip key is the same for both.
 - ★★ = a task type this stop favours (picked about twice as often); ★ = can turn up.
 
 ---
@@ -36,7 +37,7 @@ goblins at stop 3, and ends with the first siege.
 | 8 | Stumpy Fort | Siege | 2+ (ladders, then the assault) | The fort, and the chapter |
 | ⛺ | *Camp: chapter end* | | | |
 
-The party starts at 0 soldiers (just the hero and Pip). It reaches at least 5 (4 villages + the shepherd) and up to
+The party starts at 0 soldiers (just the hero and Buckleberry). It reaches at least 5 (4 villages + the shepherd) and up to
 the cap of 10. After the cap, right answers in villages give gear (§5.5 of the design doc).
 
 ## Level 1 tasks
@@ -48,10 +49,10 @@ the cap of 10. After the cap, right answers in villages give gear (§5.5 of the 
 | **Which is more?** | Two groups, **at least 3 times as many** (1 vs 3, 1 vs 4, 2 vs 6); things the same size | Two sides of the scene | Tap a side |
 
 - **Targets rotate evenly** (the least-asked number next), as Letter Hunt does with sounds.
-- **Help:** first miss, one wrong card fades. Second miss, "Let's count together!" (the things light up as Pip
+- **Help:** first miss, one wrong card fades. Second miss, "Let's count together!" (the things light up as Buckleberry
   counts), then the right card pulses.
-- **The very first task ever** *(proposal)*: if nothing is tapped for 4 s, the right banner glows softly. This
-  happens once only, to show a brand-new player what tapping does.
+- **The very first task ever:** if nothing is tapped for 4 s, the right banner glows softly. This happens once
+  only, to show a brand-new player what tapping does.
 
 ---
 
@@ -60,10 +61,11 @@ the cap of 10. After the cap, right answers in villages give gear (§5.5 of the 
 
 - **N:** "Once upon a time, in the kingdom of Brightvale…" `st1_1_01`
 - **N:** "…the king and queen set sail on a voyage of peace." *(the ship sails away; waving)* `st1_1_02`
-- **N:** "They left Uncle Grimbald in charge." *(the uncle steps out, smiling a little too widely)* `st1_1_03`
-- **N:** "'Goblins are bothering the border villages,' said Uncle Grimbald. 'Go and help them, and don't hurry
-  back!'" `st1_1_04`
-- **H:** "Ta-ra! I'm Pip, the royal herald! I'll march with you, **[Hero]**!" `h_intro` + title + name
+- **N:** "They left {Uncle Grimbald|Aunt Grimhilda} in charge." *(the steward steps out, smiling a little too
+  widely)* `st1_1_03` · *steward line*
+- **N:** "'Goblins are bothering the border villages,' said {Uncle Grimbald|Aunt Grimhilda}. 'Go and help
+  them, and don't hurry back!'" `st1_1_04` · *steward line*
+- **H:** "Ta-ra! I'm Buckleberry, the royal herald! I'll march with you, **[Hero]**!" `h_intro` + title + name
 - **H:** "Forward, march!" `h_forward_march`
 
 ## 1 · Millbrook (village)
@@ -129,7 +131,7 @@ Praise as usual.
 - **N:** "The goblins ran off into the bushes, and the lookout flew our flag." `st1_1_10`
 
 **Not yet (0 or 1 of 3)**
-- **H:** "Retreat! Retreat!" `h_retreat`. The army scampers back to the left with speed lines, and Pip's trumpet
+- **H:** "Retreat! Retreat!" `h_retreat`. The army scampers back to the left with speed lines, and Buckleberry's trumpet
   goes "wah-wah".
 - **N:** "Oops! The goblins were tricky that time." `st_retreat` (used in every chapter)
 - **H:** "That's all right. Let's try again!" `h_try_again`
@@ -152,7 +154,7 @@ Praise as usual.
 **End**
 - The rest of the sheep trot home.
 - The shepherd joins the army (+1 soldier, or gear at the cap).
-- The puppy bounds over to Pip: the **first camp treasure**.
+- The puppy bounds over to Buckleberry: the **first camp treasure**.
 - **H:** "A present for our camp!" `h_camp_gift`
 - **N:** "To say thank you, the shepherd joined the army and gave them a sheepdog puppy." `st1_1_12`
 
@@ -275,7 +277,7 @@ running:
 
 | Key | Line |
 |---|---|
-| `h_intro` | "Ta-ra! I'm Pip, the royal herald! I'll march with you," *(+ Hero)* |
+| `h_intro` | "Ta-ra! I'm Buckleberry, the royal herald! I'll march with you," *(+ Hero)* |
 | `h_forward_march` | "Forward, march!" |
 | `h_onward` | "Onward!" |
 | `h_hello_village` | "Hello, villagers! Who will join us?" |

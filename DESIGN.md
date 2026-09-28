@@ -47,7 +47,10 @@ the play space opens up from a single road, to forks, to a full campaign map.
 | Blocked road | **After** the chapter's fort: every chapter ends in a victory, then raids until the maths is ready |
 | Voices | A **herald** (commands, praise, gentle "not quite"s; robot voice if not recorded) and an optional **narrator** (story; silent if not recorded, text always shown). Each can be recorded by a different person |
 | Art | Simple custom SVG |
-| Herald | A round, cheerful trumpet herald: fanfare before each command, a sad little "wah-wah" toot for a miss |
+| Herald | **Buckleberry**, a round, cheerful trumpet herald: fanfare before each command, a sad little "wah-wah" toot for a miss |
+| Names | The kingdom of Brightvale · Buckleberry the herald · the steward Uncle Grimbald **or** Aunt Grimhilda (a grown-up setting) · the goblin chief Snagglenose |
+| Narration | The narrator says **"our hero"**, never the name, so one recording fits every player. Only the herald says the hero's name |
+| First tap | A brand-new player's very first task: if nothing is tapped for 4 s, the right card glows softly. Once only |
 | Build order | Linear → forks → full map. Get the linear game really dialled in first |
 
 ## 3. The five arcs
@@ -60,7 +63,7 @@ the play space opens up from a single road, to forks, to a full campaign map.
 | 4 | **Siege of the Capital** | Retaking the kingdom, castle by castle, ending at the capital | Forks | Within 20; tens and ones; 2-digit numbers | Companies of ten | 6 |
 | 5 | **The Invasion** | A foreign kingdom invades; drive them back | Full map | Within 100 → equal groups → times tables → light division | Companies + unit types | 6–8 |
 
-**Story frame** (agreed; names are proposals): the king and queen sail off on a peace voyage and leave the hero's uncle (or aunt) as
+**Story frame:** the king and queen sail off on a peace voyage and leave the hero's Uncle Grimbald (or Aunt Grimhilda) as
 steward. The steward sends the young hero to the goblin border, "for experience", really to get them out of the
 way. Arc 2 ends with a messenger: "Come home! The crown has been stolen!" Arc 4 ends with the capital retaken and the
 king and queen home. In arc 5 the family stands together against the invaders.
@@ -230,6 +233,11 @@ recordable, importable by file name, and backed up. **Two roles:**
   Mia!"
 - **Narrator clips:** one per story line, grouped by chapter. The step-by-step guide works per chapter ("Record
   chapter 1's story").
+- **Uncle or aunt:** the steward is a grown-up setting. Story lines that mention them have two texts
+  ({uncle|aunt}) but one clip key; the caption and recording guide show the version picked. Switching the setting
+  shows a warning: "*N* story lines mention the steward and were recorded for Uncle Grimbald. Re-record them for
+  Aunt Grimhilda?" Each recording remembers which version it was made for. Mismatched ones are kept but not played
+  (the caption still shows) until re-recorded, or until the setting is switched back *(proposal)*.
 - **Two people, two devices:** the grown-up panel has separate Herald and Narrator sections, each with its own
   step-by-step guide and its **own voice backup file**. Importing a voice file adds or replaces only that role's
   clips. So Dad can record the herald on the tablet and Mum the narrator on her phone, then combine them.
@@ -289,6 +297,7 @@ fixes port both ways.
 ## 10. Grown-up panel
 
 - **Players:** name, prince or princess, banner colour, starting chapter, level.
+- **Story:** the steward is Uncle Grimbald or Aunt Grimhilda (with the re-recording warning, §6).
 - **Campaign:** the chapter list with each chapter's maths. A **try-it** chip for each task type (practice doesn't
   count).
 - **Numbers the child knows:** amount and numeral chips, 0–20, and a "counts to" meter.
@@ -329,6 +338,5 @@ Kept loose on purpose; to be designed once the linear arcs are dialled in.
 
 ## 12. Open questions for the linear arcs
 
-1. Names: kingdom, herald, uncle or aunt, goblin chief (see chapter 1's script).
-2. Minimum gear per fort: 2 ladders (arc 1); 2 ladders + log and wheels (arc 2)?
-3. Chapter names (§5.4): good as drafted?
+1. Minimum gear per fort: 2 ladders (arc 1); 2 ladders + log and wheels (arc 2)?
+2. Chapter names (§5.4): good as drafted?
