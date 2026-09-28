@@ -90,9 +90,17 @@ The stop decides what the answers earn:
 Hunt), so nothing is left unresolved. First tries only decide the size of the reward and whether a battle is won.
 
 ### Failure is funny, never costly
-Fewer than half right first time in a battle set: the herald toots "wah-wah", and the army runs back to camp with
-speed lines and dust puffs. "Retreat! …Let's try again!" A fresh set of problems follows at the same stop. No
-soldier, ladder or freed village is ever lost.
+Every battle ends the same way: "Charge!", and both sides, the whole army and every goblin, run into one big
+cartoon dust cloud. Stars fly and it bonks and bumps for a moment. Then the losers come out running, all together,
+the way the army marches:
+- **Won** (half or more right first time): the goblins burst out of the cloud and run off the right-hand edge of the
+  screen, and they're gone. The army stands where the fight was and cheers (everyone hops), and our flag goes up.
+  On the next march the soldiers fall back into line as they walk.
+- **Not yet** (fewer than half): the army bursts out and runs off the left-hand edge, while Buckleberry toots
+  "wah-wah" and the goblins hop and cheer at their posts, sticks back up. The army marches back in: "Let's try
+  again!" A fresh set of problems follows at the same stop. No soldier, ladder or freed village is ever lost.
+
+*Open question:* should arc 1 have the "not yet" ending at all, or should every battle be won there?
 
 ### Pacing: the road waits for the maths
 Difficulty follows Letter Hunt's adaptive levels: up at 85% of first tries over 10 sets, down quietly below 50%
@@ -118,7 +126,9 @@ appears. The next sitting opens with "Wake up! The march goes on!".
 ## 5. The linear arcs in detail
 
 ### 5.1 The marching scene
-- **Layout (landscape):** a side-view landscape fills the screen. The top bar has the home button, the herald's
+- **Layout (landscape):** a side-view landscape fills the screen from edge to edge. The scene is laid out on a
+  1180 × 820 stage, scaled to fit; on a wider or taller screen the land, sky and road simply carry on past it, so
+  there are no empty bars. The home button and the pips sit at the real screen corners. The top bar has the home button, the herald's
   "hear it again" button and pips for the set. The party stands on the road on the left; the stop fills the right.
   During a task, the answer cards rise into a band along the bottom. In portrait, the scene is the top ~45% and the
   cards sit below it.
@@ -142,8 +152,8 @@ appears. The next sitting opens with "Wake up! The march goes on!".
   a cart), find the number (house numbers), which is more (two carts). Each first-try right answer: a villager
   marches over, gets a spear and joins, and the troop shield goes up by one ("We have 7 soldiers!").
 - **Goblin camp (skirmish).** Tents and a little palisade, goblins with big ears and pointy spears. Favoured tasks:
-  which camp has more goblins, how many goblins. Win: a dust-cloud clash with stars flying, then goblins drop their
-  spears and scamper off to the right. Your flag goes up.
+  which camp has more goblins, how many goblins. Win: both sides charge into a dust cloud with stars flying, then
+  the goblins scamper off the right-hand edge together and the army cheers (§4). Your flag goes up.
 - **Troll bridge (arc 2 skirmish).** A troll under a stone bridge: "Nobody crosses MY bridge!" The herald answers
   with maths. Win: the troll grumbles and stomps away into the hills.
 - **Fort siege (chapter end).** Two or more sets at one stop:
@@ -188,6 +198,7 @@ village freed in arc 1, and the level stays capped at 4.
 | **Find the number** | "Find the banner with 4!" | Banners on poles | 3–9 numeral banners | "4!" (arc 1: the 4 banner shows 4 dots) | Fade wrong ones → pulse the right one |
 | **Count them** | "How many goblins?" | 1–10 things in the scene | 3–4 numeral shields | Things light up one by one as the herald counts: "1, 2, 3. 3 goblins!" | Fade → "Let's count together", then pulse |
 | **Which is more?** | "Which camp has more goblins?" | Two groups in the scene | The two groups themselves | The bigger camp bounces: "This camp has 5!" | Fade the smaller group → count both together |
+| **Which has fewer?** (from level 3) | "Which side has fewer goblins?" | As Which is more; about a third of the comparisons | The two groups | The smaller group bounces: "This side has 2!" | Count both together |
 | **Find the sign** (arc 2) | "Find the plus!" | Signposts at a crossroads | 2–4 signs: + − = | "Plus! Plus means more are coming." | Fade → pulse |
 | **Count and compare** (arc 2) | "Count the goblins in each camp. Which camp has more?" | Two groups | A numeral shield under each group, then the groups | "This camp has 4, that camp has 6. 6 is more!" | Count together |
 | **Which number is bigger?** (arc 2) | "Which number is bigger?" | Two trolls holding shields | The two numeral shields | "7 is bigger than 4!" (the bigger shield grows) | Show each number's dots |
@@ -207,8 +218,8 @@ village freed in arc 1, and the level stays capped at 4.
 |---|---|---|---|---|
 | 1 | 1 · The Border Road | 1–3 | Find · Count · More (big gaps) | 3, with dots |
 | 2 | 1 · The Whispering Woods | 1–5 | Find · Count (dice patterns) · More | 3, with dots |
-| 3 | 1 · The Marsh Villages | 1–7 | Find · Count (scattered) · More (closer) | 4 |
-| 4 | 1 · The Goblin King's Stockade | 1–10 | Find · Count · More (closer) | 4 |
+| 3 | 1 · The Marsh Villages | 1–7 | Find · Count (scattered) · More (closer) · Fewer | 4 |
+| 4 | 1 · The Goblin King's Stockade | 1–10 | Find · Count · More or fewer (closer) | 4 |
 | 5 | 2 · The Stone Bridge | 1–12 | Find the sign (+ −) · What comes next? · Count and compare | 4 |
 | 6 | 2 · Trollberry Hills | 1–20 | Signs + − = · Which number is bigger? · Look closely | 4–6 |
 | 7 | 2 · The Echo Pass | 1–20 | First adding within 5 (pictures) · Countdown (counting back) | 4 |
@@ -303,14 +314,16 @@ fixes port both ways.
 
 - **Review boxes** for each skill:
   - `n:4` recognising the numeral
-  - `q:4` the amount (count them, which is more)
+  - `q:4` the amount (count them)
+  - `cmp` and `cmpf` comparing (which is more, which has fewer), shown as first-try rates in the panel
   - `sign:+` the signs
   - later, facts (`+:3+1`).
 - **Look-alikes:** numerals 6/9, 2/5 and 1/7 stay off the same board until arc 2.
 - **Sound-alikes:** 13/30 … 19/90 stay apart until arc 4.
 - **Reversals:** 12/21 are mixed only on purpose, in arc 4.
 - **Amounts:** early answer choices are at least 2 apart and in a clear ratio. Later ones are next door (4 vs 5).
-  From level 3, the group with *more* is sometimes drawn smaller or tighter, so size isn't a shortcut.
+  From level 3, the group with *more* is sometimes drawn smaller or tighter, so size isn't a shortcut. The same
+  trick applies to "which has fewer", where the smaller group then looks bigger.
 - **Help after a miss:** fade wrong cards first; second time, "Let's count together", with the things in the scene
   lighting up as they're counted; then the right card pulses.
 - **Guessing:** rapid wrong taps count against the level, as in Letter Hunt.

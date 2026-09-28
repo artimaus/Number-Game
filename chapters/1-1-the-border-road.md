@@ -126,17 +126,18 @@ Praise as usual.
 
 **Won (2 or 3 of 3 right first time)**
 - **H:** "Charge!" `h_charge`
-- A cartoon dust cloud with stars, then the goblins scramble down the ladder and run off to the right. Our flag
-  goes up on the tree house.
+- The whole army and all the goblins run into one cartoon dust cloud: stars, bonks, bumps. The goblins burst out
+  and run off the right-hand edge together, and they're gone. The army stands where the cloud was and cheers. Our
+  flag goes up on the tree house.
 - **H:** "Hooray! They ran away!" `h_ran_away`
 - **N:** "The goblins ran off into the bushes, and the lookout flew our flag." `st1_1_10`
 
 **Not yet (0 or 1 of 3)**
-- **H:** "Retreat! Retreat!" `h_retreat`. The army scampers back to the left with speed lines, and Buckleberry's trumpet
-  goes "wah-wah".
+- After the same dust cloud, the army bursts out and runs off the left-hand edge together. **H:** "Retreat!
+  Retreat!" `h_retreat`, and Buckleberry's trumpet goes "wah-wah". The goblins hop and cheer at their posts.
 - **N:** "Oops! The goblins were tricky that time." `st_retreat` (used in every chapter)
 - **H:** "That's all right. Let's try again!" `h_try_again`
-- A fresh set of problems follows. Nothing is lost.
+- The army marches back in, and a fresh set of problems follows. Nothing is lost.
 
 ## 4 · The Sheep Meadow (special)
 *A meadow, an empty pen, sheep scattered all over, a worried shepherd with a crook. A puppy hides behind her.*
@@ -182,12 +183,13 @@ Praise as usual.
 - **N:** "More brave friends joined the march." `st1_1_14`
 
 ## 6 · The Goblin Camp at the Ford (skirmish)
-*A shallow river crossing, stepping stones, three goblin tents on the near bank.*
+*A shallow river runs slantwise across the road, with stepping stones where the road crosses it. The goblin tents
+are on the far bank.*
 
 - **N:** "At the river crossing, goblins had set up camp." `st1_1_15`
 - **H:** "Goblins! Let's be clever!" `h_goblins`
 - ★★ More: "Which side has more goblins?" (two tents) · ★ Count: "How many goblins?" · ★ Find
-- **Won:** "Charge!", a dust cloud, then the goblins splash across the river and away. Flag up.
+- **Won:** "Charge!", the dust cloud at the stepping stones, then the goblins run off to the right and away. Flag up.
 - **N:** "Splash! The goblins ran across the river and away." `st1_1_16`
 - **Not yet:** as at the lookout.
 

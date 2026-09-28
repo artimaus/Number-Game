@@ -87,9 +87,10 @@ button:focus-visible{outline:4px solid var(--blue);outline-offset:3px}
 .pdots i.on{background:var(--yellow)}
 
 /* ---------- play (the stage) ---------- */
-#play{overflow:hidden;overflow:clip}
-#stage{position:absolute;left:0;top:0;width:1180px;height:820px;transform-origin:0 0;overflow:hidden;overflow:clip;background:var(--sky)}
-.lay{position:absolute;left:0;top:0;width:3540px;will-change:transform}
+#play{overflow:hidden;overflow:clip;background:var(--sky)}
+/* the stage is 1180 × 820; the scenery carries on past its sides to the screen edges (--ex is how far, in stage pixels) */
+#stage{position:absolute;left:0;top:0;width:1180px;height:820px;transform-origin:0 0}
+.lay{position:absolute;left:-1180px;top:0;width:5900px;will-change:transform}
 .lay svg{display:block}
 #placeWrap,#placeNext{position:absolute;left:560px;top:140px;width:620px;height:460px;will-change:transform}
 #placeWrap.dim .pl{opacity:.3}
@@ -126,6 +127,7 @@ button:focus-visible{outline:4px solid var(--blue);outline-offset:3px}
 .side.wiggle{animation:wiggle .45s}
 .side > svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 #fx{position:absolute;inset:0;pointer-events:none}
+#homeBtn{left:calc(18px - var(--ex, 0px))}
 #ui{position:absolute;inset:0;pointer-events:none}
 #ui button{pointer-events:auto}
 .round-btn{position:absolute;left:18px;top:14px;width:60px;height:60px;border-radius:50%;border:0;background:var(--card);box-shadow:0 5px 0 var(--edge);display:grid;place-items:center;color:var(--ink);padding:0}
@@ -137,7 +139,7 @@ button:focus-visible{outline:4px solid var(--blue);outline-offset:3px}
 .speak svg{width:42px;height:42px}
 .speak.talking svg .w{animation:wave .6s ease-in-out infinite alternate}
 @keyframes wave{from{opacity:.3}to{opacity:1}}
-.pips{position:absolute;right:22px;top:26px;display:flex;gap:8px;pointer-events:none}
+.pips{position:absolute;right:calc(22px - var(--ex, 0px));top:26px;display:flex;gap:8px;pointer-events:none}
 .pips svg{width:30px;height:30px;color:rgba(29,43,79,.16)}
 .pips svg.lit{color:var(--yellow);animation:pop .4s}
 .road{position:absolute;left:290px;top:92px;width:600px;height:40px;display:flex;align-items:center;justify-content:space-between;pointer-events:none}
@@ -178,14 +180,22 @@ button:focus-visible{outline:4px solid var(--blue);outline-offset:3px}
 .treasure-pop{position:absolute;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.85);box-shadow:0 0 0 8px rgba(246,211,107,.7),0 12px 30px rgba(0,0,0,.2);
   display:grid;place-items:center;animation:pop .6s}
 .treasure-pop svg{width:78%;height:78%}
-.dust{position:absolute;width:360px;height:260px;animation:dust 1.3s ease-out forwards}
-@keyframes dust{0%{transform:scale(.3);opacity:0}20%{transform:scale(1.05);opacity:1}80%{transform:scale(1);opacity:1}100%{transform:scale(1.2);opacity:0}}
-.dust .dp{animation:puff .35s ease-in-out infinite alternate}
-.dust .dp:nth-child(2n){animation-delay:.17s}
+.brawl{position:absolute;width:580px;height:380px;z-index:40}
+.brawl svg{width:100%;height:100%;overflow:visible}
+.brawl .dp{animation:puff .35s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:50% 50%}
+.brawl .dp:nth-child(2n){animation-delay:.17s}
+/* winners cheer (hop), goblins bob as they run */
+.cheer .fig .bob{animation:hop .36s ease-in-out infinite alternate}
+.cheer .fig:nth-child(2n) .bob{animation-delay:.18s}
+@keyframes hop{from{transform:translateY(0)}to{transform:translateY(-26px)}}
+.fig.hurry .bob{animation:bob .3s ease-in-out infinite alternate}
+.gob.run{animation:gobrun .2s ease-in-out infinite alternate}
+@keyframes gobrun{to{transform:translateY(-16px)}}
+.gob.hop{animation:gobhop .32s ease-in-out infinite alternate}
+@keyframes gobhop{to{transform:translateY(-46px)}}
 @keyframes puff{to{transform:scale(1.08)}}
 .star-fly{position:absolute;width:34px;height:34px;color:var(--yellow);animation:fly .9s ease-out forwards}
 @keyframes fly{from{transform:translate(0,0) rotate(0) scale(.6);opacity:1}to{transform:translate(var(--dx),var(--dy)) rotate(260deg) scale(1);opacity:0}}
-.flee{transition:transform 1.6s ease-in,opacity 1.6s ease-in!important;transform:translateX(900px)!important}
 .drop{transition:transform .5s cubic-bezier(.5,0,1,.5)!important}
 .shake{animation:wiggle .45s}
 .flagup{animation:flagup .8s ease-out forwards}
@@ -278,7 +288,7 @@ button:focus-visible{outline:4px solid var(--blue);outline-offset:3px}
 .card,.side,.prof,.bigplay,.round-btn,.speak,.caption{touch-action:none;-webkit-touch-callout:none}
 .screen:not(#parent){-webkit-touch-callout:none}
 @media (prefers-reduced-motion: reduce){
-  .walk .fig .bob,.fig.talk .bob,.card.win,.card.wiggle,.card.hint,.side.hint,.trophy svg,.dust .dp{animation:none}
+  .walk .fig .bob,.fig.talk .bob,.card.win,.card.wiggle,.card.hint,.side.hint,.trophy svg,.brawl .dp,.cheer .fig .bob,.gob.run,.gob.hop{animation:none}
 }
 </style>
 </head>
@@ -397,12 +407,13 @@ const NOUNS = {
   apples:{one:"apple", w:44, h:46}
 };
 /* Levels (arc 1). max: highest number asked. cards: answer cards shown. dots: helper dots under numerals.
-   arrange: how things to count are laid out. ratio: how many times more one side of "which is more" has. */
+   arrange: how things to count are laid out. ratio: how many times more one side of "which is more" has.
+   fewer: how often "which is more" asks the other way round ("Which side has fewer?"). */
 const LEVELS = {
-  1:{max:3,  cards:3, dots:true,  arrange:"row",     ratio:3,    moreMax:6,  near:false, sizeTrick:false},
-  2:{max:5,  cards:3, dots:true,  arrange:"dice",    ratio:2,    moreMax:8,  near:false, sizeTrick:false},
-  3:{max:7,  cards:4, dots:false, arrange:"scatter", ratio:1.5,  moreMax:9,  near:true,  sizeTrick:true},
-  4:{max:10, cards:4, dots:false, arrange:"scatter", ratio:1.25, moreMax:10, near:true,  sizeTrick:true}
+  1:{max:3,  cards:3, dots:true,  arrange:"row",     ratio:3,    moreMax:6,  near:false, sizeTrick:false, fewer:0},
+  2:{max:5,  cards:3, dots:true,  arrange:"dice",    ratio:2,    moreMax:8,  near:false, sizeTrick:false, fewer:0},
+  3:{max:7,  cards:4, dots:false, arrange:"scatter", ratio:1.5,  moreMax:9,  near:true,  sizeTrick:true,  fewer:1 / 3},
+  4:{max:10, cards:4, dots:false, arrange:"scatter", ratio:1.25, moreMax:10, near:true,  sizeTrick:true,  fewer:1 / 3}
 };
 const MAX_LEVEL = 4;
 const LOOKALIKE = [[6, 9], [2, 5], [1, 7]];          // never on one board in arc 1
@@ -707,6 +718,7 @@ function buildClips(){
   for (const [k, v] of Object.entries(NOUNS)) {
     if (k !== "berries") CLIPS["how_many_" + k] = {role:"herald", group:"Commands", label:`“How many ${k}?”`, hint:"", tts:`How many ${k}?`};
     CLIPS["which_more_" + k] = {role:"herald", group:"Commands", label:`“Which side has more ${k}?”`, hint:"", tts:`Which side has more ${k}?`};
+    CLIPS["which_fewer_" + k] = {role:"herald", group:"Commands", label:`“Which side has fewer ${k}?”`, hint:"From level 3.", tts:`Which side has fewer ${k}?`};
     CLIPS["w_" + k] = {role:"herald", group:"Words", label:`“${k}”`, hint:"Just the word, after a number: “3… " + k + "!”", tts:k};
   }
   CLIPS.w_soldiers = {role:"herald", group:"Words", label:"“soldiers”", hint:"After a number: “We have… 5… soldiers!”", tts:"soldiers"};
@@ -1047,8 +1059,8 @@ function goblinInner({pot = false, look = 0, stick = true} = {}){
   (pot ? `<path d="M34 50 Q34 26 60 26 Q86 26 86 50 Z" fill="#6B7280"/><rect x="30" y="46" width="60" height="8" rx="4" fill="#4B5563"/><rect x="84" y="34" width="18" height="5" rx="2.5" fill="#4B5563"/>` : "");
 }
 /* A goblin standing guard at a place: outer <g> positions it, inner .gob moves (drops its stick, flees). */
-const bossAt = (x, y, s, inner) => `<g transform="translate(${x} ${y}) scale(${s})"><g class="gob boss">${inner}</g></g>`;
-const guard = (x, y, s = .5, opts = {}) => `<g transform="translate(${x - 60 * s} ${y - 146 * s}) scale(${s})"><g class="gob">${goblinInner(opts)}</g></g>`;
+const bossAt = (x, y, s, inner) => `<g data-x="${x}" data-y="${y}" data-s="${s}" transform="translate(${x} ${y}) scale(${s})"><g class="gob boss">${inner}</g></g>`;
+const guard = (x, y, s = .5, opts = {}) => `<g data-x="${x}" data-y="${y}" data-s="${s}" transform="translate(${x - 60 * s} ${y - 146 * s}) scale(${s})"><g class="gob">${goblinInner(opts)}</g></g>`;
 function snagglenoseInner(){
   return `<rect x="62" y="156" width="12" height="22" rx="6" fill="#4E8F3A"/><rect x="84" y="156" width="12" height="22" rx="6" fill="#4E8F3A"/>
   <ellipse cx="66" cy="180" rx="11" ry="6" fill="#3F7A2E"/><ellipse cx="92" cy="180" rx="11" ry="6" fill="#3F7A2E"/>
@@ -1141,6 +1153,17 @@ const rocks = (x, y, s, c = "#B8AFA2") => at(x, y, s, `<path d="M-40 0 Q-44 -30 
 const tent = (x, y, s, c = "#8A6A45", patch = "#C9A36B") => at(x, y, s, `<path d="M-60 0 L0 -90 L60 0 Z" fill="${c}"/><path d="M0 -90 L-16 0 H16 Z" fill="#3B2A1E"/><rect x="24" y="-40" width="14" height="12" fill="${patch}" transform="rotate(10 31 -34)"/><rect x="-2" y="-120" width="4" height="34" fill="#8A5A32"/>` + sock(2, -118, .7));
 const sock = (x, y, s, stripe = "#E5483F") => at(x, y, s, `<path d="M0 0 H20 V18 Q33 18 35 28 Q35 36 25 36 H13 Q0 34 0 20 Z" fill="#fff"/><path d="M0 6 H20 M0 14 H20" stroke="${stripe}" stroke-width="4"/>`);
 const ourFlag = (x, y, s = 1) => `<g transform="translate(${x} ${y}) scale(${s})"><g class="ourflag" style="opacity:0"><rect x="0" y="-70" width="5" height="72" fill="#8A5A32"/><circle cx="2.5" cy="-72" r="5" fill="#F2B233"/><path d="M5 -68 L45 -62 L36 -52 L45 -40 L5 -44 Z" style="fill:var(--banner)"/></g></g>`;
+/* A river crossing the road on a slant: it comes from far away (upper right) and widens toward us (lower left).
+   Stepping stones sit where the road crosses it. cx is where the river meets the middle of the road. */
+const RIVER_Y = GY + 36;
+const riverStones = cx => [[cx - 36, RIVER_Y - 3], [cx, RIVER_Y + 5], [cx + 36, RIVER_Y - 1]];
+function crossRiver(cx){
+  const Y = RIVER_Y;
+  const fade = (id, c) => `<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="0" y1="${GY - 150}" x2="0" y2="${GY - 96}"><stop offset="0" stop-color="${c}" stop-opacity="0"/><stop offset="1" stop-color="${c}"/></linearGradient>`;
+  return `<defs>${fade("rv" + cx, "#8FB8C8")}${fade("rvs" + cx, "#7AA7B8")}</defs><path d="M${cx + 176} ${GY - 150} C${cx + 150} ${GY - 84} ${cx + 44} ${GY - 22} ${cx - 58} ${Y} C${cx - 124} ${GY + 112} ${cx - 214} ${GY + 330} ${cx - 280} ${GY + 660} L${cx - 70} ${GY + 660} C${cx - 28} ${GY + 330} ${cx + 18} ${GY + 112} ${cx + 58} ${Y} C${cx + 104} ${GY - 22} ${cx + 172} ${GY - 84} ${cx + 186} ${GY - 150} Z" fill="url(#rv${cx})" stroke="url(#rvs${cx})" stroke-width="3"/>
+    <g stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".55" fill="none"><path d="M${cx + 120} ${GY - 76} l-14 12 M${cx + 60} ${GY - 30} l-18 14 M${cx - 40} ${GY + 110} l-16 24 M${cx - 110} ${GY + 200} l-20 30 M${cx - 150} ${GY + 290} l-18 32"/></g>` +
+    riverStones(cx).map(([x, y]) => `<ellipse cx="${x}" cy="${y + 3}" rx="17" ry="7" fill="#9A9186"/><ellipse cx="${x}" cy="${y}" rx="17" ry="7" fill="#C2BAAD"/>`).join("");
+}
 const water = (y, h, c = "#8FB8C8") => `<rect x="-20" y="${y}" width="660" height="${h}" fill="${c}"/><path d="M40 ${y + 14} h40 M200 ${y + 26} h50 M380 ${y + 12} h44 M520 ${y + 30} h40" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".5"/>`;
 const stiltHouse = (x, y, s, wall = "#E8D6B3", roof = "#8A6A45") => at(x, y, s,
   `<g fill="#8A5A32"><rect x="-50" y="-60" width="8" height="60"/><rect x="-4" y="-60" width="8" height="60"/><rect x="42" y="-60" width="8" height="60"/></g><rect x="-64" y="-66" width="128" height="10" fill="#6B4A2E"/>
@@ -1182,9 +1205,8 @@ const PLACES = {
     pen:[[70, GY - 20], [120, GY - 26], [170, GY - 18], [95, GY - 44], [145, GY - 46], [190, GY - 40]],
     herd:[[300, GY - 40], [390, GY - 90], [470, GY - 30], [540, GY - 110], [350, GY - 150], [450, GY - 170]], herdThing:"sheep"}),
   berrybush:() => ({svg:bush(60, GY, 1.1, true) + cottage(240, GY, 1, {roof:"#B5552B", door:"#8657D3"}) + bush(420, GY, 1.2, true) + bush(560, GY, 1, true), door:[240, GY], guards:[[400, GY - 50], [520, GY - 40], [120, GY - 30]]}),
-  ford:() => ({svg:water(GY - 40, 50) + `<g fill="#B8AFA2"><ellipse cx="220" cy="${GY - 16}" rx="18" ry="7"/><ellipse cx="290" cy="${GY - 24}" rx="18" ry="7"/><ellipse cx="360" cy="${GY - 14}" rx="18" ry="7"/></g>` +
-      tent(170, GY - 50, .9) + tent(330, GY - 56, 1, "#7A5C45") + tent(480, GY - 48, .85) + reeds(560, GY - 10, 1) + ourFlag(420, GY - 50),
-    guards:[[240, GY - 50], [410, GY - 56], [540, GY - 48]]}),
+  ford:() => ({svg:crossRiver(230) + reeds(330, GY - 44, .8) + reeds(120, GY + 90, 1) + tent(420, GY - 6, 1, "#7A5C45") + tent(548, GY - 24, .85) + bush(40, GY - 10, .8) + ourFlag(488, GY - 30),
+    guards:[[360, GY + 4], [470, GY + 10], [580, GY - 6]]}),
   bellhill:() => ({svg:`<path d="M-20 ${GY} Q200 ${GY - 80} 420 ${GY - 70} Q560 ${GY - 60} 640 ${GY} Z" fill="#9BD07A"/>` + bellTower(420, GY - 64, 1) + cottage(210, GY - 40, .95, {roof:"#D9A441"}) + tree(560, GY, .8) + tree(60, GY, .9),
     door:[210, GY - 40], guards:[[330, GY - 60], [500, GY - 64], [120, GY - 16]]}),
   stumpy:() => ({svg:`<path d="M164 ${GY - 10} L170 150 H450 L456 ${GY - 10} Z" fill="#9A6B3E"/><path d="M210 170 V${GY - 20} M260 164 V${GY - 16} M320 164 V${GY - 16} M380 164 V${GY - 20}" stroke="#7F5530" stroke-width="4" stroke-linecap="round"/>
@@ -1204,9 +1226,8 @@ const PLACES = {
       bigTree(450, GY, .7, "#6FAE4E", "#4E8F3A") + at(450, GY, .7, `<path d="M-18 0 V-40 Q0 -60 18 -40 V0 Z" fill="#2E78D0"/><circle cx="-26" cy="-90" r="12" fill="#8FB8D8"/>`) +
       bush(300, GY, .7, false, "#4E8F3A") + bush(570, GY, .6, false, "#4E8F3A"),
     door:[170, GY], guards:[[300, GY - 4], [390, GY - 4], [540, GY - 4]]}),
-  brook:() => ({svg:pine(50, GY, 1.1) + `<path d="M150 ${GY + 30} Q260 ${GY - 60} 380 ${GY - 20} Q480 ${GY + 10} 640 ${GY - 60} V${GY + 40} H150 Z" fill="#8FB8C8"/>` +
-      `<g fill="#B8AFA2"><ellipse cx="240" cy="${GY - 18}" rx="22" ry="8"/><ellipse cx="320" cy="${GY - 26}" rx="22" ry="8"/><ellipse cx="400" cy="${GY - 16}" rx="22" ry="8"/><ellipse cx="480" cy="${GY - 22}" rx="22" ry="8"/></g>` + pine(580, GY - 40, .9) + ourFlag(540, GY - 30),
-    guards:[[240, GY - 22], [320, GY - 30], [400, GY - 20]]}),
+  brook:() => ({svg:crossRiver(300) + pine(60, GY, 1.1) + pine(150, GY - 30, .8) + pine(560, GY - 50, .9) + bush(470, GY, .8, false, "#4E8F3A") + reeds(400, GY - 50, .8) + ourFlag(520, GY - 10),
+    guards:riverStones(300)}),
   acornhill:() => ({svg:`<path d="M-20 ${GY} Q300 ${GY - 70} 640 ${GY} Z" fill="#7DB85C"/>` + bigTree(420, GY - 40, .8, "#8CC56B", "#6FAE4E") + cottage(220, GY - 30, 1, {roof:"#C0673A"}) + bush(90, GY - 20, .8),
     door:[220, GY - 30], guards:[[420, GY - 200], [520, GY - 30], [330, GY - 40]]}),
   thicket:() => ({svg:[60, 190, 320, 450, 580].map((x, i) => bush(x, GY, 1.3 + (i % 2) * .2, false, i % 2 ? "#4E8F3A" : "#3F7A2E")).join("") +
@@ -1281,7 +1302,7 @@ const LANDS = {
   night: {sky:"#24345E", far:"#2B4A4A", near:"#2A4E3A", road:"#3D4A3A", edge:"#34402F", fg:"#2F5B3A", tuft:"#264D30", deco:"stars"}
 };
 function landLayers(name){
-  const L = LANDS[name] || LANDS.meadow, t = (fn) => fn(0) + fn(1180) + fn(2360);
+  const L = LANDS[name] || LANDS.meadow, t = (fn) => [-1180, 0, 1180, 2360, 3540].map(fn).join("");
   const far = t(o => `<path d="M${o} 470 Q${o + 180} 380 ${o + 380} 440 Q${o + 600} 360 ${o + 820} 430 Q${o + 1000} 390 ${o + 1180} 470 V820 H${o} Z" fill="${L.far}"/>` +
     (L.deco === "pines" ? [120, 260, 430, 610, 790, 980, 1100].map((x, i) => pine(o + x, 450 - (i % 3) * 12, .7 + (i % 2) * .2, "#4E7F3F")).join("")
      : L.deco === "rocks" ? `<path d="M${o + 200} 440 L${o + 320} 300 L${o + 440} 430 Z M${o + 700} 430 L${o + 860} 250 L${o + 1000} 420 Z" fill="#B3A283"/><path d="M${o + 290} 336 L${o + 320} 300 L${o + 350} 336 Z M${o + 822} 292 L${o + 860} 250 L${o + 898} 292 Z" fill="#fff"/>`
@@ -1294,7 +1315,7 @@ function landLayers(name){
      : L.deco === "rocks" ? [140, 700, 1000].map(x => rocks(o + x, 552, .8)).join("")
      : L.deco === "stars" ? "" : [80, 700].map(x => bush(o + x, 548, .8)).join("")));
   const ground = t(o => `<path d="M${o} 568 Q${o + 590} 548 ${o + 1180} 568 V640 Q${o + 590} 620 ${o} 640 Z" fill="${L.road}"/><path d="M${o} 568 Q${o + 590} 548 ${o + 1180} 568" stroke="${L.edge}" stroke-width="3" fill="none"/>
-    <path d="M${o} 640 Q${o + 590} 616 ${o + 1180} 640 V820 H${o} Z" fill="${L.fg}"/>
+    <path d="M${o} 640 Q${o + 590} 616 ${o + 1180} 640 V2000 H${o} Z" fill="${L.fg}"/>
     <g stroke="${L.tuft}" stroke-width="3" stroke-linecap="round" fill="none">${[90, 330, 610, 870, 1060].map((x, i) => `<path d="M${o + x} ${700 + (i * 37) % 90} l-4 -12 M${o + x + 6} ${700 + (i * 37) % 90} l0 -14 M${o + x + 12} ${700 + (i * 37) % 90} l4 -12"/>`).join("")}</g>`);
   return {sky:L.sky, fg:L.fg, far, near, ground};
 }
@@ -1356,9 +1377,14 @@ const OWL_AWAKE = THING.owls(), OWL_ASLEEP = OWL_AWAKE.replace(/<circle cx="17" 
 
 /* ================= screens ================= */
 function show(id){ $$(".screen").forEach(s => s.classList.toggle("on", s.id === id)); if (id === "play") fitStage(); }
+/* The stage is 1180 × 820, scaled to fit and centred. The scenery runs on past its sides to the edges of the screen;
+   G.edge is where those edges are, in stage pixels. */
 function fitStage(){
   const W = $("#play").clientWidth || innerWidth, H = $("#play").clientHeight || innerHeight, s = Math.min(W / 1180, H / 820);
-  $("#stage").style.transform = `translate(${(W - 1180 * s) / 2}px, ${(H - 820 * s) / 2}px) scale(${s})`;
+  const ox = (W - 1180 * s) / 2, oy = (H - 820 * s) / 2;
+  $("#stage").style.transform = `translate(${ox}px, ${oy}px) scale(${s})`;
+  G.edge = {left:-ox / s, right:1180 + ox / s, top:-oy / s, bottom:820 + oy / s};
+  $("#stage").style.setProperty("--ex", ox / s + "px");
 }
 window.addEventListener("resize", fitStage);
 /* nothing inside the stage may scroll it (a focused button would otherwise pull the scene sideways) */
@@ -1366,7 +1392,7 @@ window.addEventListener("resize", fitStage);
 
 /* ================= the game state for this sitting ================= */
 const ABORT = {abort:true};
-const G = {session:0, busy:true, hearing:false, task:null, resolve:null, misses:0, step:0, readyAt:0, rapid:0, repeatTimer:null, repeats:0,
+const G = {session:0, busy:true, edge:{left:0, right:1180, top:0, bottom:820}, hearing:false, task:null, resolve:null, misses:0, step:0, readyAt:0, rapid:0, repeatTimer:null, repeats:0,
   prompt:[], asked:{}, recent:{n:[], q:[]}, steps:0, firstSteps:0, stopsThisSitting:0, sittings:0, locked:false, practice:null, landX:0, lastType:null};
 const guard$ = () => { const s = G.session; return () => { if (G.session !== s) throw ABORT; }; };
 const run = p => p.catch(e => { if (e !== ABORT) console.error(e); });
@@ -1380,8 +1406,8 @@ let landName = null;
 function renderLand(name){
   landName = name;
   const L = landLayers(name);
-  $("#land").innerHTML = Object.keys(PARALLAX).map(k => `<div class="lay" data-l="${k}"><svg width="3540" height="820" viewBox="0 0 3540 820">${L[k]}</svg></div>`).join("");
-  $("#stage").style.background = L.sky; document.body.style.setProperty("--sky", L.sky); document.body.style.setProperty("--ground", L.fg);
+  $("#land").innerHTML = Object.keys(PARALLAX).map(k => `<div class="lay" data-l="${k}"><svg width="5900" height="820" viewBox="-1180 0 5900 820" overflow="visible">${L[k]}</svg></div>`).join("");
+  $("#play").style.background = L.sky; document.body.style.setProperty("--sky", L.sky); document.body.style.setProperty("--ground", L.fg);
   $$(".lay").forEach(el => el.style.transform = "translateX(0px)"); G.lay = {far:0, near:0, ground:0};
 }
 function placeHTML(id, extra = ""){
@@ -1404,16 +1430,19 @@ async function marchTo(placeId, {guards = 0, pot = false, dur = 2600} = {}){
   const ck = guard$();
   hideTask(); hideCaption();
   const {pl, html} = placeHTML(placeId);
-  const next = $("#placeNext"); next.innerHTML = html; next.style.transform = "translateX(1180px)";
+  const D = Math.max(1180, Math.ceil(1240 - G.edge.left));
+  const next = $("#placeNext"); next.innerHTML = html; next.style.transform = `translateX(${D}px)`;
   $("#party").classList.add("walk");
   const d = dur * SPEED, ease = "ease-in-out";
   const anims = $$(".lay").map(el => {
-    const k = PARALLAX[el.dataset.l], from = G.lay[el.dataset.l], to = from - 1180 * k;
-    G.lay[el.dataset.l] = to <= -1180 ? to + 1180 : to;
+    const k = PARALLAX[el.dataset.l], from = G.lay[el.dataset.l], to = from - D * k;
+    let rest = to; while (rest <= -1180) rest += 1180;
+    G.lay[el.dataset.l] = rest;
     return el.animate([{transform:`translateX(${from}px)`}, {transform:`translateX(${to}px)`}], {duration:d, easing:ease, fill:"forwards"});
   });
-  anims.push($("#placeWrap").animate([{transform:"translateX(0)"}, {transform:"translateX(-1180px)"}], {duration:d, easing:ease, fill:"forwards"}));
-  anims.push(next.animate([{transform:"translateX(1180px)"}, {transform:"translateX(0)"}], {duration:d, easing:ease, fill:"forwards"}));
+  anims.push($("#placeWrap").animate([{transform:"translateX(0)"}, {transform:`translateX(${-D}px)`}], {duration:d, easing:ease, fill:"forwards"}));
+  anims.push(next.animate([{transform:`translateX(${D}px)`}, {transform:"translateX(0)"}], {duration:d, easing:ease, fill:"forwards"}));
+  anims.push(...regroup(d));
   const steps = setInterval(() => SFX.step(), 420 * SPEED);
   await Promise.all(anims.map(a => a.finished.catch(() => {})));
   clearInterval(steps);
@@ -1429,6 +1458,7 @@ async function marchTo(placeId, {guards = 0, pot = false, dur = 2600} = {}){
 const SLOTS = [...[140, 86, 32, -22, 194].map(x => ({x, foot:626, s:.9, z:5})), ...[166, 112, 58, 4, 220].map(x => ({x, foot:596, s:.76, z:2}))];
 function slotStyle(i){ const s = SLOTS[i] || SLOTS[SLOTS.length - 1]; return `left:${s.x}px;top:${s.foot - 204}px;transform:scale(${s.s});z-index:${s.z}`; }
 function renderParty(){
+  G.ahead = 0;
   $("#stage").style.setProperty("--banner", P.banner);
   $("#party").innerHTML = P.party.map((s, i) => `<div class="fig sol" data-i="${i}" style="${slotStyle(i)}">${soldierSVG(s, P.banner)}</div>`).join("") +
     `<div class="fig" id="herald" style="left:180px;top:406px;z-index:20">${heraldSVG()}</div>` +
@@ -1442,18 +1472,21 @@ function renderTroops(anim){
   t.innerHTML = `<svg viewBox="0 0 150 186" aria-label="${n} soldiers"><path d="M75 14 Q112 14 138 26 V86 Q138 142 75 170 Q12 142 12 86 V26 Q38 14 75 14 Z" fill="#D5DDEB" transform="translate(0 8)"/><path d="M75 14 Q112 14 138 26 V86 Q138 142 75 170 Q12 142 12 86 V26 Q38 14 75 14 Z" style="fill:var(--banner)"/><path d="M75 26 Q106 26 126 35 V86 Q126 134 75 158 Q24 134 24 86 V35 Q44 26 75 26 Z" fill="#fff"/><text class="num" x="75" y="${n >= 10 ? 112 : 118}" text-anchor="middle" font-family="Andika, sans-serif" font-weight="700" font-size="${n >= 10 ? 70 : 88}" style="fill:var(--banner)">${n}</text></svg>`;
   if (anim) { t.classList.remove("pop", "big"); void t.offsetWidth; t.classList.add(anim); }
 }
-async function retreat(){
-  const ck = guard$(), pty = $("#party");
-  SFX.wahwah(); say(["h_retreat"]);
-  pty.classList.add("walk");
-  await pty.animate([{transform:"translateX(0)"}, {transform:"translateX(-760px)"}], {duration:700 * SPEED, easing:"ease-in", fill:"forwards"}).finished.catch(() => {}); ck();
-  await wait(900); ck();
-  await narrate("st_retreat"); ck();
-  await pty.animate([{transform:"translateX(-760px)"}, {transform:"translateX(0)"}], {duration:1100 * SPEED, easing:"ease-out", fill:"forwards"}).finished.catch(() => {}); ck();
-  pty.getAnimations().forEach(a => a.cancel()); pty.classList.remove("walk");
-  await say(["h_try_again"]); ck();
-  if (PL) addGuards(3, PL.pot);
+/* Moving the army about: each figure keeps its place in the line-up (its base transform) and is shifted from there. */
+const figBase = f => f.dataset.base ?? (f.dataset.base = f.style.transform || "");
+const figAt = (f, dx = 0, dy = 0) => `translate(${dx}px, ${dy}px) ${figBase(f)}`;
+const armyFigs = () => $$("#party .fig.sol, #hero");
+/* After a win the army stands where the fight was. On the next march they fall back into line as they walk. */
+function regroup(d){
+  if (!G.ahead) return [];
+  const dx = G.ahead; G.ahead = 0;
+  return $$("#party .fig").map(f => {
+    const a = f.animate([{transform:figAt(f, dx)}, {transform:figAt(f)}], {duration:d, easing:"ease-in-out"});
+    f.style.transform = figBase(f);
+    return a;
+  });
 }
+function standInLine(){ G.ahead = 0; $$("#party .fig").forEach(f => { f.getAnimations().forEach(a => a.cancel()); f.style.transform = figBase(f); f.style.opacity = ""; }); }
 /* ---- road strip ---- */
 const ROAD_ICON = {
   village:`<svg viewBox="0 0 24 24" fill="#C0673A"><path d="M12 3.2 2.6 11a1 1 0 0 0 1.3 1.5l.6-.5V20a1 1 0 0 0 1 1h4.5v-6h4v6h4.5a1 1 0 0 0 1-1v-8l.6.5A1 1 0 0 0 21.4 11z"/></svg>`,
@@ -1499,7 +1532,7 @@ function morePair(){
 }
 function makeTask(spec){
   const opts = spec.map(([type, nouns, w]) => ({type, nouns, w:w * (type === G.lastType ? .5 : 1)}));
-  const pick = G.practice ? {type:G.practice.type, nouns:G.practice.type === "count" ? ["villagers","chickens"] : ["goblins","chickens"]} : weighted(opts);
+  const pick = G.practice ? {type:G.practice.type === "fewer" ? "more" : G.practice.type, nouns:G.practice.type === "count" ? ["villagers","chickens"] : ["goblins","chickens"]} : weighted(opts);
   G.lastType = pick.type;
   const L = LV(), noun = pick.nouns ? rand(pick.nouns) : null;
   if (pick.type === "find") {
@@ -1510,8 +1543,11 @@ function makeTask(spec){
     const t = pickTarget("q", activeNums("q"));
     return {type:"count", noun, target:t, cards:numberCards(t, L.cards, {near:L.near}).sort((a, b) => a - b), prompt:["how_many_" + noun], key:"q:" + t};
   }
+  // "which is more", or from level 3 now and then the other way round: "which has fewer"
   const [a, b] = morePair(), bigL = Math.random() < .5, trick = L.sizeTrick && Math.random() < 1 / 3;
-  return {type:"more", noun, sides:{L:bigL ? b : a, R:bigL ? a : b}, target:bigL ? "L" : "R", trick, prompt:["which_more_" + noun], key:"cmp"};
+  const fewer = G.practice ? G.practice.type === "fewer" : Math.random() < L.fewer, big = bigL ? "L" : "R";
+  return {type:"more", fewer, noun, sides:{L:bigL ? b : a, R:bigL ? a : b}, target:fewer ? (bigL ? "R" : "L") : big, trick,
+    prompt:[(fewer ? "which_fewer_" : "which_more_") + noun], key:fewer ? "cmpf" : "cmp"};
 }
 /* ---- laying out things to count ---- */
 function layout(noun, n, arrange, rect, scaleMul = 1){
@@ -1558,7 +1594,7 @@ function renderTask(t){
   }
   if (t.type === "more") {
     const sw = 282, sh = 300, rects = {L:{x:590, y:300}, R:{x:888, y:300}};
-    const big = t.target, small = big === "L" ? "R" : "L";
+    const big = t.sides.L > t.sides.R ? "L" : "R";              // the size trick draws the bigger crowd smaller
     $("#sides").innerHTML = ["L", "R"].map(sd => {
       const n = t.sides[sd], mul = t.trick ? (sd === big ? .72 : 1.15) : 1;
       const pos = layout(t.noun, n, n <= 3 && L.arrange === "row" ? "row" : "scatter", {x:22, y:26, w:sw - 44, h:sh - 52}, mul);
@@ -1810,17 +1846,99 @@ function dropStick(i){
   if (st) { st.style.transformBox = "fill-box"; st.style.transformOrigin = "50% 100%"; st.style.transition = `transform ${.5 * SPEED}s ease-in`; st.style.transform = "rotate(80deg)"; }
   g.classList.add("shake"); SFX.bonk();
 }
-async function clashAndFlee({fort = false} = {}){
-  const ck = guard$();
+/* ---- the fight ----
+   Both sides charge into one big dust cloud. The losers come out running, all together, the way the army marches;
+   the winners stay and cheer. Goblins who run off the edge of the screen are gone for good. */
+const gobPose = (x, y, s, flip = false) => flip ? `translate(${x + 60 * s}px, ${y - 146 * s}px) scale(${-s}, ${s})` : `translate(${x - 60 * s}px, ${y - 146 * s}px) scale(${s})`;
+const jit = a => (Math.random() * 2 - 1) * a;
+const ended = a => a.finished.catch(() => {});
+function settle(el, transform, opacity = ""){ el.getAnimations().forEach(a => a.cancel()); el.style.transform = transform; el.style.opacity = opacity; }
+/* Play keyframes, then keep the last one as the element's own style, so no finished animation is left holding it. */
+function tween(el, frames, opts){
+  const a = el.animate(frames, opts), last = frames[frames.length - 1];
+  return a.finished.then(() => { for (const k of ["transform", "opacity"]) if (k in last) el.style[k] = last[k]; a.cancel(); }, () => {});
+}
+function dustCloud(cx, cy){
+  const c = document.createElement("div"); c.className = "brawl"; c.style.left = cx - 290 + "px"; c.style.top = cy - 190 + "px";
+  c.innerHTML = `<svg viewBox="0 0 580 380">${[[170,150,80],[410,150,80],[290,110,90],[140,250,110],[440,250,110],[290,210,140],[90,310,70],[490,310,70],[200,300,90],[380,300,90]]
+    .map(([x, y, r]) => `<circle class="dp" cx="${x}" cy="${y}" r="${r}" fill="#F4EBDD" stroke="#E0D2B8" stroke-width="5"/>`).join("")}</svg>`;
+  $("#fx").appendChild(c);
+  c.animate([{transform:"scale(.2)", opacity:0}, {transform:"scale(1)", opacity:1}], {duration:380 * SPEED, easing:"ease-out"});
+  return c;
+}
+async function battle(win, {fort = false} = {}){
+  const ck = guard$(), E = G.edge, pty = $("#party");
   await say(["h_charge"]); ck();
-  const cloud = document.createElement("div"); cloud.className = "dust"; cloud.style.left = "700px"; cloud.style.top = fort ? "230px" : "330px";
-  cloud.innerHTML = `<svg viewBox="0 0 360 260">${[[90,150,70],[180,120,86],[270,150,70],[140,190,60],[230,194,62],[180,80,50]].map(([x, y, r]) => `<circle class="dp" cx="${x}" cy="${y}" r="${r}" fill="#F4EBDD" stroke="#E0D2B8" stroke-width="4"/>`).join("")}</svg>`;
-  $("#fx").appendChild(cloud);
-  for (let k = 0; k < 3; k++) { SFX.bonk(); starBurst(870, fort ? 330 : 440); await wait(380); ck(); }
-  $$("#guards .gob, #placeWrap .boss").forEach(g => g.classList.add("flee"));
-  await wait(1100); ck(); cloud.remove();
-  const f = $("#placeWrap .ourflag"); if (f) { f.style.opacity = 1; f.parentNode.classList.add("flagup"); SFX.flag(); }
-  await wait(500); ck();
+  // where the two sides meet, in stage pixels: the middle of the road, or a fort's gate
+  const cx = fort ? 560 + (PL.gate || [310])[0] - 40 : 700, foot = 612, cy = foot - 150;
+  const gobs = $$("#guards > g").map(g => ({g, x:+g.dataset.x, y:+g.dataset.y, s:+g.dataset.s, ix:cx - 560 + 60 + jit(90), iy:foot - 140 + jit(14)}));
+  const bosses = $$("#placeWrap .boss").map(b => b.parentNode);
+  const army = armyFigs().map(f => ({f, x:f.offsetLeft + f.offsetWidth / 2, y:f.offsetTop + f.offsetHeight}));
+  army.forEach(a => { a.dx = cx - 60 + jit(110) - a.x; a.dy = foot + jit(12) - a.y; });
+  const cloud = dustCloud(cx, cy);
+  // the charge: everyone runs in and disappears into the dust
+  pty.classList.add("walk");
+  gobs.forEach(o => { const in_ = o.g.querySelector(".gob"); in_.classList.remove("shake"); in_.classList.add("run"); });
+  const T = 750 * SPEED;
+  await Promise.all([
+    ...army.map(({f, dx, dy}) => tween(f, [{transform:figAt(f), opacity:1}, {transform:figAt(f, dx * .8, dy * .8), opacity:1, offset:.7}, {transform:figAt(f, dx, dy), opacity:0}], {duration:T, easing:"ease-in"})),
+    ...gobs.map(o => tween(o.g, [{transform:gobPose(o.x, o.y, o.s), opacity:1}, {transform:gobPose(o.x + (o.ix - o.x) * .8, o.y + (o.iy - o.y) * .8, o.s), opacity:1, offset:.7},
+      {transform:gobPose(o.ix, o.iy, o.s), opacity:0}], {duration:T, easing:"ease-in"}))
+  ]); ck();
+  pty.classList.remove("walk");
+  for (let k = 0; k < 4; k++) {
+    SFX.bonk(); starBurst(cx + jit(170), cy + jit(80));
+    cloud.animate([{transform:"scale(1)"}, {transform:`scale(1.05) rotate(${jit(3)}deg)`}, {transform:"scale(1)"}], {duration:330 * SPEED});
+    await wait(340); ck();
+  }
+  const clear = tween(cloud, [{opacity:1, transform:"scale(1)"}, {opacity:0, transform:"scale(1.25)"}], {duration:600 * SPEED, easing:"ease-out"}).then(() => cloud.remove());
+  if (win) {
+    // the goblins burst out of the cloud and run off the right-hand edge, all together; then they are gone
+    const off = E.right - 560 + 140, AHEAD = fort ? 250 : 300;
+    const runs = [
+      ...gobs.map((o, i) => tween(o.g, [{transform:gobPose(o.ix, o.iy, o.s, true), opacity:0}, {transform:gobPose(o.ix + 50, o.iy, o.s, true), opacity:1, offset:.12},
+        {transform:gobPose(off + i * 60, o.iy, o.s, true), opacity:1}], {duration:1500 * SPEED, easing:"ease-in"})),
+      ...bosses.map(b => { const x = +b.dataset.x, y = +b.dataset.y, s = +b.dataset.s; b.firstElementChild.classList.add("run");
+        return tween(b, [{transform:`translate(${x + 160 * s}px, ${y}px) scale(${-s}, ${s})`}, {transform:`translate(${off + 220}px, ${y}px) scale(${-s}, ${s})`}], {duration:1800 * SPEED, easing:"ease-in"}); })
+    ];
+    // our army comes out where the fight was; the herald hurries up to join them
+    army.forEach(({f, dx, dy}) => { settle(f, figAt(f, AHEAD)); f.animate([{transform:figAt(f, dx, dy), opacity:0}, {transform:figAt(f, AHEAD), opacity:1}], {duration:650 * SPEED, easing:"ease-out"}); });
+    const h = $("#herald"); settle(h, figAt(h, AHEAD)); h.classList.add("hurry");
+    const hw = ended(h.animate([{transform:figAt(h)}, {transform:figAt(h, AHEAD)}], {duration:900 * SPEED, easing:"ease-in-out"})).then(() => h.classList.remove("hurry"));
+    G.ahead = AHEAD;
+    await Promise.all([...runs, clear, hw]); ck();
+    $("#guards").innerHTML = ""; bosses.forEach(b => b.remove());
+    pty.classList.add("cheer"); SFX.cheer();
+    const f = $("#placeWrap .ourflag"); if (f) { f.style.opacity = 1; f.classList.add("flagup"); SFX.flag(); }
+    await wait(1500); ck();
+    pty.classList.remove("cheer");
+    return;
+  }
+  // lost: our army bursts out of the cloud and runs home, all together, and the goblins cheer
+  SFX.wahwah(); say(["h_retreat"]);
+  const R = Math.ceil(560 - E.left), home = [$("#herald"), $("#troops")].filter(Boolean);
+  pty.classList.add("walk");
+  const outs = [
+    ...army.map(({f, dx, dy}) => { settle(f, figAt(f, -R)); return ended(f.animate([{transform:figAt(f, dx, dy), opacity:0}, {transform:figAt(f, dx * .7 - 60, dy * .7), opacity:1, offset:.2}, {transform:figAt(f, -R), opacity:1}], {duration:1300 * SPEED, easing:"ease-in"})); }),
+    ...home.map(el => { settle(el, figAt(el, -R)); return ended(el.animate([{transform:figAt(el)}, {transform:figAt(el)}, {transform:figAt(el, -R)}], {duration:1300 * SPEED, easing:"ease-in"})); })
+  ];
+  gobs.forEach(o => {
+    const in_ = o.g.querySelector(".gob"); in_.classList.remove("run", "shake"); in_.classList.add("hop"); delete in_.dataset.dropped;
+    const st = in_.querySelector(".stick"); if (st) st.style.transform = "";                      // sticks back up
+    settle(o.g, gobPose(o.x, o.y, o.s)); o.g.animate([{transform:gobPose(o.ix, o.iy, o.s), opacity:0}, {transform:gobPose(o.x, o.y, o.s), opacity:1}], {duration:700 * SPEED, easing:"ease-out"});
+  });
+  bosses.forEach(b => b.firstElementChild.classList.add("hop"));
+  await Promise.all([...outs, clear]); ck();
+  pty.classList.remove("walk");
+  await wait(700); ck();
+  await narrate("st_retreat"); ck();
+  // back they come, ready to try again
+  pty.classList.add("walk");
+  await Promise.all([...army.map(a => a.f), ...home].map(el => { settle(el, figAt(el)); return ended(el.animate([{transform:figAt(el, -R)}, {transform:figAt(el)}], {duration:1200 * SPEED, easing:"ease-out"})); })); ck();
+  pty.classList.remove("walk");
+  bosses.forEach(b => b.firstElementChild.classList.remove("hop"));
+  if (PL) addGuards(3, PL.pot);
+  await say(["h_try_again"]); ck();
 }
 function starBurst(x, y){
   for (let i = 0; i < 6; i++) {
@@ -1861,10 +1979,10 @@ async function runSkirmish(spec, arriveLine, wonLine, {raid = false} = {}){
   ck();
   for (;;) {
     const first = await runSet(spec, i => dropStick(i)); ck();
-    if (first * 2 >= setSize()) break;
-    await retreat(); ck();
+    const won = first * 2 >= setSize();
+    await battle(won); ck();
+    if (won) break;
   }
-  await clashAndFlee(); ck();
   await say(["h_ran_away"]); ck();
   if (wonLine) { await narrate(wonLine); ck(); }
 }
@@ -1917,15 +2035,15 @@ async function runSiege(stop){
   addGuards(3, PL.pot);
   for (;;) {
     const first = await runSet(T_ASSAULT, i => dropStick(i)); ck();
-    if (first * 2 >= setSize()) break;
-    await retreat(); ck();
+    const won = first * 2 >= setSize();
+    if (won && S.ram) {                                      // BOOM… BOOM… CRASH! and the gate falls flat
+      const r = $("#ram");
+      for (let k = 0; k < 3; k++) { r.animate([{transform:"translateX(0)"}, {transform:"translateX(30px)"}, {transform:"translateX(0)"}], {duration:420 * SPEED}); SFX.boom(); await wait(460); ck(); }
+      const gate = $("#placeWrap .gate"); if (gate) { gate.style.transformBox = "fill-box"; gate.style.transformOrigin = "50% 100%"; gate.style.transition = `transform ${.5 * SPEED}s ease-in`; gate.style.transform = "scaleY(.06)"; }
+    }
+    await battle(won, {fort:true}); ck();
+    if (won) break;
   }
-  if (S.ram) {
-    const r = $("#ram");
-    for (let k = 0; k < 3; k++) { r.animate([{transform:"translateX(0)"}, {transform:"translateX(30px)"}, {transform:"translateX(0)"}], {duration:420 * SPEED}); SFX.boom(); await wait(460); ck(); }
-    const gate = $("#placeWrap .gate"); if (gate) { gate.style.transformBox = "fill-box"; gate.style.transformOrigin = "50% 100%"; gate.style.transition = `transform ${.5 * SPEED}s ease-in`; gate.style.transform = "scaleY(.06)"; }
-  }
-  await clashAndFlee({fort:true}); ck();
   await say(["h_fort_ours"]); ck();
   await narrate(stop.won); ck();
 }
@@ -2047,7 +2165,7 @@ async function makeCamp(){
   const ck = guard$();
   hideTask(); hideCaption();
   await narrate(rand(["st_camp_1","st_camp_2","st_camp_3"])); ck();
-  renderLand("night"); renderCamp();
+  renderLand("night"); standInLine(); renderCamp();
   SFX.crackle();
   await say(["h_make_camp"]); ck();
   if (P.party.length) { renderTroops("big"); await say(["we_have", "num_" + P.party.length, "w_soldiers"]); ck(); }
@@ -2077,7 +2195,7 @@ $("#marchBtn").addEventListener("click", () => { ensureAudio(); SFX.tap(); $("#m
 async function practice(type, level){
   const ck = guard$();
   G.practice = {type, level};
-  renderLand("meadow"); renderParty(); $("#road").innerHTML = ""; hideTask(); $("#marchBtn").hidden = true; setPlace("millbrook");
+  renderLand("meadow"); renderParty(); $("#road").innerHTML = ""; hideTask(); hideCaption(); $("#marchBtn").hidden = true; setPlace("millbrook");
   await say(["h_forward_march"]); ck();
   await runSet([[type, null, 1]]); ck();
   G.practice = null;
@@ -2344,7 +2462,7 @@ function whereText(E){
   if (E.blocked) return `Chapter ${ch.n} done. The road to chapter ${ch.n + 1} opens at level ${CHAPTERS[E.ch + 1].level} (now ${E.level}); until then, raids.`;
   return `Chapter ${ch.n}, stop ${E.stop + 1} of ${ch.stops.length}: ${ch.stops[E.stop].name}.`;
 }
-const LEVEL_TEXT = {1:"numbers 1–3, 3 cards with dots, things in a row", 2:"numbers 1–5, dots, dice patterns", 3:"numbers 1–7, 4 cards, no dots, scattered, size trick", 4:"numbers 1–10, close amounts"};
+const LEVEL_TEXT = {1:"numbers 1–3, 3 cards with dots, things in a row", 2:"numbers 1–5, dots, dice patterns", 3:"numbers 1–7, 4 cards, no dots, scattered, size trick, sometimes “which has fewer”", 4:"numbers 1–10, close amounts"};
 function renderParent(){
   const E = profById(state.editId) || state.profiles[0], who = E.name || "your child";
   const r = E.recent.slice(-UP_WINDOW), score = Math.round(avg(r) * 100);
@@ -2379,7 +2497,7 @@ function renderParent(){
     <p class="note">Each chapter needs its level before the road opens. Inside a chapter, the tasks follow the player's level. Tap a task to try it; practice doesn't count.</p>
     ${CHAPTERS.map((c, i) => `<div class="chrow${i === E.ch ? " cur" : ""}"><b>${c.n} · ${esc(c.name)}</b><span class="small">level ${c.level}</span>
       <span class="small">${c.stops.length} stops · ${LEVEL_TEXT[c.level]}</span>
-      <div class="achips">${[["find","Find the number"],["count","Count them"],["more","Which is more?"]].map(([t, l]) => `<button type="button" class="achip" data-try="${t}" data-lv="${c.level}">${l}</button>`).join("")}</div></div>`).join("")}
+      <div class="achips">${[["find","Find the number"],["count","Count them"],["more","Which is more?"], ...(c.level >= 3 ? [["fewer","Which is fewer?"]] : [])].map(([t, l]) => `<button type="button" class="achip" data-try="${t}" data-lv="${c.level}">${l}</button>`).join("")}</div></div>`).join("")}
   </div>
 
   <div class="sec">
@@ -2394,7 +2512,7 @@ function renderParent(){
     <p class="note">First-try answers out of all answers: green is 80% or more, yellow 50–79%, red below 50%. The small number is the review box (0–5): right first time on its review day moves it up a box, so it comes back later (next day, 2, 4, 10, then 21 days); a miss sends it back to box 1.</p>
     <h3>Counting (how many)</h3>${progressTiles(E, "q:", range(1, 10))}
     <h3>Numerals (find the number)</h3>${progressTiles(E, "n:", range(1, 10))}
-    <p class="small" style="margin-top:10px">Which is more: ${E.stats.cmp ? `${E.stats.cmp.f} of ${E.stats.cmp.n} right first time` : "not played yet"}.</p>
+    <p class="small" style="margin-top:10px">Which is more: ${E.stats.cmp ? `${E.stats.cmp.f} of ${E.stats.cmp.n} right first time` : "not played yet"}. Which is fewer (from level 3): ${E.stats.cmpf ? `${E.stats.cmpf.f} of ${E.stats.cmpf.n} right first time` : "not played yet"}.</p>
     <p class="small">The army: ${E.party.length} soldier${E.party.length === 1 ? "" : "s"}${E.party.length ? `, ${E.party.filter(s => s.gear >= 3).length} fully kitted out` : ""}. Camp treasures: ${E.treasures.length ? E.treasures.map(t => TREASURE_NAMES[t]).join(", ") : "none yet"}${E.extras ? ` and ${E.extras} extra flag${E.extras > 1 ? "s" : ""}` : ""}.</p>
     <div style="margin-top:12px"><button class="btn danger" id="resetStats">Start the campaign over for this player</button></div>
   </div>
@@ -2593,7 +2711,7 @@ store.open().then(ok => { if (storeOk !== false) storeOk = ok; if ($("#parent").
 applyDigits();
 save();
 document.addEventListener("gesturestart", e => e.preventDefault());
-if (/[#&]test\b/.test(location.hash)) window.NK = {G, state, get P(){ return P; }, CHAPTERS, LEVELS};
+if (/[#&]test\b/.test(location.hash)) window.NK = {G, state, get P(){ return P; }, CHAPTERS, LEVELS, makeTask, practice, run, get CLIPS(){ return CLIPS; }};
 })();
 </script>
 </body>

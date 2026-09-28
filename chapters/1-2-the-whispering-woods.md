@@ -76,7 +76,8 @@ As in chapter 1, using the shared camp lines. The lantern (and the puppy, if cha
 fire.
 
 ## 5 · The Babbling Brook (skirmish)
-*A bubbling stream with stepping stones, and goblins sitting on the stones, dangling their feet.*
+*A bubbling stream crosses the road on a slant. Stepping stones carry the road over it, and the goblins stand on
+them.*
 - **N:** "At the babbling brook, goblins sat on the stepping stones." `st1_2_11`
 - ★★ More: goblins on two banks · ★ Count goblins · ★ Find
 - **Won:** **N:** "Splish, splash! The goblins hopped away across the stones." `st1_2_12`

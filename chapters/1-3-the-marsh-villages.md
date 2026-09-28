@@ -30,6 +30,7 @@ things to count are **scattered**. Conventions are as in [chapter 1](1-1-the-bor
 | **Find the number** | 1–7 | Banners | 4 banners, **no dots** (dots appear only as help after a miss) |
 | **Count them** | 1–7, **scattered** | In the scene | 4 shields; wrong choices can be next door |
 | **Which is more?** | At least **1½ times** as many (2 vs 3, 4 vs 6, up to 9). **Size trick:** a third of the time, the side with more has smaller things | Two sides | Tap a side |
+| **Which has fewer?** (new) | As Which is more; about a third of the comparisons ask this way round | Two sides | Tap a side |
 
 - **Look-alikes:** 6 and 9 aren't used yet (the top is 7). 2/5 and 1/7 never share a board in arc 1.
 
@@ -119,5 +120,6 @@ As before.
   - `h_boats_back`
   - `how_many_frogs`, `how_many_boats`
   - `which_more_frogs`, `which_more_boats`, `which_more_ducks` (already used in chapter 1)
+  - "Which side has fewer…?" for every noun used from here on (`which_fewer_goblins`, `which_fewer_frogs`, …)
   - `w_frogs`, `w_boats`
 - **Narrator:** `st1_3_01` … `st1_3_20`, `st1_3_r1` … `st1_3_r4`. That's 24 lines.

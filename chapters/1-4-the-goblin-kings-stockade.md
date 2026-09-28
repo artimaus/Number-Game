@@ -30,6 +30,7 @@ battering ram**, a small step up that previews arc 2. Conventions are as in [cha
 | **Find the number** | 1–10 | Banners | 4 banners, no dots |
 | **Count them** | 1–10, scattered | In the scene | 4 shields, next-door choices |
 | **Which is more?** | Close amounts (4 vs 5, 8 vs 10) · size trick | Two sides | Tap a side |
+| **Which has fewer?** | As Which is more, about a third of the comparisons | Two sides | Tap a side |
 
 - **Look-alikes:** 6 and 9 never share a board in arc 1 (they're allowed together from arc 2).
 
@@ -106,9 +107,9 @@ beside him.*
 **Assault**
 - ★★ Count goblins on the wall · ★ More (two towers) · ★ Find
 - **Won:**
-  - The ram swings: *BOOM… BOOM… CRASH!* The gate falls flat, soldiers swarm the ladders, and a dust cloud rolls
-    along the wall.
-  - Goblins pour out the back. Grubbins's crown falls off; he grabs it and runs, with Snagglenose behind him.
+  - The ram swings: *BOOM… BOOM… CRASH!* The gate falls flat, and the army and the goblins from the wall all run
+    into one dust cloud at the gate.
+  - The goblins burst out and run off to the right, and Grubbins and Snagglenose run along the wall after them.
   - **H:** "Hooray! The fort is ours!" `h_fort_ours`
   - **N:** "Grubbins the Great ran all the way over the mountains, and the goblins never bothered the border
     again." `st1_4_16`
