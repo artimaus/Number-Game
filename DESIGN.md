@@ -245,6 +245,9 @@ recordable, importable by file name, and backed up. **Two roles:**
 
 ## 7. Look and sound
 
+- **Style sheet (draft for approval):** https://claude.ai/artifact/Q7wWZQ5H31hpSnMkZWWkpD. It has the march screen at
+  Millbrook with a count task, the characters, places, cards and states, and colours and type. The hero has tweaks
+  for prince or princess, banner colour, skin and hair.
 - **Art:** flat, chunky SVG drawn in code, recoloured with CSS variables.
   - Characters: hero (prince or princess), herald, villager/soldier with gear layers, goblin, goblin king, troll,
     troll king.
@@ -256,6 +259,8 @@ recordable, importable by file name, and backed up. **Two roles:**
 - **Numerals:** Andika (already embedded in Letter Hunt). Its subset keeps alternate digit shapes: `cv01` (plain
   stick 1), `cv04` (open 4), `cv06`/`cv09` (straight-stem 6 and 9) and `cv07` (7 with a bar). A grown-up setting can
   pick "school-style" or "book-style" digits for one line of CSS.
+  Letter Hunt's embedded subset has + and = but not the true minus sign (U+2212), so it needs adding when the font is
+  re-subset.
 - **Sound:** synthesised, as in Letter Hunt.
   - A trumpet fanfare before commands, and a "wah-wah" toot for a miss.
   - Marching drums (optional music).
