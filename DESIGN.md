@@ -1,323 +1,321 @@
-# Number Game: design draft
+# Number Knights: design
 
-A draft to talk through before building. Everything here is up for change; the questions at the end are the
-ones that shape the most.
+Maths for toddlers through 3rd grade, played as a young prince or princess leading an army in a righteous cause.
+Built on Letter Hunt's tablet framework.
 
-**The idea:** a sibling to Letter Hunt. It uses the same tablet framework, the same grown-up panel and the same "a
-grown-up's voice asks, the child taps" loop. The content is numbers and early maths, from "tap the ducks to count
-them" at about age 2 up to first-grade work: sums within 20, tens and ones, and numbers to 120.
+**Status:** the brainstorm decisions are recorded in §2. The two linear arcs (§5) are being designed in detail and
+built first. Later arcs (§11) are a rough framework for the future. Items marked *(proposal)* haven't been agreed
+yet.
 
 ---
 
-## 1. What we keep from Letter Hunt
+## 1. The game in a paragraph
 
-Letter Hunt's framework is already built for toddlers on a tablet, so we keep almost all of it:
+The child is Prince or Princess *(name)*, sent to protect the kingdom's border. With a trumpet-blowing herald at
+their side, they march from village to village. At each stop the herald shouts maths commands: "Find the banner with
+4!", "How many goblins?", "Find the plus!". Every right answer brings a reward: a villager joins the army, a
+ladder is built, a goblin camp is scattered. Foes are never hurt. They drop their spears and run. Soldiers are never
+lost; if a battle goes badly, the army scampers back to camp and tries again. The story runs through five arcs, and
+the play space opens up from a single road, to forks, to a full campaign map.
 
-| Letter Hunt piece | Keep? | Notes |
+## 2. Decisions so far
+
+| Topic | Decision |
+|---|---|
+| Name | **Number Knights** |
+| Hero | Prince or princess, picked when the player is set up; carries the player's name |
+| Tone | Foes flee; storybook dust-cloud clashes; freed towns cheer. No harm shown |
+| Enemies | Different per story beat: goblins and trolls on the border → the usurping uncle or aunt → an invading foreign kingdom |
+| Maths range | From counting to 5 (about age 2) through 3rd grade (times tables, light division) |
+| Arcs | 5 arcs: 2 linear, 2 with forks, 1 full map (§3) |
+| Maths ↔ action | **Themed card tasks:** Letter-Hunt-style tasks dressed in the theme. The stop decides the reward |
+| Stop ↔ task | **Loose match:** each stop favours tasks that fit its story; any task can appear |
+| Reward | **Each first-try right answer adds one** (a recruit, a ladder…). A set with misses still gives a smaller reward, never nothing |
+| Army display | Border arcs: a party of up to 20. Usurper arcs: companies of ten. Invasion: companies plus unit types |
+| Troops lost | **Never.** A failed attack plays a comic retreat, then a retry with fresh problems (map arc: back to the map) |
+| Battle fail | Fewer than half the set right on the first try |
+| Set size | Grows by arc: 3 tasks per stop in arc 1, up to 6–8 in arc 5 |
+| Chapter length | About 8–10 stops |
+| Progress | Adaptive difficulty inside each stop; the story moves on only on success |
+| Pacing | When the maths isn't ready for the next chapter, the road ahead is blocked and **goblins raid freed villages behind you** |
+| Sittings | **Make camp** after a set number of stops (a grown-up setting) |
+| Linear view | **Marching scene** (side view), no map until the fork arcs |
+| Siege equipment | Built **only when sieging a fort or castle**. Each build round makes one piece, or one group such as ladders. Nothing travels with the party |
+| Voices | A **herald** (commands, praise, gentle "not quite"s; robot voice if not recorded) and an optional **narrator** (story; silent if not recorded, text always shown). Each can be recorded by a different person |
+| Art | Simple custom SVG |
+| Herald | A round, cheerful trumpet herald: fanfare before each command, a sad little "wah-wah" toot for a miss |
+| Build order | Linear → forks → full map. Get the linear game really dialled in first |
+
+## 3. The five arcs
+
+| # | Arc | Story | Play space | Maths | Army | Tasks per stop |
+|---|---|---|---|---|---|---|
+| 1 | **The Goblin Border** | Sent to guard the border villages from goblin raiders | Linear march | Counting and numerals to 10; more or less | Party, up to 10 *(proposal)* | 3 |
+| 2 | **The Troll Hills** | Trolls block the hill passes; a troll king in his keep | Linear march | Numbers to 20; the signs + − =; first adding within 5 | Party, up to 20 | 4 |
+| 3 | **The Stolen Crown** | Coming home to find the uncle/aunt has seized the throne; rallying loyal towns | Forks (pick one of two) | Adding and taking away within 10 | Companies of ten | 5 |
+| 4 | **Siege of the Capital** | Retaking the kingdom, castle by castle, ending at the capital | Forks | Within 20; tens and ones; 2-digit numbers | Companies of ten | 6 |
+| 5 | **The Invasion** | A foreign kingdom invades; drive them back | Full map | Within 100 → equal groups → times tables → light division | Companies + unit types | 6–8 |
+
+**Story sketch** *(proposal)*: the king and queen sail off on a peace voyage and leave the hero's uncle (or aunt) as
+steward. The steward sends the young hero to the goblin border, "for experience", really to get them out of the
+way. Arc 2 ends with a messenger: "Come home! The crown has been stolen!" Arc 4 ends with the capital retaken and the
+king and queen home. In arc 5 the family stands together against the invaders.
+
+## 4. How play works
+
+### The loop
+A **chapter** is a road of about 8–10 **stops**. At each stop the herald gives a **set** of card tasks (3 in arc 1).
+The stop decides what the answers earn:
+
+| Stop | Each first-try right answer… | Can it fail? |
 |---|---|---|
-| One self-contained offline HTML file (fonts embedded, no network) | Yes | `Number-Game.html`. Opens from a file, a web address, or a Claude artifact. |
-| Screens: start → players → play → party, plus a collection and the grown-up panel | Yes | Same flow and the same big, chunky buttons. |
-| Long press counts as a tap; ghost taps are swallowed; no long-press menu, pinch or scroll | Yes | Copied as is. |
-| Hold the gear for 1.5 s to open grown-up settings | Yes | |
-| `say([...])`: joins recorded clips, with the robot voice filling any gaps | Yes | Numbers are built from clips ("twenty" + "three"). |
-| Recording: step-by-step guide, waveform, auto-trim, import files by name, backup/restore | Yes | New clip list (§10). |
-| Synthesised sound effects, optional music | Yes | Plus a rising note for each count (§11). |
-| Profiles, levels, sets of 3–5 rounds with stars, level up at 85% / down quietly at 50% | Yes | Plus a start level by age and a faster climb (§6). |
-| Guess detection (a wrong tap < 0.7 s after the question) | Yes | |
-| Review boxes (spaced repetition) and the known-sounds pool | Yes | Tracked per number and per maths fact instead (§7). |
-| Help after a miss: fade some wrong cards, then pulse the right one | Changed | Second help becomes "let's count together" (§8). |
-| The question repeats after 12 s; cards stay locked while it's spoken | Yes | |
-| "Which game do you want to play?" now and then; Take a break; full screen; dark mode | Yes | |
-| Level map with try-it chips; progress tiles in green/yellow/red | Yes | Plus an addition-facts grid (§9). |
-| Letter collection (letters "wake up") | Changed | Becomes the number collection (§11). |
-| Spell my name (a personal button that unlocks) | Changed | Becomes the birthday cake (§11). |
+| Village | …brings a recruit (at the party cap: gives a soldier a new piece of gear, §5.5) | No: at least one recruit per visit |
+| Goblin camp / troll bridge (a skirmish) | …pushes the foes back; half or more right and they flee | Yes: comic retreat, then a retry with fresh problems |
+| Fort or castle, **build** rounds | …adds a piece: a ladder, a ram part… | No: at least one piece per round |
+| Fort or castle, **assault** round | …as a skirmish, using what was built | Yes: retreat and retry; what was built stays built |
+| Raid (a freed village attacked again) | …as a skirmish; the villagers cheer and send a gift | Yes |
 
-Build approach: **fork the file, not a shared library.** Copy the framework, rename the storage keys
-(`numbergame.v1`, IndexedDB `numbergame`), and keep function names parallel (`say`, `ask`, `nextRound`,
-`logStep`, `checkLevel`…) so a fix in one game ports easily to the other.
+"Right" means right **on the first try**. Every task still ends with the right answer found (with help, as in Letter
+Hunt), so nothing is left unresolved. First tries only decide the size of the reward and whether a battle is won.
 
-## 2. What's different about numbers
+### Failure is funny, never costly
+Fewer than half right first time in a battle set: the herald toots "wah-wah", and the army runs back to camp with
+speed lines and dust puffs. "Retreat! …Let's try again!" A fresh set of problems follows at the same stop. No
+soldier, ladder or freed village is ever lost.
 
-1. **The robot voice can say numbers.** In Letter Hunt it can't say single sounds, so recordings were close to
-   essential. Here the robot voice covers everything, and recordings are a warmth upgrade. One exception is
-   *tap to count*: the robot voice lags a little on some tablets, and counting has to keep up with the finger. So
-   the recording guide should put numbers 1–10 first.
-2. **The content is quantity, not only symbols.** A letter is a shape and a sound. A number is a shape, a word *and
-   an amount*. So most games need a **scene** (ducks in a pond, carrots on a plate) as well as the card grid. The
-   grid stays as the answer picker; the top "target" area becomes the stage.
-3. **Two kinds of knowing grow separately.** Knowing *how many* (quantity) and *which numeral* (symbol) are
-   tracked apart, just as Letter Hunt keeps letter names and sounds apart. First-grade work adds a third kind:
-   maths facts.
-4. **The age range is wide** (about 2 to 7). A 5-year-old shouldn't have to climb through ten toddler levels.
-   So there's a start level by age and a faster climb for players who are clearly past a level.
-5. **Mistakes carry meaning.** Counting a duck twice, or stopping at 4 when asked for 3, tells us exactly what the
-   child doesn't yet get (one-to-one counting, and knowing that the last number said is "how many"). The games are
-   built so these mistakes can happen and get gentle, specific help.
+### Pacing: the road waits for the maths
+Difficulty follows Letter Hunt's adaptive levels: up at 85% of first tries over 10 sets, down quietly below 50%
+over 6. **Each chapter needs a level** (§5.4). A chapter is about 10 sets, the same as the level-up window, so a
+child who is ready moves through story and maths together.
 
-## 3. The learning path (what the levels follow)
+If the chapter's fort falls but the child isn't at the next chapter's level yet:
+- The road ahead is **blocked** (a fallen tree, thick fog, a broken bridge). The herald says "We'll find a way
+  soon!"
+- Each sitting then offers **raids**: goblins are back at a village you already freed. March back, drive them off,
+  and the villagers cheer and send a gift.
+- When the level arrives: "The woodcutters cleared the road!" and the march goes on.
 
-This is the standard early-numeracy progression. Each step builds on the one before:
+A toddler can spend months on one maths stage, so **most toddler play time will be raids**. Raids need variety
+(§5.2).
 
-1. **Seeing small amounts at a glance** (1–3, then to 5): "that's 2" without counting.
-2. **Saying the counting words in order**: 1–10, then 20, later 100 and 120.
-3. **One-to-one counting**: one number per thing, each thing counted once.
-4. **The last number counted is how many.** This is the big milestone around 3½–4. It's tested by "give me N"
-   (hand over exactly N) rather than "count these".
-5. **Numerals**: knowing the written 1–10, then 0–20, then 2-digit numbers.
-6. **Comparing**: more, fewer, the same; which number is bigger.
-7. **Order**: what comes next or before; counting on from a number; counting back.
-8. **Taking numbers apart and putting them together**: 5 is 2 and 3; ten-frames; pairs that make 10.
-9. **Adding and taking away**: first as stories with things, then as number sentences. Within 5 → 10 → 20.
-10. **Tens and ones**: 34 is 3 tens and 4 ones; 10 more, 10 less; counting to 120.
+### Sittings: make camp
+After a set number of stops (a grown-up setting, default 4 *(proposal)*), the army **makes camp**. There's a
+campfire, the herald counts the troops (each soldier lights up with a number), and "Rest now, brave Prince Leo!".
+With Letter Hunt's "Take a break" on, the game then waits for a grown-up. Otherwise a "Keep marching" button
+appears. The next sitting opens with "Wake up! The march goes on!".
 
-Kindergarten and first-grade standards also cover shapes, time, money and measuring. **This draft is numbers only**
-(open question 2).
+## 5. The linear arcs in detail
 
-## 4. How a child acts on the screen
+### 5.1 The marching scene
+- **Layout (landscape):** a side-view landscape fills the screen. The top bar has the home button, the herald's
+  "hear it again" button and pips for the set. The party stands on the road on the left; the stop fills the right.
+  During a task, the answer cards rise into a band along the bottom. In portrait, the scene is the top ~45% and the
+  cards sit below it.
+- **The march:** parallax layers (sky, far hills, trees, road) scroll left for about 3–4 s while the party walks
+  with a bobbing step. The hero leads with the player's banner colour; the herald waddles beside them; soldiers
+  follow in one or two rows. Tapping hurries the march. The next stop slides in from the right.
+- **Arriving:** the party halts. A storybook caption appears at the top ("The village of Millbrook! The villagers
+  wave hello.") and the narrator clip plays if one is recorded. Then comes the herald's fanfare and the first
+  command.
+- **During tasks:** things to count appear *in the scene* (goblins peeking over a fence, sheep in a field,
+  villagers waving). Answer cards are themed props: **shields** (numerals), **banners** (numerals), **signposts**
+  (signs), **camps** (two groups to compare).
+- **Leaving:** the stop's result plays (recruits march over and join, goblins flee, a flag goes up), then the march
+  resumes.
+- **Chapter road:** a thin strip under the top bar shows the chapter's stops as little icons (village, tents, fort),
+  with the party's banner moving along it, like a board-game path in miniature. It shows progress without being a
+  map.
 
-Letter Hunt has tap-a-card plus one drag game. Numbers need a few more kinds of touch, all big and forgiving:
+### 5.2 Stops (arcs 1–2)
+- **Village (recruit).** Villagers wave from their doorways. Favoured tasks: count them (villagers, sheep, apples on
+  a cart), find the number (house numbers), which is more (two carts). Each first-try right answer: a villager
+  marches over, gets a spear and joins, and the herald counts the party ("7 soldiers!").
+- **Goblin camp (skirmish).** Tents and a little palisade, goblins with big ears and pointy spears. Favoured tasks:
+  which camp has more goblins, how many goblins. Win: a dust-cloud clash with stars flying, then goblins drop their
+  spears and scamper off to the right. Your flag goes up.
+- **Troll bridge (arc 2 skirmish).** A troll under a stone bridge: "Nobody crosses MY bridge!" The herald answers
+  with maths. Win: the troll grumbles and stomps away into the hills.
+- **Fort siege (chapter end).** Two or more sets at one stop:
+  - *Arc 1 (goblin stockade):* build **ladders** (each right answer leans another ladder against the wall), then
+    **assault**.
+  - *Arc 2 (troll keep):* build **ladders**, then a **battering ram** (each right answer adds a part: log, wheels,
+    roof, iron head), then **assault**.
+  - The assault shows the built gear in action: ladders go up, the ram bangs the gate, the goblins flee out the back
+    gate.
+  - The gear stays at the fort afterwards; nothing travels on.
+- **Raid (pacing).** A freed village behind you, with goblins back. Variety for the long toddler stretches: goblins
+  stealing sheep (count them home), goblins in the orchard (apples), goblins on the mill roof, goblins hiding in the
+  haystacks. Win: villagers cheer and send a gift (a recruit or a piece of gear). The raid's location is picked from
+  the villages already freed.
+- **Camp.** See §4.
 
-| Touch | What it does | Used by |
-|---|---|---|
-| **Tap to choose** | Tap an answer card (as in Letter Hunt) | Most games |
-| **Tap to count** | Tap each thing once; it hops, gets a number badge, and the voice counts. Tapping one that's already counted just bumps it, with no new number. | Count with me, dot-to-dot, birthday cake |
-| **Tap to move** | Tap a thing to hop it to the plate; tap it on the plate to hop it back. No dragging needed. | Feed the animal, ten-frames, tens and ones |
-| **Drag** (older levels, optional) | As Match the Sound does it, with generous drop zones | Maybe the alligator, maybe tens and ones |
+**A typical chapter** *(proposal)*: village → goblin camp → village → village → goblin camp → village → special stop
+(sheep meadow, troll bridge…) → fort (build + assault). That's 8 stops and about 10 sets.
 
-**No timers the child can see, no lives, nothing taken away.** Quick look shows a picture briefly, but answering is
-never timed. Fact fluency is judged quietly from response time (§7).
+### 5.3 Task types (arcs 1–2)
 
-## 5. The games
+| Task | Herald says | On screen | Cards | Right answer | Help |
+|---|---|---|---|---|---|
+| **Find the number** | "Find the banner with 4!" | Banners on poles | 3–9 numeral banners | "4!" (arc 1: the 4 banner shows 4 dots) | Fade wrong ones → pulse the right one |
+| **Count them** | "How many goblins?" | 1–10 things in the scene | 3–4 numeral shields | Things light up one by one as the herald counts: "1, 2, 3. 3 goblins!" | Fade → "Let's count together", then pulse |
+| **Which is more?** | "Which camp has more goblins?" | Two groups in the scene | The two groups themselves | The bigger camp bounces: "This camp has 5!" | Fade the smaller group → count both together |
+| **Find the sign** (arc 2) | "Find the plus!" | Signposts at a crossroads | 2–4 signs: + − = | "Plus! Plus means more are coming." | Fade → pulse |
+| **First adding** (arc 2) | "3 soldiers… and 1 more! How many now?" | Soldiers walk in | Numeral shields | Everyone counted: "4 soldiers!" (later with the sentence 3 + 1 = 4 under the scene) | Count together |
 
-Each game is a "line" with versions per level, like Letter Hunt's `ACTS` table. Banner colours and icons as in
-Letter Hunt.
+- **Early scaffold:** in levels 1–2, numeral shields also show the matching dots under the numeral, so a child who
+  doesn't know numerals yet can still match amounts. From level 3 the dots appear only as help after a miss.
+- **Later variant:** "Look closely!" versions of Find the number (the banners flip face down, as Letter Hunt's
+  memory game does) from about level 4.
 
-### Count with me (tap to count)
-- **Screen:** 1–10 things (ducks, apples…) spread over the stage. **Voice:** "Let's count the ducks!"
-- Each tap on an uncounted duck: it hops, a numbered badge appears (1, 2, 3…), the voice counts, and a note one
-  step higher plays. A second tap on a counted duck bumps it; no number.
-- After the last one, they all bounce together and a big **3** appears: "3! 3 ducks."
-- **Later:** the badges hide at the end and the voice asks "How many ducks?". Answer from numeral cards. A child
-  who recounts instead of answering hasn't got "the last number is how many" yet.
-- **Big sets (6+):** each tap moves the duck into a tidy line, with its number underneath. This models keeping
-  track.
-- **Mistakes tracked:** double counts (one-to-one). It can't otherwise be failed, which makes it a good first
-  game.
+### 5.4 Levels and chapters *(proposal)*
 
-### Show me / How many?
-- **Show me N** (number word → amount): "Show me 2!" Tap the card with 2 things among cards of 1 and 3.
-- **How many?** (amount → numeral): a group of things on the stage. "How many apples?" Tap 2, 3 or 5.
-- Arrangements get harder: dice patterns → in a line → scattered → ten-frames.
-- Early on, wrong answers are far apart (2 vs 5); later they're next to each other (4 vs 5).
-- **Right:** the things light up one by one as they're counted aloud: "1, 2, 3. 3 apples!"
+| Lv | Arc · Chapter | Numbers | Tasks | Cards |
+|---|---|---|---|---|
+| 1 | 1 · The Border Road | 1–3 | Find · Count · More (big gaps) | 3, with dots |
+| 2 | 1 · The Whispering Woods | 1–5 | Find · Count (dice patterns) · More | 3, with dots |
+| 3 | 1 · The Marsh Villages | 1–7 | Find · Count (scattered) · More (closer) | 4 |
+| 4 | 1 · The Goblin King's Stockade | 1–10 | Find (incl. "look closely") · Count · More | 4 |
+| 5 | 2 · The Stone Bridge | 1–12 | + Find the sign (+ −) | 4 |
+| 6 | 2 · Trollberry Hills | 1–20 | Signs + − = · Which number is bigger? (numerals) | 4–6 |
+| 7 | 2 · The Echo Pass | 1–20 | + First adding within 5 (pictures) | 4 |
+| 8 | 2 · The Troll King's Keep | 1–20 | First adding within 5 with the number sentence | 4 |
 
-### Find the number
-- A port of Find the letter: "Find 4!" among 3, 4, 9 or 16 numeral cards.
-- The range grows 1–3 → 1–5 → 1–10 → 0–20 → 2-digit (§7).
-- **Right:** "4!" and, at younger levels, 4 dots appear under the numeral so the symbol stays tied to an amount.
+- Within a level, the numbers asked come from what the child knows plus the next two, as with Letter Hunt's known
+  sounds. The level sets the ceiling.
+- **Start point:** when adding a player, the grown-up picks a starting chapter by age (2 → ch. 1, 3 → ch. 2, 4 → ch.
+  4, 5 → ch. 6). This can be changed later.
 
-### Quick look (seeing amounts at a glance)
-- Reuses the memory-game card flip. A dot card shows for about 1.5 s, then flips face down. "How many did you
-  see?" Pick the numeral.
-- Dice patterns 1–3 → dice 1–6 → ten-frames 1–10 → a full ten-frame plus some (the teens) → fingers (SVG hands,
-  later).
-- The point is to stop one-by-one counting and build "5 and 2 more is 7".
+### 5.5 The party
+- The party starts as just the hero and the herald: "Let's find brave friends to join us!" The first villages bring
+  the first recruits.
+- **Cap** *(proposal)*: 10 in arc 1, 20 in arc 2. The party then stays inside the numbers the child is learning, so
+  when the herald counts the troops at camp, the child can count along.
+- **At the cap,** right answers in villages give **gear** instead: a helmet, a shield, a spear, boots, a cape in the
+  hero's colour. A soldier gets one piece each time ("Tom gets a helmet!"). This keeps "more right = more reward"
+  going through the long stretches.
+- The herald counts the party at every camp, with each soldier lighting up in turn. It's a counting model every
+  sitting.
 
-### Feed the animal (give me N)
-- **Screen:** 🐰 with a plate; a pile of 🥕 below. **Voice:** "Bunny wants 3 carrots!"
-- Tap a carrot: it hops to the plate as the voice counts ("1… 2…"). Tap one on the plate: it hops back.
-- **Young levels:** the bunny eats as soon as there are 3.
-- **Real give-N (about level 4 up):** the child taps the bunny when done. With 3: "Yum, 3 carrots!" With too many:
-  "That's 4! Bunny wants 3." Nothing is taken back automatically; the child fixes it.
-- **Later:** "Bunny has 2. He wants 5. Give him more!" This is counting on, the first step toward missing-number
-  sums.
-- Pairs: 🐰🥕 🐵🍌 🐭🧀 🐶🦴 🐿️🌰 🐼🎋.
+## 6. Voices
 
-### More or less
-- Two trays: "Which has more?" Tap one. Later: "Which has fewer?" and "Are they the same?"
-- The difference shrinks with level: 1 vs 4 → 4 vs 6 → 5 vs 6.
-- **Size trick:** from about level 7, the tray with *more* sometimes has smaller or more tightly packed things, so
-  the bigger-looking tray isn't always the answer. This makes the child count rather than judge by area.
-- **Numerals:** "Which is bigger, 7 or 4?"
-- **First grade:** the hungry alligator eats the bigger number (> < =), up to 2-digit numbers.
+The same modular clip system as Letter Hunt: named clips joined at play time (`say(["find_banner", "n_4"])`), each
+recordable, importable by file name, and backed up. **Two roles:**
 
-### Number train (order)
-- Train cars 1 2 3 _: "What comes next?" Pick from numeral cards. The train chugs off, saying the whole run.
-- Missing in the middle → counting back ("What comes before?") → **Blast off!** (a rocket counting 10 → 0,
-  which introduces zero) → counting by 10s, 5s and 2s → windows on a hundred chart (first grade).
-
-### Number memory / Clear the board
-- Ports of the memory games: "Look closely! Find 7…", flip, find. Clear the board: several finds per board.
-- Later versions mix numerals and dot cards on one board.
-
-### Dot-to-dot
-- Numbers scattered on the stage. Tap them in order (1, 2, 3…); a line draws from dot to dot and the voice says
-  each number. When the shape closes, it fills with colour and becomes a star, fish, rocket, house…
-- **Wrong tap:** that number wiggles. "That's 7. What comes after 4?"
-- 1–5 → 1–10 → 1–20 → counting by 2s, 5s and 10s.
-
-### Story sums (adding and taking away)
-- **Scenes:** ducks in a pond, a bus with seats, birds on a branch, apples on a tree.
-- **Adding:** "2 ducks are swimming… and 1 more!" (it waddles in) "How many now?"
-- **Taking away:** "4 birds on a branch. 1 flies away. How many are left?"
-- **Bridge to symbols (about level 11 up):** the number sentence builds under the scene as the story happens:
-  **2** … **+ 1** … **= ?**. Each part lights up with its part of the story.
-- **Help:** "Let's count them together."
-
-### Hiding game (missing part)
-- "5 mice. Some ran into the house!" Two mice are still outside. "How many are hiding?"
-- **Answer:** the roof lifts and the hiding mice count out: "3 were hiding! 2 and 3 make 5."
-- Toddlers love peek-a-boo, and this is the friendliest way into number bonds and missing-number sums.
-
-### Ten-frames / Make ten
-- "Make 7": tap cells to fill a ten-frame. "How many more to make 10?"
-- Two frames for the teens: "10 and 4 more is 14."
-
-### Tens and ones (first grade)
-- "Build 34": tap the rod pile to add a ten ("10, 20, 30"), then the cube pile for ones ("31, 32, 33, 34").
-- Then: "What's 10 more than 23?" and hundred-chart hops.
-
-### Fact rocket (first grade)
-- 3 + 4 = ? with answer cards. Each right answer adds fuel; a full tank launches the rocket.
-- Facts come from review boxes (§7), so tricky ones come back and known ones spread out over days.
-- Tricks it teaches: doubles, near-doubles, make ten (8 + 5 = 8 + 2 + 3).
-
-## 6. Level map (draft: 16 levels in 4 bands)
-
-Each round picks a line at random, avoiding the same line twice running, as in Letter Hunt. A line's version
-depends on the level. "To N" is the most the level allows; the actual numbers come from what the child knows (§7).
-
-| Lv | Band (rough age) | Numbers | Games at this level |
+| Role | Says | If not recorded | Examples |
 |---|---|---|---|
-| 1 | **Little counters** (2–3) | to 3 | Count with me · Show me (2 cards, far apart) · Feed the bunny (eats by itself) |
-| 2 | | to 3 | Count with me · Show me (3 cards) · Find the number (3 cards) · Feed the bunny |
-| 3 | | to 5 | Count with me · Quick look (dice to 3) · More or less (big gaps) · Find the number |
-| 4 | | to 5 | How many? (numerals) · Feed the bunny (tap when done: real give-N) · Quick look (dice to 5) · Memory (3) |
-| 5 | **Preschool** (3–4) | to 10 | Count with me (lines up) · How many? · Find the number (4) · More or less · Number train (next, to 5) |
-| 6 | | to 10 | Feed (to 10) · Quick look (dice to 6) · Memory (4) · Number train (to 10) · Dot-to-dot (to 10) |
-| 7 | | 0–10 | Quick look (ten-frames) · Which is bigger? (numerals, size trick) · Clear the board (9) · Blast off (10 → 0) |
-| 8 | **Kindergarten** (5) | 0–10 | Story sums: adding within 5 · Hiding game within 5 · How many? (ten-frames) · Find the number (9) |
-| 9 | | 0–10 | Story sums: taking away within 5 · Hiding game · Train (missing, counting back) · Dot-to-dot (to 20) |
-| 10 | | 0–20 | Teens (10 and some more) · Find the number (0–20) · Story sums within 10 · Make ten |
-| 11 | | 0–20 | Story sums with the number sentence · Hiding game within 10 · Make ten · Train by 10s |
-| 12 | | 0–20 | Fact rocket (+ and − within 5) · Which is bigger? (to 20) · Clear the board (16) · Mixed story sums |
-| 13 | **First grade** (6) | 0–20 | Fact rocket within 10 · Story sums within 20 (make ten, doubles) · Missing number (3 + _ = 7) |
-| 14 | | to 100 | Tens and ones · Count by 10s · Alligator (> < =, 2-digit) · Fact rocket within 10 |
-| 15 | | to 120 | 10 more / 10 less · Hundred chart · Fact rocket within 20 · Find the number (2-digit) |
-| 16 | | to 120 | 2-digit + 1-digit and + tens · Mixed fact rocket · Alligator · Clear the board (reversals together) |
+| **Herald** | Commands, praise, "not quite"s, battle calls, counting | Robot voice (a child can't read commands) | "Find the banner with…", "How many goblins?", "Huzzah!", "Not quite!", "Charge!", "Retreat!", "Let's try again!", "Rest now, brave…" |
+| **Narrator** | The story: chapter openings, stop arrivals, victories, camp | **Silent**; the caption is always shown so a grown-up can read it aloud | "The village of Millbrook! The villagers wave hello." |
 
-**Start level:** when adding a player, the grown-up picks an age or a starting band (2 → L1, 3 → L3, 4 → L5, 5 → L8,
-6 → L12). The level can still be changed in settings at any time.
+- **Herald clip groups:** numbers `n_0`…`n_20`; signs `sign_plus`, `sign_minus`, `sign_equals`; whole command
+  phrases per noun ("How many goblins?", "How many sheep?", which sounds more natural than joining "how many" +
+  "goblins"); praise and "not quite"s; battle, build and camp calls; titles `title_prince`, `title_princess`; the
+  child's name `child_<name>`. So praise can be ["well_done", "title_princess", "child_mia"]: "Well done, Princess
+  Mia!"
+- **Narrator clips:** one per story line, grouped by chapter. The step-by-step guide works per chapter ("Record
+  chapter 1's story").
+- **Two people, two devices:** the grown-up panel has separate Herald and Narrator sections, each with its own
+  step-by-step guide and its **own voice backup file**. Importing a voice file adds or replaces only that role's
+  clips. So Dad can record the herald on the tablet and Mum the narrator on her phone, then combine them.
+- **Robot herald:** the speech-synthesis voice at a slightly lower pitch, a bit slower, with a fanfare before it.
 
-**Faster climb:** Letter Hunt needs 10 rounds at 85% to move up. Here, **5 rounds in a row with every step right
-first time** also moves up, so a child who is past a level leaves it within one set. Moving down stays quiet and
-slow, as now.
+## 7. Look and sound
 
-## 7. What's tracked, and how the numbers are chosen
+- **Art:** flat, chunky SVG drawn in code, recoloured with CSS variables.
+  - Characters: hero (prince or princess), herald, villager/soldier with gear layers, goblin, goblin king, troll,
+    troll king.
+  - Places: village, goblin camp, stockade, stone bridge, troll keep, fallen tree, campfire.
+  - Props: banners, shields, signposts, ladders, ram.
+  - Landscape layers, one palette per chapter (meadow, woods, marsh, hills, pass).
+- **Walk cycle:** a body bob plus swinging legs in CSS. Goblins scamper, trolls stomp.
+- **Cards:** the Letter Hunt card look (white face, soft shadow, pop on press), shaped as shields and banners.
+- **Numerals:** Andika (already embedded in Letter Hunt). Its subset keeps alternate digit shapes: `cv01` (plain
+  stick 1), `cv04` (open 4), `cv06`/`cv09` (straight-stem 6 and 9) and `cv07` (7 with a bar). A grown-up setting can
+  pick "school-style" or "book-style" digits for one line of CSS.
+- **Sound:** synthesised, as in Letter Hunt.
+  - A trumpet fanfare before commands, and a "wah-wah" toot for a miss.
+  - Marching drums (optional music).
+  - A rising note per count as things light up.
+  - A dust-cloud "bonk", a triumphant flag-raise, and campfire crackle.
 
-- **Per number**, in review boxes as in Letter Hunt:
-  - `q:7`: quantity (how many, show me, give me)
-  - `n:7`: the numeral (find, pick the written 7)
-- **Per fact** (level 8+): `+:3+4`, `-:7-2`, `b:5=2+3` (number bonds). A fact counts as **fluent** once it's right
-  first time and answered within about 4 s, 4 of the last 5 times. The child never sees a clock.
-- **Number range:** as with Letter Hunt's known sounds, the pool is the numbers the child knows plus the next two. The
-  level sets the ceiling. A level-5 player who knows 1–6 gets 1–8, not 1–10.
-- **"Counts to" number:** the highest N where quantities 1…N are all known. The grown-up panel shows it ("Leo
-  reliably counts and gives up to 6"). It's the most useful single number to track at this age.
+## 8. Carried over from Letter Hunt
 
-### Look-alikes and sound-alikes (the maths version of b/d/p/q)
-- **Look-alike numerals:** 6/9, 2/5, 1/7. Kept off the same board below level 10, then allowed on purpose, as the
-  mirror letters are.
-- **Sound-alikes:** 13/30, 14/40, 15/50… 19/90. Kept apart until level 15.
-- **Reversals:** 12/21, 13/31, 17/71. Kept apart until level 16, then mixed on purpose.
-- **Amounts:** close amounts (4 vs 5) are hard to tell apart at a glance. Early boards keep answer choices at least
-  2 apart and in a clear ratio; later boards use next-door numbers.
+One self-contained offline HTML file (renamed to `number-knights.html` when building starts), with fonts embedded.
+It keeps:
+- The start screen that unlocks audio and full screen.
+- Player cards on the home screen (a hero portrait and chapter progress).
+- Long press counts as a tap; ghost taps are swallowed.
+- Hold the gear for grown-up settings.
+- Profiles; adaptive levels with guess detection; review boxes.
+- Help after a miss; the question repeats after 12 s; cards locked while the herald speaks.
+- Parties; take a break (now make camp); full screen; dark mode; music.
+- Recording with trim, normalise, the step-by-step guide and waveform, import by file name, backup and restore.
 
-## 8. Help after a miss
+The framework is **forked, not shared**: function names stay parallel (`say`, `ask`, `logStep`, `checkLevel`…) so
+fixes port both ways.
 
-- **First miss:** "That's 5." Fade one or two wrong cards, as in Letter Hunt.
-- **Second miss:** "Let's count together." The things on the stage light up one at a time with their numbers, then
-  the right card pulses. The hint is the skill itself, not only a pointer to the answer.
-- **Feed the bunny, too many:** "That's 4! Bunny wants 3." The extra carrot wiggles, but the child moves it.
-- **Dot-to-dot, wrong number:** "What comes after 4?" The count so far replays.
+## 9. Tracking and fairness
 
-## 9. Grown-up panel
+- **Review boxes** for each skill:
+  - `n:4` recognising the numeral
+  - `q:4` the amount (count them, which is more)
+  - `sign:+` the signs
+  - later, facts (`+:3+1`).
+- **Look-alikes:** numerals 6/9, 2/5 and 1/7 stay off the same board until arc 2.
+- **Sound-alikes:** 13/30 … 19/90 stay apart until arc 4.
+- **Reversals:** 12/21 are mixed only on purpose, in arc 4.
+- **Amounts:** early answer choices are at least 2 apart and in a clear ratio. Later ones are next door (4 vs 5).
+  From level 3, the group with *more* is sometimes drawn smaller or tighter, so size isn't a shortcut.
+- **Help after a miss:** fade wrong cards first; second time, "Let's count together", with the things in the scene
+  lighting up as they're counted; then the right card pulses.
+- **Guessing:** rapid wrong taps count against the level, as in Letter Hunt.
 
-The same layout as Letter Hunt, with:
-- **Players:** name, **age or birthday** (optional: sets the start level and powers the birthday cake), level,
-  start band.
-- **Level map** with try-it chips, as now.
-- **"Numbers Leo knows":** chips 0–20 in two rows (amount and numeral), plus a "counts to" meter.
-- **How it's going:** progress tiles for numbers, plus an **addition grid** (0–10 × 0–10), with each fact green,
-  yellow, red or not yet seen. It shows at a glance which facts are solid.
-- **Digit style:** *School* (a plain 1, an open 4, as most kids are taught to write them) or *Book* (1 with a foot,
-  closed 4). The embedded Andika font already has both through its `cv01`/`cv04` variants, so this costs one CSS
-  line.
-- **Play:** rounds per set, take a break, let them pick the game, music, full screen. All as now.
+## 10. Grown-up panel
 
-## 10. Voice clips
+- **Players:** name, prince or princess, banner colour, starting chapter, level.
+- **Campaign:** the chapter list with each chapter's maths. A **try-it** chip for each task type (practice doesn't
+  count).
+- **Numbers the child knows:** amount and numeral chips, 0–20, and a "counts to" meter.
+- **How it's going:** progress tiles per number and sign.
+- **Play:**
+  - tasks per stop (automatic by arc, or fixed)
+  - stops before making camp
+  - take a break
+  - music
+  - full screen
+  - digit style.
+- **Voices:** Herald and Narrator sections, step-by-step guides, per-voice backups, microphone test.
 
-The robot voice covers everything, so recording is optional.
+## 11. Later arcs: rough framework
 
-| Group | Clips | Count |
-|---|---|---|
-| Numbers | "zero" … "twenty", "thirty" … "ninety", "one hundred". 21–120 are built from these ("twenty" + "three") | 29 |
-| Phrases | "Let's count the…", "How many…", "Show me…", "Find…", "That's…", "Look quickly!", "How many did you see?", "Which has more?", "Which has fewer?", "Which is bigger?", "The same!", "What comes next?", "What comes before?", "…wants…", "Too many!", "…and… more", "How many now?", "…flies away", "How many are left?", "Some are hiding! How many are hiding?", "…make…", "plus", "take away", "equals", "tens", "ones", "Blast off!", "Happy birthday!", "You are…" | ~30 |
-| Things (plural only) | "ducks", "apples", "carrots", "mice"… Scripts are written so a singular is never needed ("…and 1 more!", not "here comes 1 more duck") | ~16 |
-| Praise and shared phrases | Same keys as Letter Hunt: `praise_1…8`, `you_did_it`, `level_up`, `kept_trying`, `pick_game`, `go_find`, `my_praise_*` | ~15 |
-| Names | `child_<name>` | 1 per player |
+Kept loose on purpose; to be designed once the linear arcs are dialled in.
 
-About 90 clips, against Letter Hunt's ~150. **Numbers 1–10 come first** in the step-by-step guide (for snappy
-counting).
+- **Forks (arcs 3–4):** at a crossroads, the herald offers two places by picture and voice ("The mill, or the
+  bridge?"). The child taps one. Forts now need **enough troops**, and a fork always offers a recruit stop.
+- **Full map (arc 5):** choose freely among towns, forts, castles and special places. Failed attacks return to the
+  map. Planning matters: recruit, build, then attack.
+- **Places for later:**
+  - **Inns**, for tips: what a castle needs to fall, where to recruit more, where treasures hide.
+  - **Special places:** caves, secluded lakes and rivers, sacred groves, watchtowers (they reveal the map), farms
+    (supplies).
+  - **Collectibles** hidden around the map.
+- **Army:** companies of ten under banners (arcs 3–4); unit types — foot soldiers, archers, knights, catapults — in
+  arc 5.
+- **Themed task ideas for later maths:**
+  - taking away ("3 goblins ran off, how many are left?")
+  - hiding ("5 goblins, 2 visible, how many in the woods?")
+  - tens and ones (companies and loose soldiers)
+  - 10 more / 10 less (a company joins or leaves)
+  - equal groups and arrays (formations: 3 rows of 4)
+  - sharing (split 12 soldiers across 3 gates)
+  - times tables (supply wagons)
+  - greater / less than between 2-digit armies.
 
-**Sharing with Letter Hunt:** praise, names and the "take a break" line use the *same keys*. So "Restore backup"
-here can read a Letter Hunt backup file and take the clips that match. A parent who recorded cheers once gets them
-in both games.
+## 12. Open questions for the linear arcs
 
-## 11. Look, sound and rewards
-
-- **Board:** Letter Hunt's dotted board and card style, so the two feel like siblings, but in a different colour
-  (warm sand or peach instead of mint), so they're easy to tell apart. The same palette, shadows and big buttons.
-- **Numerals:** Andika, as now (§9 digit style).
-- **Things to count:** emoji, as Letter Hunt uses for pictures. They're chosen to be one clear thing each: 🦆 🍎 🐟
-  ⭐ 🚗 🐝 🐸 🍓 🎈 🍪 🦋 🐞 🥕 🥚 🐤 🌸. **Never** 🍒 (two cherries), 🍇 (a bunch), 🧦 (a pair) or 🎲 (dots that
-  would confuse the count).
-- **Other pictures of amounts:** dice dots, ten-frames, the number train, and (first grade) tens rods and ones
-  cubes. All drawn in SVG, so they're crisp and themeable.
-- **Counting notes:** each count plays the next note of a scale (1 = do, 2 = re…), so counting higher *sounds*
-  higher. Adding plays a little chord; taking away has a soft "whoosh".
-- **Number collection** (the letter collection's twin): 0–20 as tiles that wake up when both `q:` and `n:` reach
-  box 3. Tapping an awake number says its name and shows that many dots in a ten-frame. A row of tens (30…120)
-  appears in first grade.
-- **Birthday cake** (the twin of "Spell my name"): unlocks at level 3 if an age is set, then gets its own
-  home-screen button. A cake shows the child's age in candles, which they tap to light and count: "1, 2, 3, 4…
-  Happy birthday! You are 4!" At higher levels: "How old will you be next birthday?" (+1), and "How many more
-  candles until you're 10?"
-- **Star jar** (optional): the stars earned drop into a jar in groups of ten. "You have 3 tens and 4. 34 stars!"
-  The reward teaches tens and ones by itself.
-
-## 12. Build order
-
-Each step is playable on the tablet before the next starts.
-
-1. **Framework port.** Screens, profiles, audio, recording, backup, grown-up panel, and the level table skeleton,
-   with the first three games: Count with me, Show me / How many?, and Find the number. Levels 1–2 fully
-   playable.
-2. **Band 1–2 (levels 1–7).** Feed the bunny, Quick look, More or less, Memory, Number train, Dot-to-dot, number
-   collection, birthday cake.
-3. **Band 3 (levels 8–12).** Story sums, Hiding game, Make ten, teens, Fact rocket (within 5).
-4. **Band 4 (levels 13–16).** Fact rocket to 20, Tens and ones, Alligator, hundred chart, 2-digit numbers.
-
-Before step 1, it may help to make a **clickable mockup** of the new touch styles (tap to count, feed the bunny,
-quick look) to try on the tablet, as was done for Match the Sound.
-
-## 13. Open questions
-
-1. **Who's playing, and how old are they now?** This decides which band to build first and to polish most.
-2. **Scope:** numbers only, or also shapes, patterns (AB AB), time or money later?
-3. **Name:** "Number Hunt", to pair with Letter Hunt, or something else ("Count With Me", "Number Friends")?
-4. **Voice:** share praise and name recordings with Letter Hunt through its backup file?
-5. **Digit style default:** school-style (plain 1, open 4) or book-style?
-6. **Touch:** tap-to-move everywhere, or drag at the older levels as well?
-7. **Rewards:** number collection + birthday cake (proposed); add the star jar?
-8. **Levels:** does 16 levels with a start-by-age choice feel right, or stay closer to Letter Hunt's 12?
+1. Party cap: 10 in arc 1 and 20 in arc 2 (so the party stays countable), or 20 throughout?
+2. Siege: should build rounds make the assault easier (e.g. each piece built counts as one right answer), or are they
+   spectacle only?
+3. Blocked road: after the chapter's fort (as drafted), or before it (the fort waits)?
+4. Arc 2 extra tasks: add "What comes next?" (number order) or the "look closely" memory version?
+5. The story sketch in §3: keep the king and queen on a voyage, or something else?
+6. Chapter layout (§5.2) and chapter names (§5.4): good as drafted?
