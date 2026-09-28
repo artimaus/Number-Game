@@ -285,7 +285,7 @@ button:focus-visible{outline:4px solid var(--blue);outline-offset:3px}
 .gacts .grec{min-width:120px}
 
 /* held fingers shouldn't scroll, select, or open menus */
-.card,.side,.prof,.bigplay,.round-btn,.speak,.caption{touch-action:none;-webkit-touch-callout:none}
+.card,.side,.prof,.bigplay,.round-btn,.speak,.caption,.gear{touch-action:none;-webkit-touch-callout:none}
 .screen:not(#parent){-webkit-touch-callout:none}
 @media (prefers-reduced-motion: reduce){
   .walk .fig .bob,.fig.talk .bob,.card.win,.card.wiggle,.card.hint,.side.hint,.trophy svg,.brawl .dp,.cheer .fig .bob,.gob.run,.gob.hop{animation:none}
@@ -622,7 +622,7 @@ const TREASURE_NAMES = {...FIXED_TREASURES, flag:"a flag", drum:"a drum", buntin
 
 /* ================= state & players ================= */
 const SKEY = "numberknights.v1";
-const plain = n => (n || "").normalize("NFD").replace(/[̀-ͯ]/g, "");
+const plain = n => (n || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 const nameLetters = n => plain(n).replace(/[^a-z]/gi, "");
 const slug = n => nameLetters(n).toLowerCase();
 function newProfile(name = "", i = 0){
@@ -2232,16 +2232,21 @@ function goHome(){
 }
 $("#homeBtn").addEventListener("click", () => { SFX.tap(); goHome(); });
 (() => {
-  const g = $("#gear"), tip = $("#gearTip"); let raf = 0, t0 = 0, eat = 0; const HOLD = 1500;
+  const g = $("#gear"), tip = $("#gearTip"); let raf = 0, timer = 0, t0 = 0, id = null, eat = 0; const HOLD = 1500;
   // The panel opens while the finger is still down. On a touch screen, lifting it then taps whatever is under it
   // now (the panel's own buttons), so clicks are dropped until just after the finger lifts.
-  document.addEventListener("click", e => { if (eat && performance.now() < eat) { e.stopPropagation(); e.preventDefault(); } }, true);
-  ["pointerup", "pointercancel"].forEach(ev => document.addEventListener(ev, () => { if (eat === Infinity) eat = performance.now() + 600; }, true));
-  const stop = () => { cancelAnimationFrame(raf); raf = 0; g.style.setProperty("--p", 0); tip.classList.remove("show"); };
-  const tick = () => { const p = Math.min(1, (performance.now() - t0) / HOLD); g.style.setProperty("--p", p);
-    if (p >= 1) { stop(); eat = Infinity; openParent(); } else raf = requestAnimationFrame(tick); };
-  g.addEventListener("pointerdown", e => { e.preventDefault(); t0 = performance.now(); tip.classList.add("show"); raf = requestAnimationFrame(tick); });
-  ["pointerup","pointerleave","pointercancel"].forEach(ev => g.addEventListener(ev, stop));
+  document.addEventListener("click", e => { if (performance.now() < eat) { e.stopPropagation(); e.preventDefault(); } }, true);
+  ["pointerup", "pointercancel"].forEach(ev => document.addEventListener(ev, () => { eat = Math.min(eat, performance.now() + 600); }, true));
+  const stop = () => { clearTimeout(timer); cancelAnimationFrame(raf); raf = timer = 0; id = null; g.style.setProperty("--p", 0); tip.classList.remove("show"); };
+  const ring = () => { g.style.setProperty("--p", Math.min(1, (performance.now() - t0) / HOLD)); raf = requestAnimationFrame(ring); };
+  // A finger drifts a little while it holds, so only lifting it (or the browser taking the touch away) stops the hold.
+  g.addEventListener("pointerdown", e => {
+    e.preventDefault(); if (id !== null) return;
+    id = e.pointerId; try { g.setPointerCapture(id); } catch(_) {}
+    t0 = performance.now(); tip.classList.add("show"); raf = requestAnimationFrame(ring);
+    timer = setTimeout(() => { stop(); eat = performance.now() + 5000; openParent(); }, HOLD);
+  });
+  ["pointerup", "pointercancel"].forEach(ev => g.addEventListener(ev, e => { if (e.pointerId === id) stop(); }));
   g.addEventListener("contextmenu", e => e.preventDefault());
   g.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openParent(); } });
 })();
