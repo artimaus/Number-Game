@@ -122,6 +122,10 @@ campfire, the army's total ("We have 7 soldiers!") on its shield, and "Rest now,
 With Letter Hunt's "Take a break" on, the game then waits for a grown-up. Otherwise a "Keep marching" button
 appears. The next sitting opens with "Wake up! The march goes on!".
 
+Progress is saved after every stop, so the game can be left at any moment. A stop left half-way is played again
+from its start. If the game is left during a chapter's celebration (the trophy, or the victory feast at the end of
+the arc), the celebration plays at the start of the next march.
+
 ## 5. The linear arcs in detail
 
 ### 5.1 The marching scene

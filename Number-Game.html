@@ -637,7 +637,13 @@ try { const raw = localStorage.getItem(SKEY); if (raw) state = JSON.parse(raw); 
 if (!state) { const p = newProfile(""); state = {profiles:[p], editId:p.id}; }
 const DEFAULTS = {steward:"uncle", campAfter:4, breakOn:false, breakAfter:2, music:false, fullscreen:true, autoTrim:true, digits:"school", setSize:0, clipVariant:{}};
 for (const [k, v] of Object.entries(DEFAULTS)) if (state[k] == null) state[k] = v;
-const fixProfile = p => { const d = newProfile(); for (const k of Object.keys(d)) if (p[k] == null) p[k] = d[k]; p.slug = slug(p.name); return p; };
+const fixProfile = p => {
+  const d = newProfile(); for (const k of Object.keys(d)) if (p[k] == null) p[k] = d[k];
+  p.ch = Math.max(0, Math.min(CHAPTERS.length - 1, p.ch | 0));
+  p.stop = Math.max(0, Math.min(CHAPTERS[p.ch].stops.length, p.stop | 0));      // all stops won = celebration still to come
+  p.level = Math.max(1, Math.min(MAX_LEVEL, p.level | 0));
+  p.slug = slug(p.name); return p;
+};
 state.profiles.forEach(fixProfile);
 const save = () => { try { const s = {...state, profiles:state.profiles.map(({slug, ...p}) => p)}; localStorage.setItem(SKEY, JSON.stringify(s)); } catch(e) {} };
 const profById = id => state.profiles.find(p => p.id === id);
@@ -2088,6 +2094,8 @@ async function sitting(){
   if (!P.blocked && !P.seenOpen[CHAPTERS[P.ch].n] && P.stop === 0) { await openChapter(); ck(); }
   else if (P.camped) { await narrate("st_morning"); ck(); await say(["h_wake_up"]); ck(); }
   P.camped = false; save();
+  // Every stop is won but the chapter's celebration was cut short (the game was left during it): finish it now.
+  if (!P.blocked && P.stop >= CHAPTERS[P.ch].stops.length) { await chapterEnd(); ck(); return makeCamp(); }
   let toldBlocked = false;
   for (;;) {
     if (G.stopsThisSitting >= state.campAfter) return makeCamp();
@@ -2236,7 +2244,7 @@ $("#homeBtn").addEventListener("click", () => { SFX.tap(); goHome(); });
   // The panel opens while the finger is still down. On a touch screen, lifting it then taps whatever is under it
   // now (the panel's own buttons), so clicks are dropped until just after the finger lifts.
   document.addEventListener("click", e => { if (performance.now() < eat) { e.stopPropagation(); e.preventDefault(); } }, true);
-  ["pointerup", "pointercancel"].forEach(ev => document.addEventListener(ev, () => { eat = Math.min(eat, performance.now() + 600); }, true));
+  ["pointerup", "pointercancel"].forEach(ev => document.addEventListener(ev, () => { eat = Math.min(eat, performance.now() + 350); }, true));
   const stop = () => { clearTimeout(timer); cancelAnimationFrame(raf); raf = timer = 0; id = null; g.style.setProperty("--p", 0); tip.classList.remove("show"); };
   const ring = () => { g.style.setProperty("--p", Math.min(1, (performance.now() - t0) / HOLD)); raf = requestAnimationFrame(ring); };
   // A finger drifts a little while it holds, so only lifting it (or the browser taking the touch away) stops the hold.
@@ -2424,7 +2432,17 @@ const MIC_OK = (() => { const fp = document.permissionsPolicy || document.featur
   return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) && !(fp && fp.allowsFeature && !fp.allowsFeature("microphone")); })();
 let recFilter = "all";
 function status(msg){ const s = $("#recStatus"); if (s) s.textContent = msg; }
-function openParent(){ stopSpeech(); G.session++; stopMusic(); G.locked = false; G.sittings = 0; G.practice = null; if (!profById(state.editId)) state.editId = state.profiles[0].id; renderParent(); show("parent"); $("#parent").scrollTop = 0; }
+function openParent(){
+  stopSpeech(); G.session++; stopMusic(); G.locked = false; G.sittings = 0; G.practice = null; if (!profById(state.editId)) state.editId = state.profiles[0].id;
+  // The settings must always open, even if some part of them can't be drawn: then offer the way out.
+  try { renderParent(); }
+  catch (e) {
+    console.error(e);
+    $("#pBody").innerHTML = `<div class="sec"><h2>Something went wrong</h2><p class="note">These settings couldn't be shown in full (${esc(e.message)}). Starting the campaign over for this player should fix it; recordings are kept.</p>
+      <button class="btn danger" id="resetStats">Start the campaign over for this player</button></div>`;
+  }
+  show("parent"); $("#parent").scrollTop = 0;
+}
 $("#closeParent").addEventListener("click", () => { releaseMic(); guide = null; renderGuide(); save(); enterFS(); renderHome(); show("home"); startMusic(); });
 const ICON = {
   play:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg>`,
@@ -2466,9 +2484,10 @@ function progressTiles(E, prefix, units){
     return `<div class="pt ${cls}" title="${s ? `${s.f} of ${s.n} on the first try` : "not played yet"}${b ? ` · review box ${b.box}` : ""}">${u}${s ? `<small>${s.f}/${s.n}</small>` : ""}${b ? `<i class="bx">${b.box}</i>` : ""}</div>`; }).join("")}</div>`;
 }
 function whereText(E){
-  const ch = CHAPTERS[E.ch];
-  if (E.arcDone && E.blocked) return "Arc 1 complete. Raids on freed villages continue until arc 2 is built.";
-  if (E.blocked) return `Chapter ${ch.n} done. The road to chapter ${ch.n + 1} opens at level ${CHAPTERS[E.ch + 1].level} (now ${E.level}); until then, raids.`;
+  const ch = CHAPTERS[E.ch], next = CHAPTERS[E.ch + 1];
+  if (E.blocked && (E.arcDone || !next)) return "Arc 1 complete. Raids on freed villages continue until arc 2 is built.";
+  if (E.blocked) return `Chapter ${ch.n} done. The road to chapter ${ch.n + 1} opens at level ${next.level} (now ${E.level}); until then, raids.`;
+  if (E.stop >= ch.stops.length) return `Chapter ${ch.n}: every stop won. The celebration plays at the next march.`;
   return `Chapter ${ch.n}, stop ${E.stop + 1} of ${ch.stops.length}: ${ch.stops[E.stop].name}.`;
 }
 const LEVEL_TEXT = {1:"numbers 1–3, 3 cards with dots, things in a row", 2:"numbers 1–5, dots, dice patterns", 3:"numbers 1–7, 4 cards, no dots, scattered, size trick, sometimes “which has fewer”", 4:"numbers 1–10, close amounts"};
