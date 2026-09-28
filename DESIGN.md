@@ -40,7 +40,9 @@ the play space opens up from a single road, to forks, to a full campaign map.
 | Pacing | When the maths isn't ready for the next chapter, the road ahead is blocked and **goblins raid freed villages behind you** |
 | Sittings | **Make camp** after a set number of stops (a grown-up setting) |
 | Linear view | **Marching scene** (side view), no map until the fork arcs |
-| Siege equipment | Built **only when sieging a fort or castle**. Each build round makes one piece, or one group such as ladders. Nothing travels with the party |
+| Siege equipment | Built **only when sieging a fort or castle**. Each build round makes one piece, or one group such as ladders. Nothing travels with the party. **The assault needs a minimum of gear**; build rounds repeat until it's met |
+| Party cap | 10 in arc 1, 20 in arc 2 (the party stays countable). At the cap, right answers give gear |
+| Blocked road | **After** the chapter's fort: every chapter ends in a victory, then raids until the maths is ready |
 | Voices | A **herald** (commands, praise, gentle "not quite"s; robot voice if not recorded) and an optional **narrator** (story; silent if not recorded, text always shown). Each can be recorded by a different person |
 | Art | Simple custom SVG |
 | Herald | A round, cheerful trumpet herald: fanfare before each command, a sad little "wah-wah" toot for a miss |
@@ -50,8 +52,8 @@ the play space opens up from a single road, to forks, to a full campaign map.
 
 | # | Arc | Story | Play space | Maths | Army | Tasks per stop |
 |---|---|---|---|---|---|---|
-| 1 | **The Goblin Border** | Sent to guard the border villages from goblin raiders | Linear march | Counting and numerals to 10; more or less | Party, up to 10 *(proposal)* | 3 |
-| 2 | **The Troll Hills** | Trolls block the hill passes; a troll king in his keep | Linear march | Numbers to 20; the signs + − =; first adding within 5 | Party, up to 20 | 4 |
+| 1 | **The Goblin Border** | Sent to guard the border villages from goblin raiders | Linear march | Counting and numerals to 10; more or less | Party, up to 10 | 3 |
+| 2 | **The Troll Hills** | Trolls block the hill passes; a troll king in his keep | Linear march | Numbers to 20; order; the signs + − =; which is bigger; first adding within 5; a first taste of taking away | Party, up to 20 | 4 |
 | 3 | **The Stolen Crown** | Coming home to find the uncle/aunt has seized the throne; rallying loyal towns | Forks (pick one of two) | Adding and taking away within 10 | Companies of ten | 5 |
 | 4 | **Siege of the Capital** | Retaking the kingdom, castle by castle, ending at the capital | Forks | Within 20; tens and ones; 2-digit numbers | Companies of ten | 6 |
 | 5 | **The Invasion** | A foreign kingdom invades; drive them back | Full map | Within 100 → equal groups → times tables → light division | Companies + unit types | 6–8 |
@@ -71,8 +73,8 @@ The stop decides what the answers earn:
 |---|---|---|
 | Village | …brings a recruit (at the party cap: gives a soldier a new piece of gear, §5.5) | No: at least one recruit per visit |
 | Goblin camp / troll bridge (a skirmish) | …pushes the foes back; half or more right and they flee | Yes: comic retreat, then a retry with fresh problems |
-| Fort or castle, **build** rounds | …adds a piece: a ladder, a ram part… | No: at least one piece per round |
-| Fort or castle, **assault** round | …as a skirmish, using what was built | Yes: retreat and retry; what was built stays built |
+| Fort or castle, **build** rounds | …adds a piece: a ladder, a ram part… | No: at least one piece per round. A round repeats (fresh problems) until the fort's minimum gear is built |
+| Fort or castle, **assault** round | …as a skirmish; starts only once the minimum gear is built | Yes: retreat and retry; what was built stays built |
 | Raid (a freed village attacked again) | …as a skirmish; the villagers cheer and send a gift | Yes |
 
 "Right" means right **on the first try**. Every task still ends with the right answer found (with help, as in Letter
@@ -137,9 +139,13 @@ appears. The next sitting opens with "Wake up! The march goes on!".
   with maths. Win: the troll grumbles and stomps away into the hills.
 - **Fort siege (chapter end).** Two or more sets at one stop:
   - *Arc 1 (goblin stockade):* build **ladders** (each right answer leans another ladder against the wall), then
-    **assault**.
-  - *Arc 2 (troll keep):* build **ladders**, then a **battering ram** (each right answer adds a part: log, wheels,
-    roof, iron head), then **assault**.
+    **assault**. Minimum: 2 ladders *(proposal)*.
+  - *Arc 2 (troll keep):* build **ladders** (minimum 2), then a **battering ram** (each right answer adds a part:
+    log, wheels, roof, iron head; minimum log + wheels), then **assault**.
+  - If a build round ends short of the minimum, the herald calls "We need one more ladder!" and a fresh build round
+    follows. With at least one piece per round, that's rarely more than one extra round.
+  - Gear beyond the minimum doesn't change the assault's outcome, but it makes it grander: more ladders going up, a
+    roofed ram with an iron head.
   - The assault shows the built gear in action: ladders go up, the ram bangs the gate, the goblins flee out the back
     gate.
   - The gear stays at the fort afterwards; nothing travels on.
@@ -160,12 +166,17 @@ appears. The next sitting opens with "Wake up! The march goes on!".
 | **Count them** | "How many goblins?" | 1–10 things in the scene | 3–4 numeral shields | Things light up one by one as the herald counts: "1, 2, 3. 3 goblins!" | Fade → "Let's count together", then pulse |
 | **Which is more?** | "Which camp has more goblins?" | Two groups in the scene | The two groups themselves | The bigger camp bounces: "This camp has 5!" | Fade the smaller group → count both together |
 | **Find the sign** (arc 2) | "Find the plus!" | Signposts at a crossroads | 2–4 signs: + − = | "Plus! Plus means more are coming." | Fade → pulse |
+| **Count and compare** (arc 2) | "Count the goblins in each camp. Which camp has more?" | Two groups | A numeral shield under each group, then the groups | "This camp has 4, that camp has 6. 6 is more!" | Count together |
+| **Which number is bigger?** (arc 2) | "Which number is bigger?" | Two trolls holding shields | The two numeral shields | "7 is bigger than 4!" (the bigger shield grows) | Show each number's dots |
+| **What comes next?** (arc 2) | "What comes next?" | Stepping stones across a stream: 4, 5, _ | 3–4 numeral stones | The hero hops across while the herald counts the stones | Count along from the first stone |
+| **Look closely** (arc 2) | "Look closely! …Find the 7!" | Banners flip face down after a look | 4–9 banners | As Find the number | As Letter Hunt's memory game |
 | **First adding** (arc 2) | "3 soldiers… and 1 more! How many now?" | Soldiers walk in | Numeral shields | Everyone counted: "4 soldiers!" (later with the sentence 3 + 1 = 4 under the scene) | Count together |
+| **Taking away, a first taste** (arc 2) | "3 trolls… 1 stomps off! How many are left?" | A troll stomps away | Numeral shields | "2 trolls left!" | Count what's left together |
 
 - **Early scaffold:** in levels 1–2, numeral shields also show the matching dots under the numeral, so a child who
   doesn't know numerals yet can still match amounts. From level 3 the dots appear only as help after a miss.
-- **Later variant:** "Look closely!" versions of Find the number (the banners flip face down, as Letter Hunt's
-  memory game does) from about level 4.
+- **Counting back:** at level 7, "What comes next?" also runs backwards as a countdown before a charge ("5, 4,
+  3… _"). Then "Charge!"
 
 ### 5.4 Levels and chapters *(proposal)*
 
@@ -174,11 +185,13 @@ appears. The next sitting opens with "Wake up! The march goes on!".
 | 1 | 1 · The Border Road | 1–3 | Find · Count · More (big gaps) | 3, with dots |
 | 2 | 1 · The Whispering Woods | 1–5 | Find · Count (dice patterns) · More | 3, with dots |
 | 3 | 1 · The Marsh Villages | 1–7 | Find · Count (scattered) · More (closer) | 4 |
-| 4 | 1 · The Goblin King's Stockade | 1–10 | Find (incl. "look closely") · Count · More | 4 |
-| 5 | 2 · The Stone Bridge | 1–12 | + Find the sign (+ −) | 4 |
-| 6 | 2 · Trollberry Hills | 1–20 | Signs + − = · Which number is bigger? (numerals) | 4–6 |
-| 7 | 2 · The Echo Pass | 1–20 | + First adding within 5 (pictures) | 4 |
-| 8 | 2 · The Troll King's Keep | 1–20 | First adding within 5 with the number sentence | 4 |
+| 4 | 1 · The Goblin King's Stockade | 1–10 | Find · Count · More (closer) | 4 |
+| 5 | 2 · The Stone Bridge | 1–12 | Find the sign (+ −) · What comes next? · Count and compare | 4 |
+| 6 | 2 · Trollberry Hills | 1–20 | Signs + − = · Which number is bigger? · Look closely | 4–6 |
+| 7 | 2 · The Echo Pass | 1–20 | First adding within 5 (pictures) · Countdown (counting back) | 4 |
+| 8 | 2 · The Troll King's Keep | 1–20 | First adding with the number sentence · Taking away, a first taste | 4 |
+
+Each level keeps the earlier task types in the mix, with harder numbers, so nothing learned drops out.
 
 - Within a level, the numbers asked come from what the child knows plus the next two, as with Letter Hunt's known
   sounds. The level sets the ceiling.
@@ -188,7 +201,7 @@ appears. The next sitting opens with "Wake up! The march goes on!".
 ### 5.5 The party
 - The party starts as just the hero and the herald: "Let's find brave friends to join us!" The first villages bring
   the first recruits.
-- **Cap** *(proposal)*: 10 in arc 1, 20 in arc 2. The party then stays inside the numbers the child is learning, so
+- **Cap:** 10 in arc 1, 20 in arc 2. The party then stays inside the numbers the child is learning, so
   when the herald counts the troops at camp, the child can count along.
 - **At the cap,** right answers in villages give **gear** instead: a helmet, a shield, a spear, boots, a cape in the
   hero's colour. A soldier gets one piece each time ("Tom gets a helmet!"). This keeps "more right = more reward"
@@ -312,10 +325,6 @@ Kept loose on purpose; to be designed once the linear arcs are dialled in.
 
 ## 12. Open questions for the linear arcs
 
-1. Party cap: 10 in arc 1 and 20 in arc 2 (so the party stays countable), or 20 throughout?
-2. Siege: should build rounds make the assault easier (e.g. each piece built counts as one right answer), or are they
-   spectacle only?
-3. Blocked road: after the chapter's fort (as drafted), or before it (the fort waits)?
-4. Arc 2 extra tasks: add "What comes next?" (number order) or the "look closely" memory version?
-5. The story sketch in §3: keep the king and queen on a voyage, or something else?
-6. Chapter layout (§5.2) and chapter names (§5.4): good as drafted?
+1. The story sketch in §3: keep the king and queen on a voyage, or something else?
+2. Chapter layout (§5.2) and chapter names (§5.4): good as drafted?
+3. Minimum gear per fort: 2 ladders (arc 1); 2 ladders + log and wheels (arc 2)?
