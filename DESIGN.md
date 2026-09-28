@@ -99,8 +99,7 @@ the way the army marches:
 - **Not yet** (fewer than half): the army bursts out and runs off the left-hand edge, while Buckleberry toots
   "wah-wah" and the goblins hop and cheer at their posts, sticks back up. The army marches back in: "Let's try
   again!" A fresh set of problems follows at the same stop. No soldier, ladder or freed village is ever lost.
-
-*Open question:* should arc 1 have the "not yet" ending at all, or should every battle be won there?
+  This applies in every arc, including the first.
 
 ### Pacing: the road waits for the maths
 Difficulty follows Letter Hunt's adaptive levels: up at 85% of first tries over 10 sets, down quietly below 50%
