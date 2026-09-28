@@ -117,7 +117,7 @@ beside him.*
 ## 🎉 The victory feast (arc end)
 *Long tables outside Lastfield, lanterns, bunting, villagers and soldiers cheering.*
 - **N:** "The villages held a great feast for our hero and the brave little army." `st1_4_17`
-- **H:** "Three cheers for [Hero]! Hip hip, hooray!" `h_three_cheers` + title + name
+- **H:** "Three cheers for [Hero]! Hip hip, hooray!" `h_three_cheers` + title + name + `h_hip_hooray`
 - The **Border Medal** appears on the hero (worn from now on), and a **feast table** joins the camp treasures.
 - **N:** "And the border was safe at last." `st1_4_18`
 - Confetti, the fanfare, then camp.
@@ -138,7 +138,7 @@ beside him.*
 - **Herald:**
   - `h_apples_back`
   - `h_need_ladders_ram`, `h_need_ram`, `h_ram_part`, `h_ram_more`, `h_ram_ready`
-  - `h_three_cheers`
+  - `h_three_cheers`, `h_hip_hooray`
   - `how_many_apples`, `which_more_apples`, `w_apples`
 - **Narrator:** `st1_4_01` … `st1_4_19`, `st1_4_r1`, `st1_4_r2`. That's 21 lines.
 

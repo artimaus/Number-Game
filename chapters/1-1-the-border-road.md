@@ -112,7 +112,8 @@ raspberries (a sound effect).*
 
 **Arrive**
 - **N:** "Up in a rickety tree house sat… goblins!" `st1_1_09`
-- **H:** "Goblins! Don't worry, [Hero]. Let's show them how clever we are!" `h_goblins_first` + title + name. (This
+- **H:** "Goblins! Don't worry, [Hero]. Let's show them how clever we are!" `h_goblins_first` + title + name +
+  `h_show_clever`. (This
   is the first goblin ever. Later skirmishes use "Goblins! Let's be clever!" `h_goblins`.)
 
 **Tasks** (3)
@@ -164,9 +165,8 @@ Praise as usual.
 1. **N:** "As the sun went down, the army made camp." `st_camp_1` (a generic camp line, with variants `st_camp_2`,
    `st_camp_3`)
 2. **H:** "Make camp!" `h_make_camp`
-3. **H:** "Let's count our soldiers!" `h_count_soldiers`. Each soldier lights up in turn: `num_1` … `num_5`.
-4. **H:** "5 soldiers!" `num_5` + `w_soldiers`
-5. **H:** "Rest now, brave [Hero]. Good night!" `h_rest_now` + title + name + `h_good_night`
+3. The troop shield grows big for a moment. **H:** "We have 5 soldiers!" `we_have` + `num_5` + `w_soldiers`
+4. **H:** "Rest now, brave [Hero]. Good night!" `h_rest_now` + title + name + `h_good_night`
 
 **Next sitting opens with:**
 - **N:** "Morning came, bright and early." `st_morning`
@@ -237,7 +237,7 @@ long pointy nose and a wonky crown. A woodpile sits beside the road.*
 - A victory screen: trophy, confetti and a fanfare (Letter Hunt's party screen), then camp.
 
 ## ⛺ Camp (chapter end)
-As before. The herald counts the whole party.
+As before, with the whole army's total.
 
 ---
 
@@ -275,6 +275,9 @@ running:
 
 ### Herald: shared by the whole game (robot voice if not recorded)
 
+The game's grown-up panel (Voices) lists every clip with its key, grouped the same way. If a key here and the panel
+ever differ, the panel is right.
+
 | Key | Line |
 |---|---|
 | `h_intro` | "Ta-ra! I'm Buckleberry, the royal herald! I'll march with you," *(+ Hero)* |
@@ -284,14 +287,14 @@ running:
 | `h_new_soldier` / `h_welcome` | "A new soldier!" / "Welcome to the army!" |
 | `h_joins_anyway` | "A brave villager joins anyway!" |
 | `we_have` | "We have…" |
-| `h_goblins_first` / `h_goblins` | "Goblins! Don't worry," *(+ Hero)* "Let's show them how clever we are!" / "Goblins! Let's be clever!" |
+| `h_goblins_first` / `h_show_clever` / `h_goblins` | "Goblins! Don't worry," *(+ Hero)* / "Let's show them how clever we are!" / "Goblins! Let's be clever!" |
 | `h_charge` | "Charge!" |
 | `h_ran_away` | "Hooray! They ran away!" |
 | `h_retreat` | "Retreat! Retreat!" |
 | `h_try_again` | "That's all right. Let's try again!" |
 | `h_sheep_home` | "Let's bring the sheep home!" |
 | `h_camp_gift` | "A present for our camp!" |
-| `h_make_camp` / `h_count_soldiers` | "Make camp!" / "Let's count our soldiers!" |
+| `h_make_camp` | "Make camp!" |
 | `h_rest_now` / `h_good_night` | "Rest now, brave…" / "Good night!" |
 | `h_wake_up` | "Wake up! The march goes on!" |
 | `h_need_ladders` / `h_a_ladder` / `h_one_more_ladder` / `h_up_the_ladders` | "A goblin fort! We need ladders!" / "A ladder!" / "We need one more ladder!" / "Ready! Up the ladders!" |

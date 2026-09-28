@@ -3,9 +3,13 @@
 Maths for toddlers through 3rd grade, played as a young prince or princess leading an army in a righteous cause.
 Built on Letter Hunt's tablet framework.
 
-**Status:** the brainstorm decisions are recorded in §2. The two linear arcs (§5) are being designed in detail and
-built first. Later arcs (§11) are a rough framework for the future. Items marked *(proposal)* haven't been agreed
-yet.
+**Status:** **arc 1 (the Goblin Border) is built and playable**: [`Number-Game.html`](Number-Game.html). It has all four
+chapters, raids, camp, the grown-up panel, and herald and narrator recording. The brainstorm decisions are recorded in
+§2, arc 1 is scripted in [`chapters/`](chapters), arc 2 (§5) is designed but not built, and later arcs (§11) are a
+rough framework. Items marked *(proposal)* haven't been agreed yet.
+
+**Testing hooks:** open the game with `#test` in the address to expose its state as `window.NK`, and `#fast` to run
+every pause 20× faster. A bot can then play the whole arc in about two minutes.
 
 ---
 
@@ -107,7 +111,7 @@ A toddler can spend months on one maths stage, so **most toddler play time will 
 
 ### Sittings: make camp
 After a set number of stops (a grown-up setting, default 4 *(proposal)*), the army **makes camp**. There's a
-campfire, the herald counts the troops (each soldier lights up with a number), and "Rest now, brave Prince Leo!".
+campfire, the army's total ("We have 7 soldiers!") on its shield, and "Rest now, brave Prince Leo!".
 With Letter Hunt's "Take a break" on, the game then waits for a grown-up. Otherwise a "Keep marching" button
 appears. The next sitting opens with "Wake up! The march goes on!".
 
@@ -136,7 +140,7 @@ appears. The next sitting opens with "Wake up! The march goes on!".
 ### 5.2 Stops (arcs 1–2)
 - **Village (recruit).** Villagers wave from their doorways. Favoured tasks: count them (villagers, sheep, apples on
   a cart), find the number (house numbers), which is more (two carts). Each first-try right answer: a villager
-  marches over, gets a spear and joins, and the herald counts the party ("7 soldiers!").
+  marches over, gets a spear and joins, and the troop shield goes up by one ("We have 7 soldiers!").
 - **Goblin camp (skirmish).** Tents and a little palisade, goblins with big ears and pointy spears. Favoured tasks:
   which camp has more goblins, how many goblins. Win: a dust-cloud clash with stars flying, then goblins drop their
   spears and scamper off to the right. Your flag goes up.
@@ -220,13 +224,13 @@ Each level keeps the earlier task types in the mix, with harder numbers, so noth
 ### 5.5 The party
 - The party starts as just the hero and the herald: "Let's find brave friends to join us!" The first villages bring
   the first recruits.
-- **Cap:** 10 in arc 1, 20 in arc 2. The party then stays inside the numbers the child is learning, so
-  when the herald counts the troops at camp, the child can count along.
+- **Cap:** 10 in arc 1, 20 in arc 2. The party then stays inside the numbers the child is learning.
 - **At the cap,** right answers in villages give **gear** instead: a helmet, a shield, a spear, boots, a cape in the
   hero's colour. A soldier gets one piece each time ("Tom gets a helmet!"). This keeps "more right = more reward"
   going through the long stretches.
-- The herald counts the party at every camp, with each soldier lighting up in turn. It's a counting model every
-  sitting.
+- **The troop total:** in the linear arcs the army shows **one total**, a shield beside the soldiers with the number
+  on it. Soldiers don't get numbers of their own. The shield pops whenever a recruit joins; the herald says it after
+  each village ("We have 7 soldiers!") and at camp, where the shield grows big for a moment.
 
 ## 6. Voices
 
