@@ -35,9 +35,11 @@ the play space opens up from a single road, to forks, to a full campaign map.
 | Troops lost | **Never.** A failed attack plays a comic retreat, then a retry with fresh problems (map arc: back to the map) |
 | Battle fail | Fewer than half the set right on the first try |
 | Set size | Grows by arc: 3 tasks per stop in arc 1, up to 6–8 in arc 5 |
-| Chapter length | About 8–10 stops |
+| Chapter length | About 8–10 stops; **each chapter has its own hand-made shape** |
 | Progress | Adaptive difficulty inside each stop; the story moves on only on success |
 | Pacing | When the maths isn't ready for the next chapter, the road ahead is blocked and **goblins raid freed villages behind you** |
+| Raid gifts | **Camp treasures**: each gift decorates the camp (a flag, a drum, a pet goat…) |
+| Story frame | The king and queen are away on a peace voyage; the uncle (or aunt) left as steward sends the hero to the border |
 | Sittings | **Make camp** after a set number of stops (a grown-up setting) |
 | Linear view | **Marching scene** (side view), no map until the fork arcs |
 | Siege equipment | Built **only when sieging a fort or castle**. Each build round makes one piece, or one group such as ladders. Nothing travels with the party. **The assault needs a minimum of gear**; build rounds repeat until it's met |
@@ -58,7 +60,7 @@ the play space opens up from a single road, to forks, to a full campaign map.
 | 4 | **Siege of the Capital** | Retaking the kingdom, castle by castle, ending at the capital | Forks | Within 20; tens and ones; 2-digit numbers | Companies of ten | 6 |
 | 5 | **The Invasion** | A foreign kingdom invades; drive them back | Full map | Within 100 → equal groups → times tables → light division | Companies + unit types | 6–8 |
 
-**Story sketch** *(proposal)*: the king and queen sail off on a peace voyage and leave the hero's uncle (or aunt) as
+**Story frame** (agreed; names are proposals): the king and queen sail off on a peace voyage and leave the hero's uncle (or aunt) as
 steward. The steward sends the young hero to the goblin border, "for experience", really to get them out of the
 way. Arc 2 ends with a messenger: "Come home! The crown has been stolen!" Arc 4 ends with the capital retaken and the
 king and queen home. In arc 5 the family stands together against the invaders.
@@ -151,12 +153,14 @@ appears. The next sitting opens with "Wake up! The march goes on!".
   - The gear stays at the fort afterwards; nothing travels on.
 - **Raid (pacing).** A freed village behind you, with goblins back. Variety for the long toddler stretches: goblins
   stealing sheep (count them home), goblins in the orchard (apples), goblins on the mill roof, goblins hiding in the
-  haystacks. Win: villagers cheer and send a gift (a recruit or a piece of gear). The raid's location is picked from
-  the villages already freed.
+  haystacks. Win: villagers cheer and send a **camp treasure**: a flag, a drum, a lantern, a pet goat, bunting, a
+  bigger tent. The treasures show at every camp, so long raid stretches still build something. The raid's location
+  is picked from the villages already freed.
 - **Camp.** See §4.
 
-**A typical chapter** *(proposal)*: village → goblin camp → village → village → goblin camp → village → special stop
-(sheep meadow, troll bridge…) → fort (build + assault). That's 8 stops and about 10 sets.
+**Chapter shapes** vary: each chapter is hand-made, with its own mix of villages, skirmishes, a special stop and a
+closing siege, and about 10 sets in all. Chapter 1 is written out in full in
+[`chapters/1-1-the-border-road.md`](chapters/1-1-the-border-road.md).
 
 ### 5.3 Task types (arcs 1–2)
 
@@ -325,6 +329,6 @@ Kept loose on purpose; to be designed once the linear arcs are dialled in.
 
 ## 12. Open questions for the linear arcs
 
-1. The story sketch in §3: keep the king and queen on a voyage, or something else?
-2. Chapter layout (§5.2) and chapter names (§5.4): good as drafted?
-3. Minimum gear per fort: 2 ladders (arc 1); 2 ladders + log and wheels (arc 2)?
+1. Names: kingdom, herald, uncle or aunt, goblin chief (see chapter 1's script).
+2. Minimum gear per fort: 2 ladders (arc 1); 2 ladders + log and wheels (arc 2)?
+3. Chapter names (§5.4): good as drafted?
