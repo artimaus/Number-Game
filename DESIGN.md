@@ -62,7 +62,7 @@ the play space opens up from a single road, to forks, to a full campaign map.
 | # | Arc | Story | Play space | Maths | Army | Tasks per stop |
 |---|---|---|---|---|---|---|
 | 1 | **The Goblin Border** | Sent to guard the border villages from goblin raiders | Linear march | Counting and numerals to 10; more or less | Party, up to 10 | 3 |
-| 2 | **The Troll Hills** | King Nutbelly's trolls shake the hill villages' nut trees bare; his keep is inside the Great Walnut Tree | Linear march | Numbers to 20; order; the signs + − =; which is bigger; first adding within 5; a first taste of taking away | Party, up to 20 | 4 |
+| 2 | **The Troll Hills** | King Nuttletusk's trolls shake the hill villages' nut trees bare; his keep is inside the Great Walnut Tree | Linear march | Numbers to 20; order; the signs + − =; which is bigger; first adding within 5; a first taste of taking away | Party, up to 20 | 4 |
 | 3 | **The Stolen Crown** | Coming home to find the uncle/aunt has seized the throne; rallying loyal towns | Forks (pick one of two) | Adding and taking away within 10 | Companies of ten | 5 |
 | 4 | **Siege of the Capital** | Retaking the kingdom, castle by castle, ending at the capital | Forks | Within 20; tens and ones; 2-digit numbers | Companies of ten | 6 |
 | 5 | **The Invasion** | A foreign kingdom invades; drive them back | Full map | Within 100 → equal groups → times tables → light division | Companies + unit types | 6–8 |
@@ -293,6 +293,9 @@ recordable, importable by file name, and backed up. **Two roles:**
 - **Style sheet (draft for approval):** https://claude.ai/artifact/Q7wWZQ5H31hpSnMkZWWkpD. It has the march screen at
   Millbrook with a count task, the characters, places, cards and states, and colours and type. The hero has tweaks
   for prince or princess, banner colour, skin and hair.
+- **Arc 2 art (draft for approval):** https://claude.ai/artifact/Wdx4Cp7jw9SXRfuTXNteco. It has the march arriving at
+  the Little Bridge with both number discs, a landscape for each chapter, the trolls and their chiefs (King
+  Nuttletusk included), friends and treasures, the places and forts, and every new task as the child sees it.
 - **Art:** flat, chunky SVG drawn in code, recoloured with CSS variables.
   - Characters: hero (prince or princess), herald, villager/soldier with gear layers, goblin, goblin king, troll,
     troll king.

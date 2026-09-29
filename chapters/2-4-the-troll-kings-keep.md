@@ -3,8 +3,8 @@
 **Arc 2 · The Troll Hills** · Level 8 · numbers 1–20 · 4 tasks per stop · party cap 20 · about 10 sets. **Arc
 finale.**
 
-On the highest hill grows the Great Walnut Tree, and inside it is the keep of **King Nutbelly**, the Troll King: very
-big, very round, with a crown made of acorn cups. Every nut in the hills is piled up inside. **Grubbins the Great**
+On the highest hill grows the Great Walnut Tree, and inside it is the keep of **King Nuttletusk**, the Troll King: very
+big, very round, with two great curly tusks and a crown made of acorn cups. Every nut in the hills is piled up inside. **Grubbins the Great**
 from arc 1 is back as the king's nut-counter, and he's hopeless at it. Two new tasks arrive: **adding with the
 number sentence** (3 + 2 = 5) and **taking away, a first taste**. Conventions are as in
 [chapter 1](1-1-the-border-road.md) and [chapter 5](2-1-the-stone-bridge.md).
@@ -57,7 +57,7 @@ Everything from level 7 stays in the mix, plus:
 *The Great Walnut Tree, so tall its branches touch the clouds. A great door in its trunk, windows in the branches,
 troll flags flapping.*
 - **N:** "On the highest hill grew the Great Walnut Tree, the biggest tree in the whole world." `st2_4_01`
-- **N:** "Inside lived the Troll King, King Nutbelly, with every nut in the hills. And Grubbins the Great was
+- **N:** "Inside lived the Troll King, King Nuttletusk, with every nut in the hills. And Grubbins the Great was
   counting them for him." `st2_4_02`
 - **N:** "But Grubbins wasn't very good at counting!" `st2_4_03`
 - **H:** "Forward, march!" `h_forward_march`
@@ -112,11 +112,11 @@ As before. The nutcracker soldier stands guard by the tent.
 - **Won:** **N:** "The guards ran inside and slammed the great door!" `st2_4_13`
 
 ## 7 · The Great Walnut Keep (siege, arc finale)
-*The great door in the trunk, windows in the branches, troll flags. On a branch balcony: King Nutbelly, with his huge
-round belly and his crown of acorn cups. Beside him, Grubbins the Great, holding a counting frame upside down.*
+*The great door in the trunk, windows in the branches, troll flags. On a branch balcony: King Nuttletusk, with his huge
+round belly, his two curly tusks and his crown of acorn cups. Beside him, Grubbins the Great, holding a counting frame upside down.*
 
 **Arrive**
-- **N:** "There it was: the Great Walnut Keep! On a branch sat King Nutbelly, with Grubbins the Great beside him."
+- **N:** "There it was: the Great Walnut Keep! On a branch sat King Nuttletusk, with Grubbins the Great beside him."
   `st2_4_14`
 - **H:** "The gate is shut tight! We need ladders and a battering ram!" `h_need_ladders_ram`
 
@@ -127,18 +127,18 @@ round belly and his crown of acorn cups. Beside him, Grubbins the Great, holding
   Count trolls · ★ Which number is bigger?
 - **Won:**
   - *BOOM… BOOM… CRASH!* The great door swings open, then the dust cloud and the discs. The trolls stomp out of
-    the back of the tree. King Nutbelly tries to squeeze out after them, and gets stuck in his own front door.
+    the back of the tree. King Nuttletusk tries to squeeze out after them, and gets stuck in his own front door.
     *Pop!* He tumbles out into his own pile of nuts.
   - **H:** "Hooray! The keep is ours!" `h_keep_ours`
-  - **N:** "King Nutbelly got stuck in his own front door! Pop! He tumbled out, right into a pile of nuts."
+  - **N:** "King Nuttletusk got stuck in his own front door! Pop! He tumbled out, right into a pile of nuts."
     `st2_4_15`
   - **N:** "'All right, all right,' he grumbled. 'I'll share.'" `st2_4_16`
 - **Not yet:** retreat. The ladders and ram stay; the next try is a fresh assault round.
 
 ## 🎉 The victory feast (arc end)
 *Long tables under the Great Walnut Tree, with nut cakes and lanterns. Villagers, soldiers, squirrels, the troll mum
-and her baby, and even King Nutbelly, sharing.*
-- **N:** "Everyone in the hills came to a great feast, even the trolls. And King Nutbelly shared his nuts."
+and her baby, and even King Nuttletusk, sharing.*
+- **N:** "Everyone in the hills came to a great feast, even the trolls. And King Nuttletusk shared his nuts."
   `st2_4_17`
 - **H:** "Three cheers for [Hero]! Hip hip, hooray!" `h_three_cheers` + title + name + `h_hip_hooray`
 - The **Hill Medal** appears on the hero, next to the Border Medal, and a **nut cake** joins the camp treasures.

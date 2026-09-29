@@ -3,7 +3,7 @@
 **Arc 2 · The Troll Hills** · Level 6 · numbers 1–20 · 4 tasks per stop · party cap 20 · about 10 sets.
 
 The hills are covered in nut trees (hazelnuts, chestnuts and walnuts), and the trolls are shaking them bare for King
-Nutbelly. *Thud, thud,* and down come the nuts, *bonk*, on everyone's heads. That's the chapter's running joke.
+Nuttletusk. *Thud, thud,* and down come the nuts, *bonk*, on everyone's heads. That's the chapter's running joke.
 Numbers now go up to 20, the **=** sign joins + and −, and two new tasks arrive: **which number is bigger?** and
 **look closely**. The troll chief here is **Crackjaw**, who cracks nuts with his teeth. Conventions are as in
 [chapter 1](1-1-the-border-road.md) and [chapter 5](2-1-the-stone-bridge.md).
@@ -64,7 +64,7 @@ Numbers now go up to 20, the **=** sign joins + and −, and two new tasks arriv
 *Rolling hills covered in nut trees. Far off: thud, thud. Nuts come bouncing down the road.*
 - **N:** "Beyond the bridge rose Trolltree Hills, covered in nut trees: hazelnuts, chestnuts and walnuts."
   `st2_2_01`
-- **N:** "But the trolls were shaking the trees for King Nutbelly. Thud, thud… and down came the nuts. Bonk!"
+- **N:** "But the trolls were shaking the trees for King Nuttletusk. Thud, thud… and down came the nuts. Bonk!"
   `st2_2_02`
 - **H:** "Forward, march! Mind your heads!" `h_forward_march` + `h_mind_heads`
 
@@ -109,7 +109,7 @@ As before. The squirrel nibbles a nut by the fire.
 
 ## 5 · The Big Nut Pile (skirmish)
 *A mountain of stolen nuts, and trolls with sacks guarding it.*
-- **N:** "Trolls were piling up stolen nuts for King Nutbelly. What a big pile!" `st2_2_09`
+- **N:** "Trolls were piling up stolen nuts for King Nuttletusk. What a big pile!" `st2_2_09`
 - ★★ Count and compare: "Which pile has more nuts?" `which_more_nuts` · ★ Count trolls · ★ Which number is bigger?
   · ★ Find
 - **Won:** **N:** "The trolls ran off, and the villagers took back their nuts." `st2_2_10`

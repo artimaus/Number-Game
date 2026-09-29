@@ -9,7 +9,7 @@ arc 2 siege, which needs 3 ladders and a battering ram.
 Conventions (N:, H:, [Hero], ★★/★, clip keys) are as in [chapter 1](1-1-the-border-road.md). New for arc 2:
 - **Trolls** are big, round and mossy, with tufty hair, long noses and stompy feet. They're grumbly, not scary, and
   they'd much rather eat nuts than fight. When beaten they stomp off, grumbling.
-- **King Nutbelly**, the Troll King, wants every nut in the hills. His trolls shake the villages' nut trees bare.
+- **King Nuttletusk**, the Troll King, wants every nut in the hills. His trolls shake the villages' nut trees bare.
   Each chapter has its own troll chief: here it's **Grumbleguts**, the grumpiest bridge troll of all.
 - **4 tasks per stop.** A fight is won with 2 or more right on the first try.
 - **Discs** (design doc §5.5): the gold disc over our army now counts up to 20, and the red disc shows the trolls.
@@ -84,7 +84,7 @@ shaggy tree.*
 - **N:** "Spring came to the border. The snow melted, drip, drop, and the path to the Troll Hills opened at last."
   `st2_1_01`
 - **N:** "In the hills lived the trolls: big, grumbly, and very fond of nuts." `st2_1_02`
-- **N:** "And Grubbins the Great had run straight to their king, King Nutbelly, to tell him all about our hero."
+- **N:** "And Grubbins the Great had run straight to their king, King Nuttletusk, to tell him all about our hero."
   `st2_1_03`
 - **H:** "Forward, march!" `h_forward_march`
 
