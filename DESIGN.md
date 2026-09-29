@@ -3,13 +3,13 @@
 Maths for toddlers through 3rd grade, played as a young prince or princess leading an army in a righteous cause.
 Built on Letter Hunt's tablet framework.
 
-**Status:** **arc 1 (the Goblin Border) is built and playable**: [`Number-Game.html`](Number-Game.html). It has all four
-chapters, raids, camp, the grown-up panel, and herald and narrator recording. The brainstorm decisions are recorded in
-§2. Arcs 1 and 2 are scripted in [`chapters/`](chapters); arc 2 is not built yet, and later arcs (§11) are a rough
-framework. Items marked *(proposal)* haven't been agreed yet.
+**Status:** **arcs 1 and 2 (the Goblin Border and the Troll Hills) are built and playable**:
+[`Number-Game.html`](Number-Game.html). They have all eight chapters, raids, camp, the grown-up panel, and herald and
+narrator recording. The brainstorm decisions are recorded in §2. Both arcs are scripted in [`chapters/`](chapters);
+later arcs (§11) are a rough framework. Items marked *(proposal)* haven't been agreed yet.
 
 **Testing hooks:** open the game with `#test` in the address to expose its state as `window.NK`, and `#fast` to run
-every pause 20× faster. A bot can then play the whole arc in about two minutes.
+every pause 20× faster. A bot can then play a whole arc in about two minutes.
 
 ---
 
@@ -199,8 +199,10 @@ flower pots · a birdhouse · a kite. After the last one, the list starts again,
 the special stops give a big round cheese (ch. 5), a squirrel (ch. 6), a mountain horn (ch. 7) and a wooden
 nutcracker soldier (ch. 8), and the arc's feast adds a nut cake and the Hill Medal.
 
-**After arc 1** (until arc 2 exists): snow blocks the path to the Troll Hills. Every stop is then a raid on any
-village freed in arc 1, and the level stays capped at 4.
+**Between the arcs:** after arc 1's feast, snow blocks the path to the Troll Hills until the child reaches level 5.
+Every stop until then is a raid on any village freed in arc 1; arc 1 plays at level 4 at most. When the snow melts,
+chapter 5 opens. **After arc 2** (until arc 3 exists): a storm closes the mountain road home, every stop is a raid on
+any village freed in arc 2, and the level stays at 8.
 
 ### 5.3 Task types (arcs 1–2)
 
@@ -255,7 +257,8 @@ Each level keeps the earlier task types in the mix, with harder numbers, so noth
   and at camp. It pops whenever a recruit joins; the herald says it after each village ("We have 7 soldiers!") and
   at camp, where the disc grows big for a moment.
 - **The enemy's disc:** wherever there are enemies, a **red disc** hangs over them with their headcount (chiefs
-  included). How many hold a stop varies: 2–5 at a goblin camp, 4–6 at a fort. In a fight the two discs fly up over
+  included). How many hold a stop varies: 2–5 at a goblin camp, 4–6 at a fort; trolls are big, so 1–3 at a troll camp
+  and 3–5 at a troll fort. In a fight the two discs fly up over
   the dust cloud and clink together; the loser's disc is knocked back and leaves with its side, and the winner's
   hovers over its cheering side. The discs are honest headcounts only: the answers decide the fight, so now and
   then the bigger number loses, and the enemies come back at full strength for the next try.
@@ -338,7 +341,8 @@ fixes port both ways.
   - `q:4` the amount (count them)
   - `cmp` and `cmpf` comparing (which is more, which has fewer), shown as first-try rates in the panel
   - `sign:+` the signs
-  - later, facts (`+:3+1`).
+  - arc 2: `next:6` (what comes next), `back:2` (counting down), `big` (which number is bigger), and facts
+    (`+:3+1`, `-:4-1`), shown as first-try rates in the panel.
 - **Look-alikes:** numerals 6/9, 2/5 and 1/7 stay off the same board until arc 2.
 - **Sound-alikes:** 13/30 … 19/90 stay apart until arc 4.
 - **Reversals:** 12/21 are mixed only on purpose, in arc 4.
