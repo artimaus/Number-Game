@@ -2937,7 +2937,7 @@ $("#stage").addEventListener("click", e => {
 async function countAlong(pos, noun, n, {from = 0, badge = true} = {}){
   const items = [...$$(`#things .thing, .side[data-side] .thing`)];
   const keys = range(from + 1, from + n).map(i => "num_" + i);
-  await say(keys, {gap:430, onStep:(i) => {                  // a slow, steady beat: each number gets time to land
+  await say(keys, {gap:400, onStep:(i) => {                  // a slow, steady beat: each number gets time to land
     const el = pos.els ? pos.els[i] : items[i]; if (el) el.classList.add("lit");
     SFX.count(from + i);
     if (badge && pos[i]) numBadge(pos[i].x, pos[i].y - 10, from + i + 1);
