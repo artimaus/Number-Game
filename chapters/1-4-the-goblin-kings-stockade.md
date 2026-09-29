@@ -129,6 +129,9 @@ beside him.*
 - **H:** "The road is blocked! We'll find a way soon." `h_road_blocked`
 - Every stop is then a **raid** on any freed village from the whole arc (all the raids of chapters 1–4). Raids keep
   giving camp treasures. The level stays capped at 4 until arc 2 exists.
+- **Once arc 2 is built and level 5 arrives:** **N:** "The sun came out, and the snow began to melt…" `st1_4_20` ·
+  **H:** "The road is clear! Onward!" `h_road_clear`. Then [chapter 5, The Stone Bridge](2-1-the-stone-bridge.md)
+  opens with spring in the hills.
 
 | Raid | Narrator | Favoured |
 |---|---|---|
@@ -141,7 +144,8 @@ beside him.*
   - `h_need_ladders_ram`, `h_need_ram`, `h_ram_part`, `h_ram_more`, `h_ram_ready`
   - `h_three_cheers`, `h_hip_hooray`
   - `how_many_apples`, `which_more_apples`, `w_apples`
-- **Narrator:** `st1_4_01` … `st1_4_19`, `st1_4_r1`, `st1_4_r2`. That's 21 lines.
+- **Narrator:** `st1_4_01` … `st1_4_20`, `st1_4_r1`, `st1_4_r2`. That's 22 lines (`st1_4_20` plays once arc 2
+  exists).
 
 ## Arc 1 totals
 - **Narration:** about 100 lines across the four chapters.

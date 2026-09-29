@@ -5,8 +5,8 @@ Built on Letter Hunt's tablet framework.
 
 **Status:** **arc 1 (the Goblin Border) is built and playable**: [`Number-Game.html`](Number-Game.html). It has all four
 chapters, raids, camp, the grown-up panel, and herald and narrator recording. The brainstorm decisions are recorded in
-§2, arc 1 is scripted in [`chapters/`](chapters), arc 2 (§5) is designed but not built, and later arcs (§11) are a
-rough framework. Items marked *(proposal)* haven't been agreed yet.
+§2. Arcs 1 and 2 are scripted in [`chapters/`](chapters); arc 2 is not built yet, and later arcs (§11) are a rough
+framework. Items marked *(proposal)* haven't been agreed yet.
 
 **Testing hooks:** open the game with `#test` in the address to expose its state as `window.NK`, and `#fast` to run
 every pause 20× faster. A bot can then play the whole arc in about two minutes.
@@ -62,7 +62,7 @@ the play space opens up from a single road, to forks, to a full campaign map.
 | # | Arc | Story | Play space | Maths | Army | Tasks per stop |
 |---|---|---|---|---|---|---|
 | 1 | **The Goblin Border** | Sent to guard the border villages from goblin raiders | Linear march | Counting and numerals to 10; more or less | Party, up to 10 | 3 |
-| 2 | **The Troll Hills** | Trolls block the hill passes; a troll king in his keep | Linear march | Numbers to 20; order; the signs + − =; which is bigger; first adding within 5; a first taste of taking away | Party, up to 20 | 4 |
+| 2 | **The Troll Hills** | King Nutbelly's trolls shake the hill villages' nut trees bare; his keep is inside the Great Walnut Tree | Linear march | Numbers to 20; order; the signs + − =; which is bigger; first adding within 5; a first taste of taking away | Party, up to 20 | 4 |
 | 3 | **The Stolen Crown** | Coming home to find the uncle/aunt has seized the throne; rallying loyal towns | Forks (pick one of two) | Adding and taking away within 10 | Companies of ten | 5 |
 | 4 | **Siege of the Capital** | Retaking the kingdom, castle by castle, ending at the capital | Forks | Within 20; tens and ones; 2-digit numbers | Companies of ten | 6 |
 | 5 | **The Invasion** | A foreign kingdom invades; drive them back | Full map | Within 100 → equal groups → times tables → light division | Companies + unit types | 6–8 |
@@ -185,13 +185,19 @@ closing siege, and about 10 sets in all. Arc 1 is written out in full:
 [1 The Border Road](chapters/1-1-the-border-road.md) ·
 [2 The Whispering Woods](chapters/1-2-the-whispering-woods.md) ·
 [3 The Marsh Villages](chapters/1-3-the-marsh-villages.md) ·
-[4 The Goblin King's Stockade](chapters/1-4-the-goblin-kings-stockade.md).
+[4 The Goblin King's Stockade](chapters/1-4-the-goblin-kings-stockade.md). Arc 2 is scripted too:
+[5 The Stone Bridge](chapters/2-1-the-stone-bridge.md) ·
+[6 Trolltree Hills](chapters/2-2-trolltree-hills.md) ·
+[7 The Echo Pass](chapters/2-3-the-echo-pass.md) ·
+[8 The Troll King's Keep](chapters/2-4-the-troll-kings-keep.md).
 
 **Camp treasures.** Each special stop gives a fixed treasure: the sheepdog puppy (ch. 1), a lantern (ch. 2), a
 little boat (ch. 3) and an apple cart (ch. 4). The arc's victory feast adds a feast table and the Border Medal. Raids
 give the next treasure from this list, in order: a flag · a drum · bunting · a goat · a bigger tent · a cooking
 pot · a bench · a banner pole · a pony · hay bales · a scarecrow · a chicken · a cat · a bell · a weathervane ·
-flower pots · a birdhouse · a kite. After the last one, the list starts again, as extra flags and bunting.
+flower pots · a birdhouse · a kite. After the last one, the list starts again, as extra flags and bunting. In arc 2
+the special stops give a big round cheese (ch. 5), a squirrel (ch. 6), a mountain horn (ch. 7) and a wooden
+nutcracker soldier (ch. 8), and the arc's feast adds a nut cake and the Hill Medal.
 
 **After arc 1** (until arc 2 exists): snow blocks the path to the Troll Hills. Every stop is then a raid on any
 village freed in arc 1, and the level stays capped at 4.
