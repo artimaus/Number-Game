@@ -91,8 +91,10 @@ Hunt), so nothing is left unresolved. First tries only decide the size of the re
 
 ### Failure is funny, never costly
 Every battle ends the same way: "Charge!", and both sides, the whole army and every goblin, run into one big
-cartoon dust cloud. Stars fly and it bonks and bumps for a moment. Then the losers come out running, all together,
-the way the army marches:
+cartoon dust cloud. Stars fly and it bonks and bumps for a moment, while above it the two **number discs** (§5.5),
+gold for us and red for them, clink together back and forth. The first-try answers decide who wins, whatever the
+headcounts say. Then the losers come out running, all together, the way the army marches, each side's disc
+hovering over it:
 - **Won** (half or more right first time): the goblins burst out of the cloud and run off the right-hand edge of the
   screen, and they're gone. The army stands where the fight was and cheers (everyone hops), and our flag goes up.
   On the next march the soldiers fall back into line as they walk.
@@ -118,7 +120,7 @@ A toddler can spend months on one maths stage, so **most toddler play time will 
 
 ### Sittings: make camp
 After a set number of stops (a grown-up setting, default 4 *(proposal)*), the army **makes camp**. There's a
-campfire, the army's total ("We have 7 soldiers!") on its shield, and "Rest now, brave Prince Leo!".
+campfire, the army's total ("We have 7 soldiers!") on its gold disc, and "Rest now, brave Prince Leo!".
 With Letter Hunt's "Take a break" on, the game then waits for a grown-up. Otherwise a "Keep marching" button
 appears. The next sitting opens with "Wake up! The march goes on!".
 
@@ -153,7 +155,7 @@ the arc), the celebration plays at the start of the next march.
 ### 5.2 Stops (arcs 1–2)
 - **Village (recruit).** Villagers wave from their doorways. Favoured tasks: count them (villagers, sheep, apples on
   a cart), find the number (house numbers), which is more (two carts). Each first-try right answer: a villager
-  marches over, gets a spear and joins, and the troop shield goes up by one ("We have 7 soldiers!").
+  marches over, gets a spear and joins, and the gold disc over the army goes up by one ("We have 7 soldiers!").
 - **Goblin camp (skirmish).** Tents and a little palisade, goblins with big ears and pointy spears. Favoured tasks:
   which camp has more goblins, how many goblins. Win: both sides charge into a dust cloud with stars flying, then
   the goblins scamper off the right-hand edge together and the army cheers (§4). Your flag goes up.
@@ -162,7 +164,7 @@ the arc), the celebration plays at the start of the next march.
 - **Fort siege (chapter end).** Two or more sets at one stop:
   - *Arc 1 (goblin stockade):* build **ladders** (each right answer leans another ladder against the wall), then
     **assault**. Minimum: 2 ladders *(proposal)*.
-  - *Arc 1 finale (the Great Stockade) and arc 2 (troll keep):* build **ladders** (minimum 2), then a **battering ram** (each right answer adds a part:
+  - *Arc 1 finale (the Great Stockade) and arc 2's forts:* build **ladders** (minimum 2 in arc 1, **3 in arc 2**), then a **battering ram** (each right answer adds a part:
     log, wheels, roof, iron head; minimum log + wheels), then **assault**.
   - If a build round ends short of the minimum, the herald calls "We need one more ladder!" and a fresh build round
     follows. With at least one piece per round, that's rarely more than one extra round.
@@ -224,7 +226,7 @@ village freed in arc 1, and the level stays capped at 4.
 | 3 | 1 · The Marsh Villages | 1–7 | Find · Count (scattered) · More (closer) · Fewer | 4 |
 | 4 | 1 · The Goblin King's Stockade | 1–10 | Find · Count · More or fewer (closer) | 4 |
 | 5 | 2 · The Stone Bridge | 1–12 | Find the sign (+ −) · What comes next? · Count and compare | 4 |
-| 6 | 2 · Trollberry Hills | 1–20 | Signs + − = · Which number is bigger? · Look closely | 4–6 |
+| 6 | 2 · Trolltree Hills | 1–20 | Signs + − = · Which number is bigger? · Look closely | 4–6 |
 | 7 | 2 · The Echo Pass | 1–20 | First adding within 5 (pictures) · Countdown (counting back) | 4 |
 | 8 | 2 · The Troll King's Keep | 1–20 | First adding with the number sentence · Taking away, a first taste | 4 |
 
@@ -242,9 +244,16 @@ Each level keeps the earlier task types in the mix, with harder numbers, so noth
 - **At the cap,** right answers in villages give **gear** instead: a helmet, a shield, a spear, boots, a cape in the
   hero's colour. A soldier gets one piece each time ("Tom gets a helmet!"). This keeps "more right = more reward"
   going through the long stretches.
-- **The troop total:** in the linear arcs the army shows **one total**, a shield beside the soldiers with the number
-  on it. Soldiers don't get numbers of their own. The shield pops whenever a recruit joins; the herald says it after
-  each village ("We have 7 soldiers!") and at camp, where the shield grows big for a moment.
+- **Number discs:** the army's total is a **gold disc** hovering over the soldiers, like the gold counting badges.
+  Soldiers don't get numbers of their own. The disc travels with the army: on the march, into fights, on a retreat
+  and at camp. It pops whenever a recruit joins; the herald says it after each village ("We have 7 soldiers!") and
+  at camp, where the disc grows big for a moment.
+- **The enemy's disc:** wherever there are enemies, a **red disc** hangs over them with their headcount (chiefs
+  included). How many hold a stop varies: 2–5 at a goblin camp, 4–6 at a fort. In a fight the two discs fly up over
+  the dust cloud and clink together; the loser's disc is knocked back and leaves with its side, and the winner's
+  hovers over its cheering side. The discs are honest headcounts only: the answers decide the fight, so now and
+  then the bigger number loses, and the enemies come back at full strength for the next try.
+- **Both discs fade out while a task is up**, so a number overhead never gives away (or muddles) an answer.
 
 ## 6. Voices
 
@@ -375,5 +384,8 @@ Kept loose on purpose; to be designed once the linear arcs are dialled in.
 
 ## 12. Open questions for the linear arcs
 
-1. Minimum gear per fort: 2 ladders (arc 1); 2 ladders + log and wheels (arc 2)?
-2. Chapter names (§5.4): good as drafted?
+None open. Settled:
+- Minimum gear per fort: 2 ladders in arc 1 (plus the ram's log and wheels at the Great Stockade); 3 ladders and
+  the ram's log and wheels in arc 2.
+- Chapter names as drafted, with **Trolltree Hills** instead of Trollberry: the hills are nut trees, and trolls
+  shaking the nuts down is arc 2's running joke.

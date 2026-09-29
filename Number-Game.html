@@ -108,10 +108,15 @@ button:focus-visible{outline:4px solid var(--blue);outline-offset:3px}
 .fig.talk .bob{animation:talk .3s ease-in-out infinite alternate}
 @keyframes talk{from{transform:translateY(0)}to{transform:translateY(-5px) scale(1.02)}}
 .fig.lit .bob{filter:drop-shadow(0 0 10px #F6D36B)}
-.troops{position:absolute;left:8px;top:634px;width:78px;height:96px;z-index:30;pointer-events:none}
-.troops svg{width:100%;height:100%}
-.troops.pop{animation:pop .55s}
-.troops.big{animation:big 1.6s ease-in-out}
+/* number discs: gold over our army, red over the enemy; they fade while a task is up */
+.disc{position:absolute;width:72px;height:72px;pointer-events:none;z-index:25;transition:opacity .3s}
+.disc svg{width:100%;height:100%;display:block;filter:drop-shadow(0 3px 3px rgba(29,43,79,.22))}
+#stage.tasking .disc{opacity:0}
+.disc .bob{animation:float 1.8s ease-in-out infinite alternate}
+@keyframes float{to{transform:translateY(-6px)}}
+.disc.hop .bob{animation:hop .36s ease-in-out infinite alternate}
+.disc .face.pop{animation:pop .55s}
+.disc .face.big{animation:big 1.6s ease-in-out}
 @keyframes big{30%,70%{transform:scale(1.6) translateY(-30px)}}
 .badge{position:absolute;min-width:44px;height:44px;padding:0 8px;border-radius:22px;background:var(--yellow);color:#fff;display:grid;place-items:center;
   font:700 28px/1 var(--num);box-shadow:0 4px 0 #B97F06;animation:pop .35s;pointer-events:none;z-index:6}
@@ -288,7 +293,7 @@ button:focus-visible{outline:4px solid var(--blue);outline-offset:3px}
 .card,.side,.prof,.bigplay,.round-btn,.speak,.caption,.gear{touch-action:none;-webkit-touch-callout:none}
 .screen:not(#parent){-webkit-touch-callout:none}
 @media (prefers-reduced-motion: reduce){
-  .walk .fig .bob,.fig.talk .bob,.card.win,.card.wiggle,.card.hint,.side.hint,.trophy svg,.brawl .dp,.cheer .fig .bob,.gob.run,.gob.hop{animation:none}
+  .walk .fig .bob,.fig.talk .bob,.card.win,.card.wiggle,.card.hint,.side.hint,.trophy svg,.brawl .dp,.cheer .fig .bob,.gob.run,.gob.hop,.disc .bob{animation:none}
 }
 </style>
 </head>
@@ -917,6 +922,7 @@ const SFX = {
   cheer(){ if (!ac) return; const t = ac.currentTime, m = [523.25,587.33,659.25,783.99,659.25,783.99,1046.5];
     m.forEach((f, i) => tone(f, t + i * .11, i === m.length - 1 ? .7 : .2, "triangle", .2)); },
   crackle(){ if (!ac) return; const t = ac.currentTime; for (let i = 0; i < 6; i++) noise(t + Math.random() * 1.2, .04, 2500, 1500, .08, "highpass"); },
+  clink(){ if (!ac) return; const t = ac.currentTime; tone(2093, t, .2, "sine", .11); tone(3136, t, .14, "sine", .06); tone(1568, t + .01, .28, "triangle", .05); },
   star(){ if (!ac) return; const t = ac.currentTime; tone(1318.5, t, .25, "sine", .1); tone(1760, t + .06, .3, "sine", .08); }
 };
 /* Background music: a little marching tune with a drum, very quiet. */
@@ -1063,6 +1069,14 @@ function goblinInner({pot = false, look = 0, stick = true} = {}){
   <ellipse cx="60" cy="70" rx="4.5" ry="3.5" fill="#5FA243"/>
   <path d="M46 78 Q60 90 74 78" fill="none" stroke="${INK}" stroke-width="2.6" stroke-linecap="round"/><rect x="60.5" y="83" width="5" height="5" rx="1" fill="#fff"/>` +
   (pot ? `<path d="M34 50 Q34 26 60 26 Q86 26 86 50 Z" fill="#6B7280"/><rect x="30" y="46" width="60" height="8" rx="4" fill="#4B5563"/><rect x="84" y="34" width="18" height="5" rx="2.5" fill="#4B5563"/>` : "");
+}
+/* Number discs: gold for our army, red for the enemy. Metal coins with the headcount on them. */
+const DISC = {gold:["#F6D36B", "#E9A20F", "#B97F06"], red:["#F29A8F", "#D8453C", "#9C2A22"]};
+function discSVG(n, kind){
+  const [hi, mid, lo] = DISC[kind], big = n >= 10;
+  return `<svg viewBox="0 0 100 100" role="img" aria-label="${n}"><circle cx="50" cy="55" r="45" fill="${lo}"/><circle cx="50" cy="50" r="45" fill="${mid}"/>
+    <circle cx="50" cy="50" r="37" fill="none" stroke="${lo}" stroke-width="3" opacity=".5"/><path d="M19 40 A33 33 0 0 1 60 17" stroke="${hi}" stroke-width="7" fill="none" stroke-linecap="round" opacity=".85"/>
+    <text class="num" x="50" y="${big ? 64 : 67}" text-anchor="middle" font-family="Andika, sans-serif" font-weight="700" font-size="${big ? 42 : 52}" fill="#fff" stroke="${lo}" stroke-width="2.5" paint-order="stroke">${n}</text></svg>`;
 }
 /* A goblin standing guard at a place: outer <g> positions it, inner .gob moves (drops its stick, flees). */
 const bossAt = (x, y, s, inner) => `<g data-x="${x}" data-y="${y}" data-s="${s}" transform="translate(${x} ${y}) scale(${s})"><g class="gob boss">${inner}</g></g>`;
@@ -1428,9 +1442,29 @@ function setPlace(id, {guards = 0, pot = false} = {}){
   return pl;
 }
 function addGuards(n, pot){
-  const spots = (PL.guards || [[200, GY], [320, GY], [440, GY]]).slice(0, n);
-  $("#guards").innerHTML = spots.map(([x, y], i) => guard(x, y, .55, {pot:pot && i % 2 === 0, look:i % 2 ? -1 : 1})).join("");
+  const base = PL.guards || [[200, GY], [320, GY], [440, GY]], low = Math.max(...base.map(p => p[1]));
+  const pool = base.filter(p => p[1] >= low - 40), spots = [];                  // extras join the posts on the lowest level
+  for (let i = 0; i < n; i++) {
+    if (i < base.length) { spots.push([...base[i], 0]); continue; }
+    const j = i - base.length, [x, y] = pool[j % pool.length], k = 1 + Math.floor(j / pool.length);
+    spots.push([x + (k % 2 ? -1 : 1) * 34 * Math.ceil(k / 2), y - 8 * k, k]);
+  }
+  const back = spots.map((s, i) => [s, i]).sort((a, b) => b[0][2] - a[0][2]);   // the ones further back are drawn first
+  $("#guards").innerHTML = back.map(([[x, y, k], i]) => guard(x, y, k ? .5 : .55, {pot:pot && i % 2 === 0, look:i % 2 ? -1 : 1})).join("");
+  foeDisc(spots);
 }
+/* The red disc: how many enemies are here (the chiefs on the wall count too). It hangs over them. */
+function foeDisc(spots){
+  $$("#placeWrap .disc.red").forEach(d => d.remove());
+  const n = spots.length + $$("#placeWrap .boss").length; if (!n) return;
+  const xs = spots.map(s => s[0]), top = Math.min(...spots.map(s => s[1]));
+  const d = document.createElement("div"); d.className = "disc red";
+  d.style.left = (Math.min(...xs) + Math.max(...xs)) / 2 - 36 + "px"; d.style.top = Math.max(76, top - 170) + "px";
+  d.innerHTML = `<div class="bob"><div class="face pop">${discSVG(n, "red")}</div></div>`;
+  $("#placeWrap").appendChild(d);
+}
+/* How many goblins hold a stop: a camp has 2 to 5, a fort 4 to 6. */
+const foesFor = kind => (G.foes = kind === "siege" ? 4 + Math.floor(Math.random() * 3) : 2 + Math.floor(Math.random() * 4));
 /* Walk one screen to the right: the land scrolls (far hills slower), the old place slides away, the new one in. */
 async function marchTo(placeId, {guards = 0, pot = false, dur = 2600} = {}){
   const ck = guard$();
@@ -1468,15 +1502,14 @@ function renderParty(){
   $("#stage").style.setProperty("--banner", P.banner);
   $("#party").innerHTML = P.party.map((s, i) => `<div class="fig sol" data-i="${i}" style="${slotStyle(i)}">${soldierSVG(s, P.banner)}</div>`).join("") +
     `<div class="fig" id="herald" style="left:180px;top:406px;z-index:20">${heraldSVG()}</div>` +
-    `<div class="fig" id="hero" style="left:322px;top:375px;z-index:21">${heroSVG(P)}</div><div class="troops" id="troops"></div>`;
+    `<div class="fig" id="hero" style="left:322px;top:375px;z-index:21">${heroSVG(P)}</div><div class="fig disc gold" id="goldDisc" style="left:134px;top:298px"></div>`;
   renderTroops();
 }
-/* The army's total, on a shield beside the soldiers. It pops when it changes. */
+/* The army's total, on a gold disc hovering over the soldiers. It travels with them, and pops when it changes. */
 function renderTroops(anim){
-  const t = $("#troops"); if (!t) return;
-  const n = P.party.length; t.hidden = !n || !!G.practice;
-  t.innerHTML = `<svg viewBox="0 0 150 186" aria-label="${n} soldiers"><path d="M75 14 Q112 14 138 26 V86 Q138 142 75 170 Q12 142 12 86 V26 Q38 14 75 14 Z" fill="#D5DDEB" transform="translate(0 8)"/><path d="M75 14 Q112 14 138 26 V86 Q138 142 75 170 Q12 142 12 86 V26 Q38 14 75 14 Z" style="fill:var(--banner)"/><path d="M75 26 Q106 26 126 35 V86 Q126 134 75 158 Q24 134 24 86 V35 Q44 26 75 26 Z" fill="#fff"/><text class="num" x="75" y="${n >= 10 ? 112 : 118}" text-anchor="middle" font-family="Andika, sans-serif" font-weight="700" font-size="${n >= 10 ? 70 : 88}" style="fill:var(--banner)">${n}</text></svg>`;
-  if (anim) { t.classList.remove("pop", "big"); void t.offsetWidth; t.classList.add(anim); }
+  const d = $("#goldDisc"); if (!d) return;
+  const n = P.party.length; d.hidden = !n || !!G.practice;
+  d.innerHTML = `<div class="bob"><div class="face${anim ? " " + anim : ""}">${discSVG(n, "gold")}</div></div>`;
 }
 /* Moving the army about: each figure keeps its place in the line-up (its base transform) and is shifted from there. */
 const figBase = f => f.dataset.base ?? (f.dataset.base = f.style.transform || "");
@@ -1591,6 +1624,7 @@ const thingG = (noun, p, i) => `<g class="thing" data-i="${i}" transform="transl
 const THING_RECT = {x:600, y:300, w:550, h:300};
 function renderTask(t){
   hideTask();
+  $("#stage").classList.add("tasking");
   const L = LV();
   $("#placeWrap").classList.toggle("dim", t.type !== "find");
   if (t.type === "count") {
@@ -1635,7 +1669,7 @@ function cardHTML(kind, n, c, dots, i){
        <g class="dots" style="opacity:${dots ? 1 : 0}">${dotsSVG(n, c, 75, 128, n > 5 ? 4.8 : 6)}</g>`;
   return `<button class="card in" data-n="${n}" aria-label="${n}" style="animation-delay:${i * .07}s"><svg viewBox="${kind === "banner" ? "-5 0 150 200" : "0 0 150 186"}">${face}</svg></button>`;
 }
-function hideTask(){ $("#things").innerHTML = ""; $("#sides").innerHTML = ""; $("#cards").innerHTML = ""; $("#placeWrap").classList.remove("dim"); }
+function hideTask(){ $("#stage").classList.remove("tasking"); $("#things").innerHTML = ""; $("#sides").innerHTML = ""; $("#cards").innerHTML = ""; $("#placeWrap").classList.remove("dim"); }
 /* ---- asking ---- */
 async function ask(prompt, first = false){
   G.prompt = prompt; G.hearing = true;
@@ -1881,6 +1915,11 @@ async function battle(win, {fort = false} = {}){
   const bosses = $$("#placeWrap .boss").map(b => b.parentNode);
   const army = armyFigs().map(f => ({f, x:f.offsetLeft + f.offsetWidth / 2, y:f.offsetTop + f.offsetHeight}));
   army.forEach(a => { a.dx = cx - 60 + jit(110) - a.x; a.dy = foot + jit(12) - a.y; });
+  // the two discs fly up over the cloud, gold from our side and red from theirs, and clink together there
+  const gd = $("#goldDisc"), rd = $("#placeWrap .disc.red"), top = cy - 205;
+  const gold = gd && !gd.hidden ? {x:cx - 40 - (gd.offsetLeft + 36), y:top - (gd.offsetTop + 36)} : null;
+  const red = rd ? {x:cx + 40 - (560 + rd.offsetLeft + 36), y:top - (140 + rd.offsetTop + 36)} : null;
+  const redAt = (dx, dy, extra = "") => `translate(${dx}px, ${dy}px)${extra}`;
   const cloud = dustCloud(cx, cy);
   // the charge: everyone runs in and disappears into the dust
   pty.classList.add("walk");
@@ -1889,12 +1928,19 @@ async function battle(win, {fort = false} = {}){
   await Promise.all([
     ...army.map(({f, dx, dy}) => tween(f, [{transform:figAt(f), opacity:1}, {transform:figAt(f, dx * .8, dy * .8), opacity:1, offset:.7}, {transform:figAt(f, dx, dy), opacity:0}], {duration:T, easing:"ease-in"})),
     ...gobs.map(o => tween(o.g, [{transform:gobPose(o.x, o.y, o.s), opacity:1}, {transform:gobPose(o.x + (o.ix - o.x) * .8, o.y + (o.iy - o.y) * .8, o.s), opacity:1, offset:.7},
-      {transform:gobPose(o.ix, o.iy, o.s), opacity:0}], {duration:T, easing:"ease-in"}))
+      {transform:gobPose(o.ix, o.iy, o.s), opacity:0}], {duration:T, easing:"ease-in"})),
+    gold && tween(gd, [{transform:figAt(gd)}, {transform:figAt(gd, gold.x, gold.y)}], {duration:T, easing:"ease-in-out"}),
+    red && tween(rd, [{transform:redAt(0, 0)}, {transform:redAt(red.x, red.y)}], {duration:T, easing:"ease-in-out"})
   ]); ck();
   pty.classList.remove("walk");
   for (let k = 0; k < 4; k++) {
     SFX.bonk(); starBurst(cx + jit(170), cy + jit(80));
     cloud.animate([{transform:"scale(1)"}, {transform:`scale(1.05) rotate(${jit(3)}deg)`}, {transform:"scale(1)"}], {duration:330 * SPEED});
+    // clink: the discs knock together, and the pair sways one way, then the other
+    const sway = k % 2 ? -14 : 14, hit = {duration:330 * SPEED, easing:"ease-in-out"};
+    if (gold) gd.animate([{transform:figAt(gd, gold.x, gold.y)}, {transform:figAt(gd, gold.x + 12 + sway, gold.y) + " rotate(12deg)"}, {transform:figAt(gd, gold.x, gold.y)}], hit);
+    if (red) rd.animate([{transform:redAt(red.x, red.y)}, {transform:redAt(red.x - 12 + sway, red.y, " rotate(-12deg)")}, {transform:redAt(red.x, red.y)}], hit);
+    if (gold && red) setTimeout(() => SFX.clink(), 150 * SPEED);
     await wait(340); ck();
   }
   const clear = tween(cloud, [{opacity:1, transform:"scale(1)"}, {opacity:0, transform:"scale(1.25)"}], {duration:600 * SPEED, easing:"ease-out"}).then(() => cloud.remove());
@@ -1907,13 +1953,17 @@ async function battle(win, {fort = false} = {}){
       ...bosses.map(b => { const x = +b.dataset.x, y = +b.dataset.y, s = +b.dataset.s; b.firstElementChild.classList.add("run");
         return tween(b, [{transform:`translate(${x + 160 * s}px, ${y}px) scale(${-s}, ${s})`}, {transform:`translate(${off + 220}px, ${y}px) scale(${-s}, ${s})`}], {duration:1800 * SPEED, easing:"ease-in"}); })
     ];
-    // our army comes out where the fight was; the herald hurries up to join them
+    if (red) runs.push(tween(rd, [{transform:redAt(red.x, red.y)}, {transform:redAt(red.x + 50, red.y - 24, " rotate(30deg)"), offset:.18},
+      {transform:redAt(E.right + 120 - (560 + rd.offsetLeft), red.y + 60, " rotate(200deg)")}], {duration:1500 * SPEED, easing:"ease-in"}));
+    // our army comes out where the fight was, with its disc over it; the herald hurries up to join them
     army.forEach(({f, dx, dy}) => { settle(f, figAt(f, AHEAD)); f.animate([{transform:figAt(f, dx, dy), opacity:0}, {transform:figAt(f, AHEAD), opacity:1}], {duration:650 * SPEED, easing:"ease-out"}); });
+    if (gold) { settle(gd, figAt(gd, AHEAD)); gd.animate([{transform:figAt(gd, gold.x, gold.y)}, {transform:figAt(gd, gold.x - 20, gold.y - 30)}, {transform:figAt(gd, AHEAD)}], {duration:900 * SPEED, easing:"ease-out"}); }
+    else if (gd) settle(gd, figAt(gd, AHEAD));
     const h = $("#herald"); settle(h, figAt(h, AHEAD)); h.classList.add("hurry");
     const hw = ended(h.animate([{transform:figAt(h)}, {transform:figAt(h, AHEAD)}], {duration:900 * SPEED, easing:"ease-in-out"})).then(() => h.classList.remove("hurry"));
     G.ahead = AHEAD;
     await Promise.all([...runs, clear, hw]); ck();
-    $("#guards").innerHTML = ""; bosses.forEach(b => b.remove());
+    $("#guards").innerHTML = ""; bosses.forEach(b => b.remove()); if (rd) rd.remove();
     pty.classList.add("cheer"); SFX.cheer();
     const f = $("#placeWrap .ourflag"); if (f) { f.style.opacity = 1; f.classList.add("flagup"); SFX.flag(); }
     await wait(1500); ck();
@@ -1922,7 +1972,7 @@ async function battle(win, {fort = false} = {}){
   }
   // lost: our army bursts out of the cloud and runs home, all together, and the goblins cheer
   SFX.wahwah(); say(["h_retreat"]);
-  const R = Math.ceil(560 - E.left), home = [$("#herald"), $("#troops")].filter(Boolean);
+  const R = Math.ceil(560 - E.left), home = [$("#herald")].filter(Boolean);
   pty.classList.add("walk");
   const outs = [
     ...army.map(({f, dx, dy}) => { settle(f, figAt(f, -R)); return ended(f.animate([{transform:figAt(f, dx, dy), opacity:0}, {transform:figAt(f, dx * .7 - 60, dy * .7), opacity:1, offset:.2}, {transform:figAt(f, -R), opacity:1}], {duration:1300 * SPEED, easing:"ease-in"})); }),
@@ -1934,16 +1984,19 @@ async function battle(win, {fort = false} = {}){
     settle(o.g, gobPose(o.x, o.y, o.s)); o.g.animate([{transform:gobPose(o.ix, o.iy, o.s), opacity:0}, {transform:gobPose(o.x, o.y, o.s), opacity:1}], {duration:700 * SPEED, easing:"ease-out"});
   });
   bosses.forEach(b => b.firstElementChild.classList.add("hop"));
+  if (gold) { settle(gd, figAt(gd, -R)); outs.push(ended(gd.animate([{transform:figAt(gd, gold.x, gold.y)}, {transform:figAt(gd, gold.x - 60, gold.y - 20) + " rotate(-30deg)", offset:.2}, {transform:figAt(gd, -R)}], {duration:1300 * SPEED, easing:"ease-in"}))); }
+  else if (gd) settle(gd, figAt(gd, -R));
+  if (red) { settle(rd, "none"); rd.classList.add("hop"); rd.animate([{transform:redAt(red.x, red.y)}, {transform:redAt(0, 0)}], {duration:700 * SPEED, easing:"ease-out"}); }
   await Promise.all([...outs, clear]); ck();
   pty.classList.remove("walk");
   await wait(700); ck();
   await narrate("st_retreat"); ck();
   // back they come, ready to try again
   pty.classList.add("walk");
-  await Promise.all([...army.map(a => a.f), ...home].map(el => { settle(el, figAt(el)); return ended(el.animate([{transform:figAt(el, -R)}, {transform:figAt(el)}], {duration:1200 * SPEED, easing:"ease-out"})); })); ck();
+  await Promise.all([...army.map(a => a.f), ...home, ...(gd ? [gd] : [])].map(el => { settle(el, figAt(el)); return ended(el.animate([{transform:figAt(el, -R)}, {transform:figAt(el)}], {duration:1200 * SPEED, easing:"ease-out"})); })); ck();
   pty.classList.remove("walk");
   bosses.forEach(b => b.firstElementChild.classList.remove("hop"));
-  if (PL) addGuards(3, PL.pot);
+  if (PL) addGuards(G.foes || 3, PL.pot);
   await say(["h_try_again"]); ck();
 }
 function starBurst(x, y){
@@ -2038,7 +2091,7 @@ async function runSiege(stop){
     }
   }
   await say([stop.build.includes("ram") ? "h_ram_ready" : "h_up_the_ladders"]); ck();
-  addGuards(3, PL.pot);
+  addGuards(G.foes || 4, PL.pot);
   for (;;) {
     const first = await runSet(T_ASSAULT, i => dropStick(i)); ck();
     const won = first * 2 >= setSize();
@@ -2124,7 +2177,7 @@ async function sitting(){
     renderRoad();
     await say([P.stop === 0 && G.stopsThisSitting === 0 ? "h_forward_march" : "h_onward"]); ck();
     const skirm = stop.kind === "skirmish";
-    await marchTo(stop.place, {guards:skirm || stop.kind === "siege" ? 3 : 0}); ck();
+    await marchTo(stop.place, {guards:skirm ? foesFor("skirmish") : stop.kind === "siege" ? foesFor("siege") : 0}); ck();
     if (stop.kind === "village") await runVillage(stop);
     else if (skirm) await runSkirmish(stop.t, stop.arrive, stop.won);
     else if (stop.kind === "special") await runSpecial(stop);
@@ -2144,7 +2197,7 @@ async function runRaid(){
   const where = STOP_BY_ID[r.at];
   await say(["h_raid"]); ck();
   if (landName !== CHAPTERS[where.ci].land) renderLand(CHAPTERS[where.ci].land);
-  await marchTo(where.place, {guards:3}); ck();
+  await marchTo(where.place, {guards:foesFor("skirmish")}); ck();
   await runSkirmish(r.t, r.line, null, {raid:true}); ck();
   SFX.cheer();
   await giveTreasure(nextTreasure()); ck();

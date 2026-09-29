@@ -166,7 +166,7 @@ Praise as usual.
 1. **N:** "As the sun went down, the army made camp." `st_camp_1` (a generic camp line, with variants `st_camp_2`,
    `st_camp_3`)
 2. **H:** "Make camp!" `h_make_camp`
-3. The troop shield grows big for a moment. **H:** "We have 5 soldiers!" `we_have` + `num_5` + `w_soldiers`
+3. The gold disc over the army grows big for a moment. **H:** "We have 5 soldiers!" `we_have` + `num_5` + `w_soldiers`
 4. **H:** "Rest now, brave [Hero]. Good night!" `h_rest_now` + title + name + `h_good_night`
 
 **Next sitting opens with:**
