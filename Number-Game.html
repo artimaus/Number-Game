@@ -487,7 +487,7 @@ const LOOKALIKE = [[6, 9], [2, 5], [1, 7]];          // never on one board in ar
 const PARTY_MAX = 20, GEAR_MAX = 3;                  // the army never outgrows the numbers taught (to 20); gear: spear, then helmet, shield, cape
 /* The party cap grows with the story: 5 soldiers in chapter 1, 10 in chapter 2, and so on, up to 20. */
 const partyCap = ci => Math.min(PARTY_MAX, 5 * (CHAPTERS[ci] || CHAPTERS[0]).n);
-const UP_WINDOW = 7, UP_SCORE = .85,    DOWN_WINDOW = 6, DOWN_SCORE = .5;
+const UP_WINDOW = 6, UP_SCORE = .85,    DOWN_WINDOW = 6, DOWN_SCORE = .5;
 const REPEAT_MS = 12000, REPEAT_MAX = 3;             // the command repeats after this long with no tap
 const RAPID_MS = 700;                                // a wrong tap this soon after the cards unlock counts as a guess
 const GUESS_WINDOW = 5, GUESS_ROUNDS = 3;

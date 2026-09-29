@@ -104,8 +104,8 @@ hovering over it:
   This applies in every arc, including the first.
 
 ### Pacing: the road waits for the maths
-Difficulty follows Letter Hunt's adaptive levels: up at 85% of first tries over 7 sets, down quietly below 50%
-over 6. **Each chapter needs a level** (§5.4). A chapter is about 8–10 sets, a little more than the 7-set level-up
+Difficulty follows Letter Hunt's adaptive levels: up at 85% of first tries over the last 6 sets (a sliding average, so one weak set doesn't send the child back to the start), down quietly below 50%
+over 6. **Each chapter needs a level** (§5.4). A chapter is about 8–10 sets, a little more than the 6-set level-up
 window, so a child who is ready moves through story and maths together.
 
 If the chapter's fort falls but the child isn't at the next chapter's level yet:
@@ -113,9 +113,9 @@ If the chapter's fort falls but the child isn't at the next chapter's level yet:
   soon!"
 - Each sitting then offers **raids**: goblins are back at a village you already freed. March back, drive them off,
   and the villagers cheer and send a gift.
-- **Seven dots** under the blocked road on the road bar show how close the road is to clearing: they light as the
+- **Six dots** under the blocked road on the road bar show how close the road is to clearing: they light as the
   recent stops add up to the level-up (a weak stop can dim one again). When one lights, the herald says "The road is
-  getting clearer!"; all seven light just before the road clears.
+  getting clearer!"; all six light just before the road clears.
 - When the level arrives: "The woodcutters cleared the road!" and the march goes on.
 
 A toddler can spend months on one maths stage, so **most toddler play time will be raids**. Raids need variety
