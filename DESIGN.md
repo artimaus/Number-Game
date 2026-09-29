@@ -61,7 +61,7 @@ the play space opens up from a single road, to forks, to a full campaign map.
 
 | # | Arc | Story | Play space | Maths | Army | Tasks per stop |
 |---|---|---|---|---|---|---|
-| 1 | **The Goblin Border** | Sent to guard the border villages from goblin raiders | Linear march | Counting and numerals to 10; more or less | Party, up to 10 | 3 |
+| 1 | **The Goblin Border** | Sent to guard the border villages from goblin raiders | Linear march | Counting and numerals to 10; more or less | Party: 5 in chapter 1, +5 a chapter | 3 |
 | 2 | **The Troll Hills** | King Nuttletusk's trolls shake the hill villages' nut trees bare; his keep is inside the Great Walnut Tree | Linear march | Numbers to 20; order; the signs + − =; which is bigger; first adding within 5; a first taste of taking away | Party, up to 20 | 4 |
 | 3 | **The Stolen Crown** | Coming home to find the uncle/aunt has seized the throne; rallying loyal towns | Forks (pick one of two) | Adding and taking away within 10 | Companies of ten | 5 |
 | 4 | **Siege of the Capital** | Retaking the kingdom, castle by castle, ending at the capital | Forks | Within 20; tens and ones; 2-digit numbers | Companies of ten | 6 |
@@ -400,10 +400,11 @@ Kept loose on purpose; to be designed once the linear arcs are dialled in.
 
 ## 12. Open questions for the linear arcs
 
-**To do later:**
-- Reshape the water in the marsh places (chapter 3, the Marsh Villages). Noted, not started.
-
 None open. Settled:
+- Water in the marsh (chapter 3) is drawn by what each stop is about: round ponds beside the road for the quiet
+  villages, rivers the road crosses (on stepping stones, a footbridge or ferry jetties) where the stop is a crossing,
+  and a wooden boardwalk across the wetland to the Muddy Island and Mudwall Fort. The road is never covered by a
+  square band of water. The opening scene's harbour and the flooded-road block are rounded the same way.
 - Minimum gear per fort: 2 ladders in arc 1 (plus the ram's log and wheels at the Great Stockade); 3 ladders and
   the ram's log and wheels in arc 2.
 - Chapter names as drafted, with **Trolltree Hills** instead of Trollberry: the hills are nut trees, and trolls

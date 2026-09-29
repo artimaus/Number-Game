@@ -1509,13 +1509,78 @@ function crossRiver(cx){
     <g stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".55" fill="none"><path d="M${cx + 120} ${GY - 76} l-14 12 M${cx + 60} ${GY - 30} l-18 14 M${cx - 40} ${GY + 110} l-16 24 M${cx - 110} ${GY + 200} l-20 30 M${cx - 150} ${GY + 290} l-18 32"/></g>` +
     riverStones(cx).map(([x, y]) => `<ellipse cx="${x}" cy="${y + 3}" rx="17" ry="7" fill="#9A9186"/><ellipse cx="${x}" cy="${y}" rx="17" ry="7" fill="#C2BAAD"/>`).join("");
 }
-const water = (y, h, c = "#8FB8C8") => `<rect x="-20" y="${y}" width="660" height="${h}" fill="${c}"/><path d="M40 ${y + 14} h40 M200 ${y + 26} h50 M380 ${y + 12} h44 M520 ${y + 30} h40" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".5"/>`;
 const stiltHouse = (x, y, s, wall = "#E8D6B3", roof = "#8A6A45") => at(x, y, s,
   `<g fill="#8A5A32"><rect x="-50" y="-60" width="8" height="60"/><rect x="-4" y="-60" width="8" height="60"/><rect x="42" y="-60" width="8" height="60"/></g><rect x="-64" y="-66" width="128" height="10" fill="#6B4A2E"/>
   <rect x="-54" y="-136" width="108" height="70" fill="${wall}"/><path d="M-70 -130 L0 -184 L70 -130 Z" fill="${roof}"/><path d="M-12 -66 V-102 Q0 -114 12 -102 V-66 Z" fill="#6B4A2E"/><rect x="24" y="-118" width="20" height="20" rx="10" fill="#8FB8D8"/>
   <path d="M-58 -60 L-70 0 M-46 -60 L-58 0 M-68 -44 H-54 M-66 -28 H-52 M-64 -12 H-50" stroke="#8A5A32" stroke-width="3" stroke-linecap="round"/>`);
 const reeds = (x, y, s) => at(x, y, s, `<g stroke="#5E8F5A" stroke-width="4" stroke-linecap="round"><path d="M0 0 V-60 M10 0 Q12 -40 18 -70 M-10 0 Q-12 -36 -20 -56 M22 0 Q26 -30 34 -46"/></g><g fill="#8A5A32"><rect x="15" y="-82" width="7" height="18" rx="3.5"/><rect x="-3" y="-72" width="6" height="16" rx="3"/></g>`);
 const lily = (x, y, s) => at(x, y, s, `<path d="M0 0 m-24 0 a24 9 0 1 0 48 0 a24 9 0 1 0 -48 0 M0 0 L22 -4" fill="#5FA243" stroke="#8FB8C8" stroke-width="2"/>`);
+/* ---- water: soft ponds, winding streams, fords and boardwalks (the marsh, the harbour) ---- */
+const WATER = "#8FB8C8", SHEEN = "#A7CAD6", BANK = "#6F9F66";
+const f1 = v => v.toFixed(1);
+function smoothClosed(pts){
+  const n = pts.length; let d = `M${f1(pts[0][0])} ${f1(pts[0][1])}`;
+  for (let i = 0; i < n; i++) { const p0 = pts[(i - 1 + n) % n], p1 = pts[i], p2 = pts[(i + 1) % n], p3 = pts[(i + 2) % n];
+    d += ` C${f1(p1[0] + (p2[0] - p0[0]) / 6)} ${f1(p1[1] + (p2[1] - p0[1]) / 6)} ${f1(p2[0] - (p3[0] - p1[0]) / 6)} ${f1(p2[1] - (p3[1] - p1[1]) / 6)} ${f1(p2[0])} ${f1(p2[1])}`; }
+  return d + "Z";
+}
+function smoothOpen(pts){
+  let d = `${f1(pts[0][0])} ${f1(pts[0][1])}`;
+  for (let i = 0; i < pts.length - 1; i++) { const p0 = pts[Math.max(0, i - 1)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(pts.length - 1, i + 2)];
+    d += ` C${f1(p1[0] + (p2[0] - p0[0]) / 6)} ${f1(p1[1] + (p2[1] - p0[1]) / 6)} ${f1(p2[0] - (p3[0] - p1[0]) / 6)} ${f1(p2[1] - (p3[1] - p1[1]) / 6)} ${f1(p2[0])} ${f1(p2[1])}`; }
+  return d;
+}
+/* A soft, gently wobbling outline: an ellipse whose near (lower) half can be flatter than its far half. */
+function pondShape(cx, cy, rx, ryT, ryB, seed = 1, n = 12, wob = .08){
+  return smoothClosed(Array.from({length:n}, (_, k) => { const a = k / n * Math.PI * 2, m = 1 + wob * Math.sin(k * 2.3 + seed) + wob * .5 * Math.cos(k * 3.7 + seed * 2);
+    return [cx + Math.cos(a) * rx * m, cy + Math.sin(a) * (Math.sin(a) > 0 ? ryB : ryT) * m]; }));
+}
+const ripples = list => `<g stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".55">${list.map(([x, y, w]) => `<path d="M${f1(x)} ${f1(y)} h${w}"/>`).join("")}</g>`;
+/* A pond: a grassy bank, the water, a paler sheen on the far side, and ripples. */
+function pond(cx, cy, rx, ryT, ryB, seed, {bank = BANK, water = WATER, rip = true} = {}){
+  return `<path d="${pondShape(cx, cy, rx + 12, ryT + 9, ryB + 7, seed)}" fill="${bank}"/><path d="${pondShape(cx, cy, rx, ryT, ryB, seed)}" fill="${water}"/>` +
+    `<path d="${pondShape(cx - rx * .05, cy - ryT * .42, rx * .7, ryT * .4, ryB * .25, seed + 3)}" fill="${SHEEN}" opacity=".7"/>` +
+    (rip ? ripples([[cx - rx * .55, cy + ryB * .3, 34], [cx + rx * .1, cy + ryB * .5, 46], [cx + rx * .5, cy - ryT * .1, 30]]) : "");
+}
+/* A stream: a centre line and a width that grows toward us, drawn as a smooth ribbon with a grassy bank. */
+function stream(line, w0, w1){
+  const n = line.length, side = (s, grow) => line.map(([x, y], i) => {
+    const a = line[Math.max(0, i - 1)], b = line[Math.min(n - 1, i + 1)], dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy) || 1, w = (w0 + (w1 - w0) * i / (n - 1)) / 2 + grow;
+    return [x - s * dy / L * w, y + s * dx / L * w]; });
+  const rib = grow => `M${smoothOpen(side(1, grow))} L${smoothOpen(side(-1, grow).reverse())} Z`;
+  return `<path d="${rib(9)}" fill="${BANK}"/><path d="${rib(0)}" fill="${WATER}"/>`;
+}
+/* stepping stones: [x, y, scale] */
+const stepStones = list => list.map(([x, y, s = 1]) => `<g transform="translate(${x} ${y}) scale(${s})"><ellipse cx="0" cy="4" rx="17" ry="8" fill="#8E857A"/><ellipse cx="0" cy="0" rx="17" ry="8" fill="#C9C1B4"/><ellipse cx="-5" cy="-2" rx="6" ry="2.4" fill="#fff" opacity=".45"/></g>`).join("");
+/* a plank footbridge from x0 to x1, its deck at y */
+function footbridge(x0, x1, y){
+  let planks = ""; for (let x = x0; x < x1; x += 16) planks += `<rect x="${x}" y="${y - 7}" width="14" height="16" rx="2" fill="${(x / 16) % 2 ? "#B5854F" : "#A97A45"}"/>`;
+  return `<rect x="${x0 - 4}" y="${y + 6}" width="${x1 - x0 + 8}" height="7" rx="3" fill="#7F5530"/>${planks}
+    <path d="M${x0 + 4} ${y - 7} V${y - 30} M${x1 - 4} ${y - 7} V${y - 30} M${(x0 + x1) / 2} ${y - 7} V${y - 30}" stroke="#7F5530" stroke-width="5" stroke-linecap="round"/>
+    <path d="M${x0 + 4} ${y - 28} Q${(x0 + x1) / 2} ${y - 20} ${x1 - 4} ${y - 28}" stroke="#8A5A32" stroke-width="4" fill="none"/>`;
+}
+/* a wooden jetty from x0 to x1, its deck at y, on posts */
+function jetty(x0, x1, y){
+  let p = ""; for (let x = x0; x < x1; x += 18) p += `<rect x="${x}" y="${y - 8}" width="16" height="14" rx="2" fill="${(x / 18) % 2 ? "#A97A45" : "#B5854F"}"/>`;
+  return `<g fill="#6B4A2E">${[x0 + 6, (x0 + x1) / 2, x1 - 12].map(x => `<rect x="${x}" y="${y}" width="8" height="40" rx="2"/>`).join("")}</g>${p}`;
+}
+/* a boardwalk along the road's line, over the wetland: planks, a dark edge and posts into the water */
+function boardwalk(x0, x1, top = GY + 4, bottom = GY + 52){
+  let seams = "", posts = "";
+  for (let x = x0 + 18; x < x1; x += 22) seams += `M${x} ${top} V${bottom}`;
+  for (let x = x0 + 30; x < x1; x += 88) posts += `<rect x="${x}" y="${bottom - 2}" width="10" height="22" rx="3" fill="#6B4A2E"/>`;
+  return `${posts}<path d="M${x0} ${top} Q${(x0 + x1) / 2} ${top - 6} ${x1} ${top} V${bottom} Q${(x0 + x1) / 2} ${bottom - 6} ${x0} ${bottom} Z" fill="#B98B55"/>
+    <path d="${seams}" stroke="#946A3E" stroke-width="2.5"/><path d="M${x0} ${bottom} Q${(x0 + x1) / 2} ${bottom - 6} ${x1} ${bottom}" stroke="#7F5530" stroke-width="6" fill="none"/>`;
+}
+/* a wetland across the whole stop (the road's line too), with soft ends */
+function wetland(x0, x1, seed = 1){
+  const cx = (x0 + x1) / 2, rx = (x1 - x0) / 2;
+  return `<path d="${pondShape(cx, GY + 40, rx + 14, 158, 186, seed, 14, .06)}" fill="${BANK}"/><path d="${pondShape(cx, GY + 40, rx, 150, 178, seed, 14, .06)}" fill="${WATER}"/>` +
+    `<path d="${pondShape(cx, GY - 60, rx * .8, 50, 30, seed + 2)}" fill="${SHEEN}" opacity=".6"/>` +
+    ripples([[x0 + 60, GY - 40, 40], [cx, GY - 70, 50], [x1 - 120, GY - 30, 36], [x0 + 110, GY + 110, 50], [cx + 60, GY + 150, 44]]);
+}
+const islet = (cx, cy, rx, ry, seed) => `<path d="${pondShape(cx, cy, rx, ry, ry * .8, seed, 9, .12)}" fill="#7FB27A"/><path d="${pondShape(cx, cy + ry * .35, rx * .92, ry * .45, ry * .5, seed)}" fill="#6A9C60" opacity=".6"/>` + reeds(cx + rx * .3, cy, .55);
+const raft = (x, y) => at(x, y, 1, `<ellipse cx="0" cy="10" rx="76" ry="9" fill="#7AA7B8" opacity=".7"/><rect x="-70" y="-10" width="140" height="20" rx="8" fill="#9A6B3E"/><path d="M-50 -10 V10 M-20 -10 V10 M10 -10 V10 M40 -10 V10" stroke="#7F5530" stroke-width="3"/>`);
 const logCabin = (x, y, s) => at(x, y, s,
   `<rect x="-80" y="-84" width="160" height="84" fill="#9A6B3E"/><g stroke="#7F5530" stroke-width="3"><path d="M-80 -70 H80 M-80 -56 H80 M-80 -42 H80 M-80 -28 H80 M-80 -14 H80"/></g>
   <path d="M-96 -80 L0 -140 L96 -80 Z" fill="#6E8F3E"/><path d="M-16 0 V-44 H16 V0 Z" fill="#5A3B22"/><rect x="36" y="-64" width="26" height="24" fill="#8FB8D8"/><rect x="50" y="-150" width="16" height="30" fill="#8A6A45"/>`);
@@ -1583,30 +1648,40 @@ const PLACES = {
       `<rect x="400" y="120" width="4" height="60" fill="#8A5A32"/>` + sock(404, 124, 1, "#8657D3") + palisade(40, 580, GY, 70, "#A3753F", "#8A6A45") + bossAt(420, 190, .4, snagglenoseInner()) + ourFlag(250, 180, 1.2),
     guards:[[150, GY - 80], [470, GY - 80], [230, GY - 80]], ladders:[[100, GY], [180, GY], [440, GY], [520, GY], [140, GY], [480, GY]], gate:[310, GY], flag:[250, 180]}),
 
-  reedby:() => ({svg:water(GY - 30, 60) + stiltHouse(180, GY - 20, 1, "#E8D6B3", "#8A6A45") + stiltHouse(420, GY - 20, .9, "#D9E4C8", "#C0673A") + lily(300, GY - 8, 1) + lily(540, GY - 4, .8) + reeds(40, GY, 1),
-    door:[180, GY - 20], guards:[[300, GY - 20], [520, GY - 14], [100, GY - 20]]}),
-  rafts:() => ({svg:water(GY - 70, 110) + [[170, GY - 20], [340, GY - 44], [500, GY - 16]].map(([x, y]) => at(x, y, 1, `<rect x="-70" y="-10" width="140" height="20" rx="8" fill="#9A6B3E"/><path d="M-50 -10 V10 M-20 -10 V10 M10 -10 V10 M40 -10 V10" stroke="#7F5530" stroke-width="3"/>`)).join("") + reeds(40, GY, 1.1) + reeds(590, GY, 1) + ourFlag(580, GY - 40),
-    guards:[[150, GY - 30], [340, GY - 54], [490, GY - 26]]}),
-  ferry:() => ({svg:water(GY - 90, 130) + `<rect x="20" y="${GY - 70}" width="170" height="16" fill="#8A5A32"/><g fill="#6B4A2E"><rect x="30" y="${GY - 58}" width="8" height="60"/><rect x="100" y="${GY - 58}" width="8" height="60"/><rect x="170" y="${GY - 58}" width="8" height="60"/></g>` +
-      at(110, GY - 70, .55, villagerInner({sk:2, tu:0, hs:2, hc:4})) + reeds(600, GY, 1),
-    dock:[[60, GY - 40], [130, GY - 34], [60, GY - 6], [130, GY + 2]], drift:[[300, GY - 70], [420, GY - 40], [520, GY - 80], [380, GY - 4]], driftThing:"boats"}),
-  frogmore:() => ({svg:water(GY - 30, 60) + stiltHouse(300, GY - 20, 1.05, "#D9E4C8", "#6E8F3E") + [120, 200, 460, 560].map((x, i) => lily(x, GY - 6 + i % 2 * 6, .9)).join("") +
-      reeds(80, GY, 1), door:[300, GY - 20], guards:[[180, GY - 16], [450, GY - 20], [560, GY - 16]]}),
-  mistwater:() => ({svg:water(GY - 30, 60) + stiltHouse(170, GY - 20, .95, "#E8D6B3", "#8A6A45") + stiltHouse(420, GY - 20, 1, "#EDE4D0", "#6B7A8F") +
-      `<g fill="#fff" opacity=".55"><ellipse cx="160" cy="${GY - 140}" rx="160" ry="30"/><ellipse cx="460" cy="${GY - 90}" rx="190" ry="34"/><ellipse cx="300" cy="${GY - 40}" rx="220" ry="22"/></g>` + lily(290, GY - 8, .9),
-    door:[420, GY - 20], guards:[[290, GY - 20], [540, GY - 20], [90, GY - 20]]}),
-  watchtower:() => ({svg:water(GY - 30, 60) + reeds(100, GY, 1.3) + reeds(520, GY, 1.2) + at(320, GY, 1, `<g transform="rotate(-6 0 0)"><path d="M-40 0 L-20 -200 M40 0 L20 -200 M-34 -40 L34 -80 M34 -40 L-34 -80 M-28 -110 L28 -150 M28 -110 L-28 -150" stroke="#8A6A45" stroke-width="7" stroke-linecap="round"/>
-      <rect x="-50" y="-214" width="100" height="16" rx="3" fill="#6B4A2E"/><path d="M-50 -214 L0 -250 L50 -214 Z" fill="#6E8F3E"/></g>`) + `<rect x="318" y="100" width="4" height="40" fill="#8A5A32"/>` + sock(322, 104, .8) + ourFlag(420, GY - 20),
-    guards:[[290, GY - 214], [345, GY - 214], [200, GY - 20]]}),
-  muddy:() => ({svg:water(GY - 60, 100) + `<ellipse cx="320" cy="${GY - 20}" rx="230" ry="44" fill="#8A6A45"/><g fill="#6B4A2E"><circle cx="220" cy="${GY - 30}" r="10"/><circle cx="420" cy="${GY - 14}" r="12"/><circle cx="330" cy="${GY - 40}" r="8"/></g>` + reeds(60, GY, 1) + reeds(590, GY, 1.1) + ourFlag(430, GY - 40),
-    guards:[[220, GY - 40], [320, GY - 50], [420, GY - 38]]}),
-  heronby:() => ({svg:water(GY - 30, 60) + stiltHouse(240, GY - 20, 1.05, "#E8D6B3", "#2E78D0") +
-      at(470, GY - 10, 1, `<path d="M0 0 V-50 M8 0 V-40" stroke="#E9A20F" stroke-width="3"/><ellipse cx="4" cy="-66" rx="22" ry="16" fill="#E6ECF2"/><path d="M14 -76 Q18 -110 30 -112" stroke="#E6ECF2" stroke-width="8" fill="none" stroke-linecap="round"/><circle cx="30" cy="-114" r="8" fill="#E6ECF2"/><path d="M36 -114 L60 -110 L36 -108 Z" fill="#E9A20F"/><circle cx="31" cy="-116" r="1.8" fill="${INK}"/>`) + reeds(80, GY, 1) + reeds(580, GY, 1),
-    door:[240, GY - 20], guards:[[380, GY - 20], [120, GY - 20], [540, GY - 20]]}),
-  mudwall:() => ({svg:water(GY - 30, 60) + `<path d="M60 ${GY} Q70 ${GY - 110} 110 ${GY - 120} Q200 ${GY - 140} 310 ${GY - 132} Q420 ${GY - 140} 510 ${GY - 120} Q550 ${GY - 110} 560 ${GY} Z" fill="#8A6A45"/>
-      <g stroke="#6B4A2E" stroke-width="4" stroke-linecap="round"><path d="M110 ${GY - 110} l-10 -30 M200 ${GY - 132} l6 -30 M420 ${GY - 132} l-6 -30 M510 ${GY - 110} l10 -30"/></g><g fill="#6B4A2E"><circle cx="160" cy="${GY - 60}" r="10"/><circle cx="460" cy="${GY - 80}" r="12"/><circle cx="380" cy="${GY - 40}" r="8"/></g>
-      <path d="M270 ${GY} V${GY - 60} Q310 ${GY - 90} 350 ${GY - 60} V${GY} Z" fill="#3E2816"/><rect x="308" y="140" width="4" height="60" fill="#8A5A32"/>` + sock(312, 144, 1) + bossAt(380, 184, .42, snagglenoseInner()) + ourFlag(250, 196, 1.2),
-    guards:[[150, GY - 124], [230, GY - 134], [460, GY - 128]], ladders:[[100, GY], [190, GY], [430, GY], [510, GY], [145, GY], [470, GY]], gate:[310, GY], flag:[250, 196]}),
+  /* The marsh: ponds by the quiet villages, rivers where the stop is a crossing, a boardwalk to the island and the fort. */
+  reedby:() => ({svg:pond(340, GY - 62, 285, 58, 44, 1) + pond(470, GY + 118, 84, 13, 10, 7, {rip:false}) + reeds(395, GY + 124, .6) +
+      stiltHouse(185, GY - 30, 1, "#E8D6B3", "#8A6A45") + stiltHouse(445, GY - 40, .9, "#D9E4C8", "#C0673A") + lily(300, GY - 30, 1) + lily(560, GY - 44, .8) + lily(330, GY - 70, .7) +
+      reeds(60, GY - 26, 1) + reeds(610, GY - 40, .9) + reeds(250, GY - 104, .6),
+    door:[185, GY - 30], guards:[[300, GY - 14], [520, GY - 12], [100, GY - 14]]}),
+  rafts:() => ({svg:stream([[540, GY - 150], [480, GY - 92], [380, GY - 30], [320, GY + 40], [270, GY + 140], [200, GY + 300]], 40, 270) + ripples([[430, GY - 60, 30], [240, GY + 150, 40], [330, GY + 90, 34]]) +
+      stepStones([[180, GY + 30, .8], [470, GY + 26, .8]]) + raft(430, GY - 36) + raft(335, GY + 34) + raft(270, GY + 120) + reeds(560, GY - 10, 1) + reeds(150, GY - 20, 1) + ourFlag(600, GY - 20),
+    guards:[[420, GY - 46], [335, GY + 24], [260, GY + 110]]}),
+  ferry:() => ({svg:stream([[430, GY - 150], [390, GY - 80], [340, GY - 8], [310, GY + 60], [270, GY + 180], [230, GY + 320]], 70, 400) + ripples([[380, GY - 50, 36], [300, GY + 110, 50], [420, GY + 40, 40]]) +
+      jetty(110, 220, GY + 14) + jetty(470, 560, GY + 6) + at(117, GY - 83, .55, villagerInner({sk:2, tu:0, hs:2, hc:4})) + reeds(80, GY - 10, 1) + reeds(600, GY - 16, 1) + lily(360, GY - 90, .7),
+    dock:[[250, GY + 4], [290, GY + 26], [240, GY + 56], [290, GY + 80]], drift:[[380, GY - 70], [440, GY - 20], [400, GY + 90], [330, GY + 150]], driftThing:"boats"}),
+  frogmore:() => ({svg:pond(430, GY - 62, 200, 52, 38, 3) + stream([[300, GY - 40], [250, GY - 8], [215, GY + 40], [180, GY + 130], [130, GY + 280]], 26, 110) +
+      stepStones([[184, GY + 26, .9], [212, GY + 36], [240, GY + 26, .95]]) + stiltHouse(440, GY - 36, 1.05, "#D9E4C8", "#6E8F3E") +
+      [330, 560, 600].map((x, i) => lily(x, GY - 40 - i % 2 * 26, .9)).join("") + reeds(80, GY - 14, 1) + reeds(620, GY - 40, .9),
+    door:[440, GY - 36], guards:[[120, GY - 14], [330, GY + 2], [560, GY - 12]]}),
+  mistwater:() => ({svg:pond(320, GY - 64, 290, 60, 44, 8) + stiltHouse(170, GY - 32, .95, "#E8D6B3", "#8A6A45") + stiltHouse(430, GY - 40, 1, "#EDE4D0", "#6B7A8F") +
+      `<g fill="#fff" opacity=".55"><ellipse cx="160" cy="${GY - 140}" rx="160" ry="30"/><ellipse cx="460" cy="${GY - 90}" rx="190" ry="34"/><ellipse cx="300" cy="${GY - 40}" rx="220" ry="22"/></g>` + lily(290, GY - 30, .9) + reeds(40, GY - 20, .9),
+    door:[430, GY - 40], guards:[[290, GY - 14], [540, GY - 14], [90, GY - 14]]}),
+  watchtower:() => ({svg:pond(330, GY - 60, 290, 60, 44, 6) + reeds(80, GY - 20, 1.3) + reeds(560, GY - 30, 1.2) + at(320, GY - 24, 1, `<g transform="rotate(-6 0 0)"><path d="M-40 0 L-20 -200 M40 0 L20 -200 M-34 -40 L34 -80 M34 -40 L-34 -80 M-28 -110 L28 -150 M28 -110 L-28 -150" stroke="#8A6A45" stroke-width="7" stroke-linecap="round"/>
+      <rect x="-50" y="-214" width="100" height="16" rx="3" fill="#6B4A2E"/><path d="M-50 -214 L0 -250 L50 -214 Z" fill="#6E8F3E"/></g>`) + `<rect x="318" y="76" width="4" height="40" fill="#8A5A32"/>` + sock(322, 80, .8) + ourFlag(430, GY - 14),
+    guards:[[290, GY - 238], [345, GY - 238], [200, GY - 14]]}),
+  muddy:() => ({svg:wetland(-20, 700, 3) + `<ellipse cx="320" cy="${GY - 34}" rx="230" ry="40" fill="#8A6A45"/><g fill="#6B4A2E"><circle cx="220" cy="${GY - 42}" r="10"/><circle cx="420" cy="${GY - 28}" r="12"/><circle cx="330" cy="${GY - 52}" r="8"/></g>` +
+      islet(600, GY + 130, 70, 16, 6) + reeds(40, GY - 30, 1) + reeds(640, GY - 40, 1.1) + ourFlag(440, GY - 50) + boardwalk(-30, 720),
+    guards:[[220, GY - 50], [320, GY - 60], [420, GY - 48]]}),
+  heronby:() => ({svg:pond(330, GY - 62, 290, 60, 44, 9) + stiltHouse(240, GY - 32, 1.05, "#E8D6B3", "#2E78D0") +
+      at(470, GY - 30, 1, `<path d="M0 0 V-50 M8 0 V-40" stroke="#E9A20F" stroke-width="3"/><ellipse cx="4" cy="-66" rx="22" ry="16" fill="#E6ECF2"/><path d="M14 -76 Q18 -110 30 -112" stroke="#E6ECF2" stroke-width="8" fill="none" stroke-linecap="round"/><circle cx="30" cy="-114" r="8" fill="#E6ECF2"/><path d="M36 -114 L60 -110 L36 -108 Z" fill="#E9A20F"/><circle cx="31" cy="-116" r="1.8" fill="${INK}"/>`) +
+      ripples([[452, GY - 26, 36]]) + reeds(60, GY - 20, 1) + reeds(610, GY - 36, 1) + lily(360, GY - 36, .9),
+    door:[240, GY - 32], guards:[[380, GY - 14], [120, GY - 14], [560, GY - 14]]}),
+  mudwall:() => { const b = GY - 6;
+    return {svg:wetland(-20, 700, 4) + `<path d="${pondShape(310, b, 280, 40, 18, 2)}" fill="#7FB27A"/><path d="M60 ${b} Q70 ${b - 110} 110 ${b - 120} Q200 ${b - 140} 310 ${b - 132} Q420 ${b - 140} 510 ${b - 120} Q550 ${b - 110} 560 ${b} Z" fill="#8A6A45"/>
+      <g stroke="#6B4A2E" stroke-width="4" stroke-linecap="round"><path d="M110 ${b - 110} l-10 -30 M200 ${b - 132} l6 -30 M420 ${b - 132} l-6 -30 M510 ${b - 110} l10 -30"/></g><g fill="#6B4A2E"><circle cx="160" cy="${b - 60}" r="10"/><circle cx="460" cy="${b - 80}" r="12"/><circle cx="380" cy="${b - 40}" r="8"/></g>
+      <path d="M270 ${b} V${b - 60} Q310 ${b - 90} 350 ${b - 60} V${b} Z" fill="#3E2816"/><rect x="308" y="${b - 288}" width="4" height="60" fill="#8A5A32"/>` + sock(312, b - 284, 1) + bossAt(380, b - 244, .42, snagglenoseInner()) + ourFlag(250, b - 232, 1.2) +
+      boardwalk(-30, 720, GY + 10, GY + 56) + reeds(640, GY - 40, 1),
+    guards:[[150, b - 124], [230, b - 134], [460, b - 128]], ladders:[[100, b], [190, b], [430, b], [510, b], [145, b], [470, b]], gate:[310, b], flag:[250, b - 232]}; },
 
   stonybrook:() => ({svg:rocks(40, GY, 1) + cottage(200, GY, 1, {stone:true, wall:"#D9D2C4", roof:"#6B7A8F", door:"#2E78D0"}) + cottage(430, GY, .9, {stone:true, wall:"#E0D8C9", roof:"#8A6A45", door:"#1F9A5E"}) + rocks(580, GY, .8),
     door:[200, GY], guards:[[320, GY - 4], [520, GY - 4], [90, GY - 30]]}),
@@ -1653,12 +1728,13 @@ function landLayers(name){
   const far = t(o => (D && D.farShape ? D.farShape(o, L) : `<path d="M${o} 470 Q${o + 180} 380 ${o + 380} 440 Q${o + 600} 360 ${o + 820} 430 Q${o + 1000} 390 ${o + 1180} 470 V820 H${o} Z" fill="${L.far}"/>`) +
     (D ? (D.far ? D.far(o, L) : "") : L.deco === "pines" ? [120, 260, 430, 610, 790, 980, 1100].map((x, i) => pine(o + x, 450 - (i % 3) * 12, .7 + (i % 2) * .2, "#4E7F3F")).join("")
      : L.deco === "rocks" ? `<path d="M${o + 200} 440 L${o + 320} 300 L${o + 440} 430 Z M${o + 700} 430 L${o + 860} 250 L${o + 1000} 420 Z" fill="#B3A283"/><path d="M${o + 290} 336 L${o + 320} 300 L${o + 350} 336 Z M${o + 822} 292 L${o + 860} 250 L${o + 898} 292 Z" fill="#fff"/>`
-     : L.deco === "reeds" ? `<rect x="${o}" y="486" width="1180" height="40" fill="#9FC3CF" opacity=".8"/>`
+     : L.deco === "reeds" ? [[180, 490, 150, 12, 1], [560, 496, 200, 14, 2], [960, 488, 160, 11, 3]].map(([x, y, rx, ry, s]) => `<path d="${pondShape(o + x, y, rx, ry, ry * .8, s, 10, .1)}" fill="#9FC3CF" opacity=".85"/>`).join("")
      : L.deco === "stars" ? [80, 240, 400, 560, 700, 860, 1020, 1120].map((x, i) => `<circle cx="${o + x}" cy="${60 + (i * 53) % 220}" r="${1.6 + (i % 3) * .5}" fill="#fff" opacity=".8"/>`).join("")
      : [300, 340, 560, 900, 1050].map((x, i) => tree(o + x, 440 - (i % 2) * 20, .5, "#8CC56B", "#7DB85C")).join("")));
   const near = t(o => `<path d="M${o} 540 Q${o + 300} 480 ${o + 620} 530 Q${o + 900} 490 ${o + 1180} 540 V820 H${o} Z" fill="${L.near}"/>` +
     (D ? (D.near ? D.near(o, L) : "") : L.deco === "pines" ? [60, 520, 880].map(x => pine(o + x, 548, 1.1, "#3F7A2E")).join("")
-     : L.deco === "reeds" ? [100, 480, 760, 1040].map(x => reeds(o + x, 556, .9)).join("")
+     : L.deco === "reeds" ? [[300, 536, 110, 11, 4], [840, 532, 90, 9, 5]].map(([x, y, rx, ry, s]) => `<path d="${pondShape(o + x, y, rx + 8, ry + 5, ry + 4, s, 10, .1)}" fill="#7AA575"/><path d="${pondShape(o + x, y, rx, ry, ry, s, 10, .1)}" fill="#96BFCC"/>`).join("") +
+       [100, 480, 760, 1040].map(x => reeds(o + x, 556, .9)).join("") + reeds(o + 400, 540, .6) + reeds(o + 900, 536, .55)
      : L.deco === "rocks" ? [140, 700, 1000].map(x => rocks(o + x, 552, .8)).join("")
      : L.deco === "stars" ? "" : [80, 700].map(x => bush(o + x, 548, .8)).join("")));
   const ground = t(o => `<path d="M${o} 568 Q${o + 590} 548 ${o + 1180} 568 V640 Q${o + 590} 620 ${o} 640 Z" fill="${L.road}"/><path d="M${o} 568 Q${o + 590} 548 ${o + 1180} 568" stroke="${L.edge}" stroke-width="3" fill="none"/>
@@ -1703,7 +1779,7 @@ function stewardInner(aunt){
   `<path d="M48 58 L56 60 M72 58 L64 60" stroke="${INK}" stroke-width="2.6" stroke-linecap="round"/><circle cx="52" cy="64" r="2.6" fill="${INK}"/><circle cx="68" cy="64" r="2.6" fill="${INK}"/>
   <path d="M48 74 Q60 84 72 74" fill="none" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"/>`;
 }
-PLACES.castle = () => ({svg:water(GY - 30, 60) + at(430, GY - 50, 1, `<g class="ship"><path d="M-70 0 H70 Q60 26 40 26 H-40 Q-60 26 -70 0 Z" fill="#8A5A32"/><rect x="-2" y="-120" width="5" height="120" fill="#6B4A2E"/>
+PLACES.castle = () => ({svg:pond(600, GY - 52, 420, 52, 30, 11) + at(430, GY - 50, 1, `<g class="ship"><path d="M-70 0 H70 Q60 26 40 26 H-40 Q-60 26 -70 0 Z" fill="#8A5A32"/><rect x="-2" y="-120" width="5" height="120" fill="#6B4A2E"/>
       <path d="M3 -114 Q50 -80 3 -30 Z" fill="#fff"/><path d="M3 -104 H34 M3 -84 H40 M3 -64 H34" stroke="#E5483F" stroke-width="5"/><path d="M3 -120 L28 -114 L3 -108 Z" fill="#2E78D0"/></g>`) +
     at(170, GY, 1, `<rect x="-110" y="-150" width="220" height="150" fill="#D9D2C4"/><path d="M-110 -150 v-16 h20 v16 h20 v-16 h20 v16 h20 v-16 h20 v16 h20 v-16 h20 v16 h20 v-16 h20 v16 h20 v-16 h10 v16" fill="#D9D2C4"/>
       <rect x="-150" y="-220" width="60" height="220" fill="#CFC7B8"/><rect x="90" y="-220" width="60" height="220" fill="#CFC7B8"/><path d="M-160 -216 L-120 -270 L-80 -216 Z M80 -216 L120 -270 L160 -216 Z" fill="#2E78D0"/>
@@ -1716,7 +1792,7 @@ PLACES.feast = () => ({svg:`<path d="M20 ${GY - 150} Q310 ${GY - 110} 600 ${GY -
 const BLOCKS = {
   1:`<g transform="translate(300 ${GY})"><rect x="-230" y="-40" width="460" height="46" rx="23" fill="#9A6B3E"/><ellipse cx="220" cy="-17" rx="16" ry="23" fill="#D9B27C"/><path d="M-180 -30 l-30 -40 M-60 -34 l-20 -50 M80 -36 l20 -44" stroke="#8A6A45" stroke-width="10" stroke-linecap="round"/><g fill="#6FAE4E"><circle cx="-210" cy="-78" r="22"/><circle cx="-84" cy="-90" r="24"/><circle cx="104" cy="-86" r="22"/></g></g>`,
   2:`<g fill="#fff" opacity=".85"><ellipse cx="300" cy="${GY - 60}" rx="300" ry="90"/><ellipse cx="160" cy="${GY - 150}" rx="180" ry="60"/><ellipse cx="460" cy="${GY - 160}" rx="200" ry="70"/></g>`,
-  3:water(GY - 120, 170, "#7FA9BA"),
+  3:pond(300, GY + 6, 340, 118, 74, 12, {water:"#7FA9BA"}) + ripples([[120, GY + 40, 50], [380, GY + 20, 60], [230, GY - 40, 40]]) + reeds(40, GY + 30, .9) + reeds(560, GY - 20, .8),
   4:`<path d="M-20 ${GY} L160 ${GY - 300} L340 ${GY} Z M220 ${GY} L440 ${GY - 360} L660 ${GY} Z" fill="#B3A283"/><path d="M110 ${GY - 218} L160 ${GY - 300} L210 ${GY - 218} Q160 ${GY - 200} 110 ${GY - 218} Z M374 ${GY - 252} L440 ${GY - 360} L506 ${GY - 252} Q440 ${GY - 232} 374 ${GY - 252} Z" fill="#fff"/><g fill="#fff">${[40, 120, 260, 380, 520, 590, 180, 450].map((x, i) => `<circle cx="${x}" cy="${40 + (i * 61) % 240}" r="5"/>`).join("")}</g>`
 };
 const OWL_AWAKE = THING.owls(), OWL_ASLEEP = OWL_AWAKE.replace(/<circle cx="17" cy="28" r="4" fill="[^"]+"\/><circle cx="33" cy="28" r="4" fill="[^"]+"\/>/, `<path d="M12 29 q5 4 10 0 M28 29 q5 4 10 0" stroke="${INK}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`) +
