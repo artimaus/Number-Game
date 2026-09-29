@@ -2937,7 +2937,7 @@ $("#stage").addEventListener("click", e => {
 async function countAlong(pos, noun, n, {from = 0, badge = true} = {}){
   const items = [...$$(`#things .thing, .side[data-side] .thing`)];
   const keys = range(from + 1, from + n).map(i => "num_" + i);
-  await say(keys, {gap:650, onStep:(i) => {                  // a slow, steady beat: each number gets time to land
+  await say(keys, {gap:430, onStep:(i) => {                  // a slow, steady beat: each number gets time to land
     const el = pos.els ? pos.els[i] : items[i]; if (el) el.classList.add("lit");
     SFX.count(from + i);
     if (badge && pos[i]) numBadge(pos[i].x, pos[i].y - 10, from + i + 1);
@@ -3633,7 +3633,7 @@ function stoneXY(el){ const m = /translate\(([-\d.]+) ([-\d.]+)\)/.exec(el.getAt
 /* Count along the stones (and on into the blank one when it's filled), the hero hopping onto each. */
 async function hopAlong(nums, live){
   const els = nums.map(n => stoneAt(n) || $("#things .stone.blank"));
-  await say(nums.map(n => "num_" + n), {gap:500, onStep:i => {
+  await say(nums.map(n => "num_" + n), {gap:340, onStep:i => {
     const el = els[i]; if (!el) return;
     el.classList.add("lit"); const p = stoneXY(el); hopTo(p.x, p.y, i === 0); SFX.count(i);
   }});
@@ -3716,7 +3716,7 @@ const TASKS2 = {
       return {type:"next", target:t, run, cards, prompt:["whats_next", ...run.map(n => "num_" + n)], key:"next:" + t};
     },
     render(t){ renderStones(t, false); },
-    sayOpts(t){ return {gap:380, onStep:(i, k) => { const m = /^num_(\d+)$/.exec(k || ""); if (m) { const s = stoneAt(+m[1]); if (s) { s.classList.add("lit"); SFX.count(t.run.indexOf(+m[1])); } } }}; },
+    sayOpts(t){ return {gap:260, onStep:(i, k) => { const m = /^num_(\d+)$/.exec(k || ""); if (m) { const s = stoneAt(+m[1]); if (s) { s.classList.add("lit"); SFX.count(t.run.indexOf(+m[1])); } } }}; },
     async right(t, el, first, live){
       $$("#things .stone.lit").forEach(s => s.classList.remove("lit"));
       fillStone(t.target); await wait(200); if (!live()) return;
@@ -3797,7 +3797,7 @@ const TASKS2 = {
       $$(".side").forEach(s => s.classList.add("dotted"));
       const small = t.target === "L" ? "R" : "L", dots = [...$$(`.side[data-side="${small}"] .dots circle`)];
       await say(["lets_count"]); if (!live()) return;
-      await say(range(1, t.sides[small]).map(i => "num_" + i), {gap:600, onStep:i => { dots[i]?.classList.add("on"); SFX.count(i); }});
+      await say(range(1, t.sides[small]).map(i => "num_" + i), {gap:400, onStep:i => { dots[i]?.classList.add("on"); SFX.count(i); }});
       if (!live()) return;
       await wait(300); dots.forEach(d => d.classList.remove("on"));
     }
