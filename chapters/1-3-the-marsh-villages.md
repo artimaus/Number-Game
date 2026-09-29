@@ -1,6 +1,6 @@
 # Chapter 3 · The Marsh Villages
 
-**Arc 1 · The Goblin Border** · Level 3 · numbers 1–7 · 3 tasks per stop · party cap 10 · about 10 sets.
+**Arc 1 · The Goblin Border** · Level 3 · numbers 1–7 · 3 tasks per stop · party cap 15 · about 10 sets.
 
 Goblins on rafts are paddling from village to village causing trouble. Villages here stand on stilts above the water.
 This is the first chapter **without the helper dots** on the cards, the first with **4 cards**, and the first where

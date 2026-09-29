@@ -1,6 +1,6 @@
 # Chapter 1 · The Border Road
 
-**Arc 1 · The Goblin Border** · Level 1 · numbers 1–3 · 3 tasks per stop · party cap 10 · about 10 sets · two
+**Arc 1 · The Goblin Border** · Level 1 · numbers 1–3 · 3 tasks per stop · party cap 5 · about 10 sets · two
 sittings at the default "make camp after 4 stops".
 
 This is the very first chapter a 2-year-old plays. It opens gently with two villages (nothing can fail), meets
@@ -81,8 +81,10 @@ the cap of 10. After the cap, right answers in villages give gear (§5.5 of the 
 - ★ Find: "Find the banner with…" `find_banner` + `num_2` (bunting on the windmill)
 - ★ More: "Which side has more chickens?" `which_more_chickens` (two pens)
 
-**Each first-try right answer:** a villager steps out, takes a spear and marches over to the party. **H:** "A new
-soldier!" `h_new_soldier`, or "Welcome to the army!" `h_welcome`.
+**Recruiting:** at the end of the set, if half or more were right on the first try (2 of 3), **one** villager steps
+out, takes a spear and marches over to the party. **H:** "A new soldier!" `h_new_soldier`, or "Welcome to the army!"
+`h_welcome`. The party cap is 5 in this chapter (it grows by 5 a chapter, up to 20); at the cap, a soldier gets gear
+instead.
 - **Right answer, spoken every time:** Count gets "1, 2, 3. 3 chickens!" `num_…` + `w_chickens`. Find gets "2!".
   More gets "This side has 3!" `this_side_has` + `num_3`.
 - **Praise** (about 1 in 3, as Letter Hunt does): "Huzzah!" `praise_huzzah`, "Well done, [Hero]!" `praise_well_done`
@@ -91,7 +93,8 @@ soldier!" `h_new_soldier`, or "Welcome to the army!" `h_welcome`.
 **A miss:** "Not quite! That's 1." `not_quite` + `thats` + `num_1`, then help, then the command again.
 
 **End of set**
-- If no answer was right first time, one villager joins anyway: "A brave villager joins anyway!" `h_joins_anyway`.
+- If fewer than half were right first time, nobody joins this time: "They're still thinking it over. On we go!"
+  `h_still_thinking`, and the "joined the march" line is skipped.
 - **H:** "We have 3 soldiers!" `we_have` + `num_3` + `w_soldiers`
 - **N:** "The people of Millbrook cheered as the little army marched on." `st1_1_06`
 - **H:** "Onward!" `h_onward`
@@ -287,7 +290,7 @@ ever differ, the panel is right.
 | `h_onward` | "Onward!" |
 | `h_hello_village` | "Hello, villagers! Who will join us?" |
 | `h_new_soldier` / `h_welcome` | "A new soldier!" / "Welcome to the army!" |
-| `h_joins_anyway` | "A brave villager joins anyway!" |
+| `h_still_thinking` | "They're still thinking it over. On we go!" |
 | `we_have` | "We have…" |
 | `h_goblins_first` / `h_show_clever` / `h_goblins` | "Goblins! Don't worry," *(+ Hero)* / "Let's show them how clever we are!" / "Goblins! Let's be clever!" |
 | `h_charge` | "Charge!" |

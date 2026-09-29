@@ -1,6 +1,6 @@
 # Chapter 4 · The Goblin King's Stockade
 
-**Arc 1 · The Goblin Border** · Level 4 · numbers 1–10 · 3 tasks per stop · party cap 10 · about 10 sets. **Arc
+**Arc 1 · The Goblin Border** · Level 4 · numbers 1–10 · 3 tasks per stop · party cap 20 · about 10 sets. **Arc
 finale.**
 
 Snagglenose has run to his master, the Goblin King **Grubbins the Great**: very round, with a crown too big for him

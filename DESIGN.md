@@ -47,7 +47,7 @@ the play space opens up from a single road, to forks, to a full campaign map.
 | Sittings | **Make camp** after a set number of stops (a grown-up setting) |
 | Linear view | **Marching scene** (side view), no map until the fork arcs |
 | Siege equipment | Built **only when sieging a fort or castle**. Each build round makes one piece, or one group such as ladders. Nothing travels with the party. **The assault needs a minimum of gear**; build rounds repeat until it's met |
-| Party cap | 10 in arc 1, 20 in arc 2 (the party stays countable). At the cap, right answers give gear |
+| Party cap | 5 in chapter 1, growing by 5 a chapter to 20 (the party stays countable). One recruit per village, when half or more are right. At the cap, a recruit becomes gear |
 | Blocked road | **After** the chapter's fort: every chapter ends in a victory, then raids until the maths is ready |
 | Voices | A **herald** (commands, praise, gentle "not quite"s; robot voice if not recorded) and an optional **narrator** (story; silent if not recorded, text always shown). Each can be recorded by a different person |
 | Art | Simple custom SVG |
@@ -80,7 +80,7 @@ The stop decides what the answers earn:
 
 | Stop | Each first-try right answer… | Can it fail? |
 |---|---|---|
-| Village | …brings a recruit (at the party cap: gives a soldier a new piece of gear, §5.5) | No: at least one recruit per visit |
+| Village | …counts toward one recruit: half or more right and **one** soldier joins (at the party cap: a soldier gets a new piece of gear, §5.5) | Gently: under half, "They're still thinking it over. On we go!" and nobody joins this time |
 | Goblin camp / troll bridge (a skirmish) | …pushes the foes back; half or more right and they flee | Yes: comic retreat, then a retry with fresh problems |
 | Fort or castle, **build** rounds | …adds a piece: a ladder, a ram part… | No: at least one piece per round. A round repeats (fresh problems) until the fort's minimum gear is built |
 | Fort or castle, **assault** round | …as a skirmish; starts only once the minimum gear is built | Yes: retreat and retry; what was built stays built |
@@ -248,8 +248,11 @@ Each level keeps the earlier task types in the mix, with harder numbers, so noth
 ### 5.5 The party
 - The party starts as just the hero and the herald: "Let's find brave friends to join us!" The first villages bring
   the first recruits.
-- **Cap:** 10 in arc 1, 20 in arc 2. The party then stays inside the numbers the child is learning.
-- **At the cap,** right answers in villages give **gear** instead: a helmet, a shield, a spear, boots, a cape in the
+- **One recruit per village,** when half or more of its set is right on the first try (the same line a fight is won
+  at). The special stops' friends (the shepherd, the ferryman, the goatherd) always join.
+- **Cap:** 5 in chapter 1, growing by 5 each chapter (10 in chapter 2, 15 in chapter 3), up to 20 from chapter 4 on.
+  The party then stays inside the numbers the child is learning.
+- **At the cap,** a village's recruit becomes **gear** instead: a helmet, a shield, a spear, boots, a cape in the
   hero's colour. A soldier gets one piece each time ("Tom gets a helmet!"). This keeps "more right = more reward"
   going through the long stretches.
 - **Number discs:** the army's total is a **gold disc** hovering over the soldiers, like the gold counting badges.
@@ -396,6 +399,9 @@ Kept loose on purpose; to be designed once the linear arcs are dialled in.
   - greater / less than between 2-digit armies.
 
 ## 12. Open questions for the linear arcs
+
+**To do later:**
+- Reshape the water in the marsh places (chapter 3, the Marsh Villages). Noted, not started.
 
 None open. Settled:
 - Minimum gear per fort: 2 ladders in arc 1 (plus the ram's log and wheels at the Great Stockade); 3 ladders and

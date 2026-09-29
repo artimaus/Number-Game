@@ -94,7 +94,7 @@ shaggy tree.*
 - **H:** *(fanfare)* "Hello, villagers! Who will join us?" `h_hello_village`
 - ★★ Count: "How many goats?" `how_many_goats` · ★ Find the sign (signposts at the village gate) · ★ What comes
   next? (numbered steps up the hill) · ★ Find
-- **Each first-try right answer:** a villager joins, and the gold disc pops up by one.
+- **Half or more right first time (2 of 4):** one villager joins, and the gold disc pops up by one.
 - **N:** "The mountain folk of Goatsby joined the march." `st2_1_05`
 
 ## 2 · The Little Bridge (skirmish): the first troll!
