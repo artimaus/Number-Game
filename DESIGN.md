@@ -61,7 +61,7 @@ the play space opens up from a single road, to forks, to a full campaign map.
 
 | # | Arc | Story | Play space | Maths | Army | Tasks per stop |
 |---|---|---|---|---|---|---|
-| 1 | **The Goblin Border** | Sent to guard the border villages from goblin raiders | Linear march | Counting and numerals to 10; more or less | Party, up to 10 | 3 |
+| 1 | **The Goblin Border** | Sent to guard the border villages from goblin raiders | Linear march | Counting and numerals to 10; more or less | Party: 5 in chapter 1, +5 a chapter | 3 |
 | 2 | **The Troll Hills** | King Nuttletusk's trolls shake the hill villages' nut trees bare; his keep is inside the Great Walnut Tree | Linear march | Numbers to 20; order; the signs + − =; which is bigger; first adding within 5; a first taste of taking away | Party, up to 20 | 4 |
 | 3 | **The Stolen Crown** | Coming home to find the uncle/aunt has seized the throne; rallying loyal towns | Forks (pick one of two) | Adding and taking away within 10 | Companies of ten | 5 |
 | 4 | **Siege of the Capital** | Retaking the kingdom, castle by castle, ending at the capital | Forks | Within 20; tens and ones; 2-digit numbers | Companies of ten | 6 |
@@ -104,15 +104,18 @@ hovering over it:
   This applies in every arc, including the first.
 
 ### Pacing: the road waits for the maths
-Difficulty follows Letter Hunt's adaptive levels: up at 85% of first tries over 10 sets, down quietly below 50%
-over 6. **Each chapter needs a level** (§5.4). A chapter is about 10 sets, the same as the level-up window, so a
-child who is ready moves through story and maths together.
+Difficulty follows Letter Hunt's adaptive levels: up at 85% of first tries over the last 6 sets (a sliding average, so one weak set doesn't send the child back to the start), down quietly below 50%
+over 6. **Each chapter needs a level** (§5.4). A chapter is about 8–10 sets, a little more than the 6-set level-up
+window, so a child who is ready moves through story and maths together.
 
 If the chapter's fort falls but the child isn't at the next chapter's level yet:
 - The road ahead is **blocked** (a fallen tree, thick fog, a broken bridge). The herald says "We'll find a way
   soon!"
 - Each sitting then offers **raids**: goblins are back at a village you already freed. March back, drive them off,
   and the villagers cheer and send a gift.
+- **Six dots** under the blocked road on the road bar show how close the road is to clearing: they light as the
+  recent stops add up to the level-up (a weak stop can dim one again). When one lights, the herald says "The road is
+  getting clearer!"; all six light just before the road clears.
 - When the level arrives: "The woodcutters cleared the road!" and the march goes on.
 
 A toddler can spend months on one maths stage, so **most toddler play time will be raids**. Raids need variety
@@ -400,10 +403,11 @@ Kept loose on purpose; to be designed once the linear arcs are dialled in.
 
 ## 12. Open questions for the linear arcs
 
-**To do later:**
-- Reshape the water in the marsh places (chapter 3, the Marsh Villages). Noted, not started.
-
 None open. Settled:
+- Water in the marsh (chapter 3) is drawn by what each stop is about: round ponds beside the road for the quiet
+  villages, rivers the road crosses (on stepping stones, a footbridge or ferry jetties) where the stop is a crossing,
+  and a wooden boardwalk across the wetland to the Muddy Island and Mudwall Fort. The road is never covered by a
+  square band of water. The opening scene's harbour and the flooded-road block are rounded the same way.
 - Minimum gear per fort: 2 ladders in arc 1 (plus the ram's log and wheels at the Great Stockade); 3 ladders and
   the ram's log and wheels in arc 2.
 - Chapter names as drafted, with **Trolltree Hills** instead of Trollberry: the hills are nut trees, and trolls
