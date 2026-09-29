@@ -1536,19 +1536,28 @@ function pondShape(cx, cy, rx, ryT, ryB, seed = 1, n = 12, wob = .08){
     return [cx + Math.cos(a) * rx * m, cy + Math.sin(a) * (Math.sin(a) > 0 ? ryB : ryT) * m]; }));
 }
 const ripples = list => `<g stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".55">${list.map(([x, y, w]) => `<path d="M${f1(x)} ${f1(y)} h${w}"/>`).join("")}</g>`;
-/* A pond: a grassy bank, the water, a paler sheen on the far side, and ripples. */
-function pond(cx, cy, rx, ryT, ryB, seed, {bank = BANK, water = WATER, rip = true} = {}){
-  return `<path d="${pondShape(cx, cy, rx + 12, ryT + 9, ryB + 7, seed)}" fill="${bank}"/><path d="${pondShape(cx, cy, rx, ryT, ryB, seed)}" fill="${water}"/>` +
-    `<path d="${pondShape(cx - rx * .05, cy - ryT * .42, rx * .7, ryT * .4, ryB * .25, seed + 3)}" fill="${SHEEN}" opacity=".7"/>` +
-    (rip ? ripples([[cx - rx * .55, cy + ryB * .3, 34], [cx + rx * .1, cy + ryB * .5, 46], [cx + rx * .5, cy - ryT * .1, 30]]) : "");
+/* A pond: a grassy bank, the water, a paler sheen on the far side, and ripples. The parts come apart so a stream
+   can join it: both banks first, then both waters, so the two outlines run into one. */
+function pondParts(cx, cy, rx, ryT, ryB, seed, {bank = BANK, water = WATER, rip = true} = {}){
+  return {bank:`<path d="${pondShape(cx, cy, rx + 12, ryT + 9, ryB + 7, seed)}" fill="${bank}"/>`, water:`<path d="${pondShape(cx, cy, rx, ryT, ryB, seed)}" fill="${water}"/>`,
+    top:`<path d="${pondShape(cx - rx * .05, cy - ryT * .42, rx * .7, ryT * .4, ryB * .25, seed + 3)}" fill="${SHEEN}" opacity=".7"/>` +
+      (rip ? ripples([[cx - rx * .55, cy + ryB * .3, 34], [cx + rx * .1, cy + ryB * .5, 46], [cx + rx * .5, cy - ryT * .1, 30]]) : "")};
 }
+const pond = (...a) => { const p = pondParts(...a); return p.bank + p.water + p.top; };
 /* A stream: a centre line and a width that grows toward us, drawn as a smooth ribbon with a grassy bank. */
-function stream(line, w0, w1){
+function streamParts(line, w0, w1){
   const n = line.length, side = (s, grow) => line.map(([x, y], i) => {
     const a = line[Math.max(0, i - 1)], b = line[Math.min(n - 1, i + 1)], dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy) || 1, w = (w0 + (w1 - w0) * i / (n - 1)) / 2 + grow;
     return [x - s * dy / L * w, y + s * dx / L * w]; });
   const rib = grow => `M${smoothOpen(side(1, grow))} L${smoothOpen(side(-1, grow).reverse())} Z`;
-  return `<path d="${rib(9)}" fill="${BANK}"/><path d="${rib(0)}" fill="${WATER}"/>`;
+  return {bank:`<path d="${rib(9)}" fill="${BANK}"/>`, water:`<path d="${rib(0)}" fill="${WATER}"/>`};
+}
+const stream = (line, w0, w1) => { const s = streamParts(line, w0, w1); return s.bank + s.water; };
+/* A stream that runs out of a pond: the banks run into one outline, and so do the waters. The mouth (x, y, rx, ry),
+   a small rounded widening where they meet, softens the corners. */
+function pondStream(p, s, [mx, my, mrx, mry] = []){
+  const mouth = mrx ? [`<ellipse cx="${mx}" cy="${my}" rx="${mrx + 10}" ry="${mry + 8}" fill="${BANK}"/>`, `<ellipse cx="${mx}" cy="${my}" rx="${mrx}" ry="${mry}" fill="${WATER}"/>`] : ["", ""];
+  return p.bank + s.bank + mouth[0] + p.water + s.water + mouth[1] + p.top;
 }
 /* stepping stones: [x, y, scale] */
 const stepStones = list => list.map(([x, y, s = 1]) => `<g transform="translate(${x} ${y}) scale(${s})"><ellipse cx="0" cy="4" rx="17" ry="8" fill="#8E857A"/><ellipse cx="0" cy="0" rx="17" ry="8" fill="#C9C1B4"/><ellipse cx="-5" cy="-2" rx="6" ry="2.4" fill="#fff" opacity=".45"/></g>`).join("");
@@ -1659,8 +1668,8 @@ const PLACES = {
   ferry:() => ({svg:stream([[430, GY - 150], [390, GY - 80], [340, GY - 8], [310, GY + 60], [270, GY + 180], [230, GY + 320]], 70, 400) + ripples([[380, GY - 50, 36], [300, GY + 110, 50], [420, GY + 40, 40]]) +
       jetty(110, 220, GY + 14) + jetty(470, 560, GY + 6) + at(117, GY - 83, .55, villagerInner({sk:2, tu:0, hs:2, hc:4})) + reeds(80, GY - 10, 1) + reeds(600, GY - 16, 1) + lily(360, GY - 90, .7),
     dock:[[250, GY + 4], [290, GY + 26], [240, GY + 56], [290, GY + 80]], drift:[[380, GY - 70], [440, GY - 20], [400, GY + 90], [330, GY + 150]], driftThing:"boats"}),
-  frogmore:() => ({svg:pond(430, GY - 62, 200, 52, 38, 3) + stream([[300, GY - 40], [250, GY - 8], [215, GY + 40], [180, GY + 130], [130, GY + 280]], 26, 110) +
-      stepStones([[184, GY + 26, .9], [212, GY + 36], [240, GY + 26, .95]]) + stiltHouse(440, GY - 36, 1.05, "#D9E4C8", "#6E8F3E") +
+  frogmore:() => ({svg:pondStream(pondParts(430, GY - 62, 200, 52, 38, 3), streamParts([[372, GY - 50], [346, GY - 20], [300, GY + 10], [256, GY + 42], [212, GY + 130], [150, GY + 280]], 50, 112), [336, GY - 26, 60, 15]) +
+      stepStones([[228, GY + 26, .9], [256, GY + 36], [284, GY + 26, .95]]) + stiltHouse(440, GY - 36, 1.05, "#D9E4C8", "#6E8F3E") +
       [330, 560, 600].map((x, i) => lily(x, GY - 40 - i % 2 * 26, .9)).join("") + reeds(80, GY - 14, 1) + reeds(620, GY - 40, .9),
     door:[440, GY - 36], guards:[[120, GY - 14], [330, GY + 2], [560, GY - 12]]}),
   mistwater:() => ({svg:pond(320, GY - 64, 290, 60, 44, 8) + stiltHouse(170, GY - 32, .95, "#E8D6B3", "#8A6A45") + stiltHouse(430, GY - 40, 1, "#EDE4D0", "#6B7A8F") +
