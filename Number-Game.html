@@ -153,6 +153,11 @@ button:focus-visible{outline:4px solid var(--blue);outline-offset:3px}
 .road .st{position:relative;width:30px;height:30px;border-radius:50%;background:#fff;opacity:.7;display:grid;place-items:center}
 .road .st svg{width:17px;height:17px}
 .road .st.done{opacity:1;background:#fff}
+/* under a blocked road: dots that light as the child gets closer to clearing it */
+.road .clear{position:absolute;top:38px;left:50%;transform:translateX(-50%);display:flex;gap:4px;padding:4px 6px;border-radius:10px;background:rgba(255,255,255,.75)}
+.road .clear i{width:10px;height:10px;border-radius:50%;background:rgba(29,43,79,.18)}
+.road .clear i.on{background:var(--yellow);box-shadow:0 0 0 1.5px #B97F06 inset}
+.road .clear i.pop{animation:pop .6s}
 .road .st.done::after{content:"";position:absolute;right:-3px;top:-3px;width:12px;height:12px;border-radius:50%;background:var(--green);border:2px solid #fff}
 .road .st.cur{width:40px;height:40px;opacity:1;box-shadow:0 0 0 4px var(--banner,#E5483F)}
 .road .st.cur svg{width:22px;height:22px}
@@ -482,7 +487,7 @@ const LOOKALIKE = [[6, 9], [2, 5], [1, 7]];          // never on one board in ar
 const PARTY_MAX = 20, GEAR_MAX = 3;                  // the army never outgrows the numbers taught (to 20); gear: spear, then helmet, shield, cape
 /* The party cap grows with the story: 5 soldiers in chapter 1, 10 in chapter 2, and so on, up to 20. */
 const partyCap = ci => Math.min(PARTY_MAX, 5 * (CHAPTERS[ci] || CHAPTERS[0]).n);
-const UP_WINDOW = 10, UP_SCORE = .85, DOWN_WINDOW = 6, DOWN_SCORE = .5;
+const UP_WINDOW = 7, UP_SCORE = .85,    DOWN_WINDOW = 6, DOWN_SCORE = .5;
 const REPEAT_MS = 12000, REPEAT_MAX = 3;             // the command repeats after this long with no tap
 const RAPID_MS = 700;                                // a wrong tap this soon after the cards unlock counts as a guess
 const GUESS_WINDOW = 5, GUESS_ROUNDS = 3;
@@ -929,6 +934,7 @@ const HERALD = [
   ["h_apples_back","Let's pick up the apples!","March and story"],
   ["h_road_blocked","The road is blocked! We'll find a way soon.","March and story"],
   ["h_road_clear","The road is clear! Onward!","March and story"],
+  ["h_road_clearing","The road is getting clearer!","March and story","While the road is blocked, after a good raid (a dot lights under the block)."],
   ["h_raid","Goblins are back! To the village!","March and story"],
   ["h_three_cheers","Three cheers for…","March and story","The hero's title and name play right after it."],
   ["h_hip_hooray","Hip hip, hooray!","March and story"],
@@ -2805,11 +2811,15 @@ const ROAD_ICON = {
   siege:`<svg viewBox="0 0 24 24" fill="#8A5A32"><path d="M4 20V8h3v3h3V8h4v3h3V8h3v12z"/></svg>`,
   blocked:`<svg viewBox="0 0 24 24" fill="#9A6B3E"><rect x="2" y="10" width="20" height="7" rx="3.5"/><path d="M6 10 l-2 -4 M16 10 l2 -5" stroke="#8A6A45" stroke-width="2"/></svg>`
 };
-function renderRoad(){
+/* While the road is blocked: how close the child is to the level that clears it, as dots under the block (one per stop
+   of the level-up window, lit as the recent stops add up to the 85% it needs). A weak stop can dim one again. */
+const clearDots = () => { const r = P.recent.slice(-UP_WINDOW); return r.length ? Math.min(UP_WINDOW, Math.round(r.length * Math.min(1, avg(r) / UP_SCORE))) : 0; };
+const willClear = () => P.blocked && P.ch + 1 < CHAPTERS.length;                 // after the last chapter built, nothing to clear toward
+function renderRoad(pop = -1, full = false){
   if (G.practice) { $("#road").innerHTML = ""; return; }
-  const ch = CHAPTERS[P.ch], cur = P.blocked ? -1 : P.stop;
+  const ch = CHAPTERS[P.ch], cur = P.blocked ? -1 : P.stop, n = full ? UP_WINDOW : clearDots();
   $("#road").innerHTML = ch.stops.map((s, i) => `<span class="st${i < P.stop || P.blocked ? " done" : ""}${i === cur ? " cur" : ""}">${ROAD_ICON[s.kind]}</span>`).join("") +
-    (P.blocked ? `<span class="st cur">${ROAD_ICON.blocked}</span>` : "");
+    (P.blocked ? `<span class="st cur">${ROAD_ICON.blocked}${willClear() ? `<span class="clear" aria-label="${n} of ${UP_WINDOW}">${range(1, UP_WINDOW).map(i => `<i class="${i <= n ? "on" : ""}${i === pop ? " pop" : ""}"></i>`).join("")}</span>` : ""}</span>` : "");
 }
 function renderPips(n, done){ $("#pips").innerHTML = Array.from({length:n}, (_, i) => `<svg viewBox="0 0 24 24" class="${i < done ? "lit" : ""}" fill="currentColor"><path d="${STAR}"/></svg>`).join(""); }
 
@@ -3484,6 +3494,7 @@ async function sitting(){
       if (canAdvance()) {
         const ch = CHAPTERS[P.ch];
         $("#placeWrap").innerHTML = `<svg viewBox="0 0 620 460" width="620" height="460" overflow="visible">${BLOCKS[ch.n] || ""}</svg>`;
+        renderRoad(UP_WINDOW, true); SFX.star();                   // every dot lit: the road clears
         if (ch.cleared) { await narrate(ch.cleared); ck(); }
         await say(["h_road_clear"]); ck();
         P.ch++; P.stop = 0; P.blocked = false; save();
@@ -3497,8 +3508,14 @@ async function sitting(){
         $("#placeWrap").innerHTML = `<svg viewBox="0 0 620 460" width="620" height="460" overflow="visible">${BLOCKS[CHAPTERS[P.ch].n] || ""}</svg>`;
         await narrate(CHAPTERS[P.ch].blocked); ck(); await say(["h_road_blocked"]); ck();
       }
+      const before = clearDots();
       await runRaid(); ck();
       G.stopsThisSitting++;
+      // the road is getting clearer: a dot lights under the block, and the herald says so
+      const after = clearDots();
+      if (canAdvance()) renderRoad(UP_WINDOW, true);                   // that raid did it: all the dots light, and the road clears next
+      else if (willClear() && after > before) { renderRoad(after); SFX.star(); await say(["h_road_clearing"]); ck(); }
+      else renderRoad();
       continue;
     }
     const ch = CHAPTERS[P.ch], stop = ch.stops[P.stop];
@@ -3552,7 +3569,7 @@ async function chapterEnd(){
     P.arcsDone.push(ch.arc); save();
   }
   if (canAdvance()) { P.ch++; P.stop = 0; } else P.blocked = true;
-  save();
+  save(); renderRoad();
 }
 /* Hoofbeats: a royal messenger gallops up the hill. The crown has been stolen! */
 async function messenger(){
