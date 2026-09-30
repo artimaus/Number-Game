@@ -427,6 +427,11 @@ Nobody records 300 clips before the first game. Instead the game asks for what's
 - **Arc 2 art (draft for approval):** https://claude.ai/artifact/Wdx4Cp7jw9SXRfuTXNteco. It has the march arriving at
   the Little Bridge with both number discs, a landscape for each chapter, the trolls and their chiefs (King
   Nuttletusk included), friends and treasures, the places and forts, and every new task as the child sees it.
+- **Arc 3 art (draft for approval):** https://claude.ai/artifact/HWeszGyfhjunEgKhai5diL. It has the march arriving
+  at the Grey Bridge with the army in companies, the four landscapes, the Grey Guards (on guard, helmet wobbling,
+  cloak flying off, joined) and their captains, the steward and Sir Snivelwick, the company banners and a
+  100-soldier army, friends, things and treasures, the places and forts with their blocked roads, and the new tasks,
+  the fork and the troop check as the child sees them.
 - **Art:** flat, chunky SVG drawn in code, recoloured with CSS variables.
   - Characters: hero (prince or princess), herald, villager/soldier with gear layers, goblin, goblin king, troll,
     troll king.
