@@ -353,11 +353,16 @@ recordable, importable by file name, and backed up. **Two roles:**
 | **Herald** | Commands, praise, "not quite"s, battle calls, counting | Robot voice (a child can't read commands) | "Find the banner with…", "How many goblins?", "Huzzah!", "Not quite!", "Charge!", "Retreat!", "Let's try again!", "Rest now, brave…" |
 | **Narrator** | The story: chapter openings, stop arrivals, victories, camp | **Silent**; the caption is always shown so a grown-up can read it aloud | "The village of Millbrook! The villagers wave hello." |
 
-- **Herald clip groups:** numbers `n_0`…`n_20`; signs `sign_plus`, `sign_minus`, `sign_equals`; whole command
+- **Herald clips:** numbers `num_0`…`num_100`; signs `sign_plus`, `sign_minus`, `sign_equals`; whole command
   phrases per noun ("How many goblins?", "How many sheep?", which sounds more natural than joining "how many" +
   "goblins"); praise and "not quite"s; battle, build and camp calls; titles `title_prince`, `title_princess`; the
   child's name `child_<name>`. So praise can be ["well_done", "title_princess", "child_mia"]: "Well done, Princess
   Mia!"
+- **Numbers to 100 from 29 recordings:** 1–20 and the tens (30, 40 … 100) are recorded; 21–99 are joined from a
+  tens clip and a ones clip, overlapped a little so they run together ("thirty" + "three"). Any whole number can be
+  recorded too (optional), and then it's used instead. If either half isn't recorded, the robot says the whole
+  number, so a number never comes out half in one voice and half in another. The tens aren't needed until arc 3,
+  where the army counts in companies.
 - **Narrator clips:** one per story line, grouped by chapter. The step-by-step guide works per chapter ("Record
   chapter 1's story").
 - **Uncle or aunt:** the steward is a grown-up setting. Story lines that mention them have two texts
@@ -369,6 +374,50 @@ recordable, importable by file name, and backed up. **Two roles:**
   step-by-step guide and its **own voice backup file**. Importing a voice file adds or replaces only that role's
   clips. So Dad can record the herald on the tablet and Mum the narrator on her phone, then combine them.
 - **Robot herald:** the speech-synthesis voice at a slightly lower pitch, a bit slower, with a fanfare before it.
+
+### How the recordings are sorted
+The grown-up panel lists every clip the way the game needs it, so recording can follow the child through the story:
+- **Always:** clips used all through the game: numbers, commands, praise, battle and camp calls, names, and the
+  shared story lines (making camp, morning). Clips that aren't needed at the start say so ("From chapter 5"); the
+  tens say "Not needed yet" until arc 3 is built.
+- **Each arc:** first **Across the arc** (clips used in several of its chapters, such as the goblin or troll calls),
+  then **chapter by chapter**: that chapter's story lines, its special stop's call, and the things first counted
+  there.
+- Where a clip goes is worked out from the chapters themselves: a clip used in one chapter belongs to it, one used
+  in several chapters of an arc belongs to the arc, and one used in more than one arc is "always". So when a new
+  arc is added, its clips sort themselves, and clips that turn out to be shared move up to "always".
+- Each part opens on a tap and shows its progress ("Herald 12 of 17 · Story 20 of 27"). Filters show one voice or
+  both, and everything or just what's **to do**. Every part and group has **Step through**, which walks through its
+  clips one at a time.
+
+### When a clip isn't recorded (or can't be used)
+Nothing is ever silent by accident, and nothing half-right is played:
+
+| Situation | Herald | Narrator |
+|---|---|---|
+| Not recorded | The robot voice says it. Neighbouring robot pieces are joined into one sentence | The caption shows long enough to read aloud |
+| A number above 20 without its own recording | Joined from the tens and ones clips; the robot says the whole number if either is missing | – |
+| Recorded for the other steward | Not played; treated as not recorded | Not played; the caption shows |
+| The recording won't play on this device | Treated as not recorded (the robot fills in), and flagged in the panel | The caption shows; flagged |
+| The words changed in a game update since it was recorded | Still plays; flagged "record it again" | Still plays; flagged |
+| A clip the catalogue doesn't know (a bug or a future key) | The robot still says sensible words ("How many geese?") | – |
+| The device has no robot voice | The panel warns that unrecorded herald clips will be silent, so numbers and commands get recorded first | – |
+
+- **Takes that are silent or a blip are turned away** ("That was too quiet… try again"), so a slip never replaces a
+  good recording.
+- **Backups:** after 5 new recordings the Voices section reminds the grown-up that recordings live only on this
+  device, until a backup is saved. Voice backups carry which steward each line was recorded for and which words it
+  was recorded to.
+
+### Record next: a living, ongoing process
+Nobody records 300 clips before the first game. Instead the game asks for what's coming up:
+- **Record next** at the top of the grown-up panel: the player's current and next chapter, and how many story lines
+  and herald clips they still need. One tap steps through exactly those clips, in the order they'll be heard.
+- **A quiet note on the home screen** for grown-ups: "Grown-ups: 18 story lines for Mia's next chapters aren't
+  recorded yet. Hold the gear to record them." **Not now** puts it off until that player reaches the next chapter.
+- Story reminders are on from the start, since unrecorded story lines are silent. Herald reminders switch on by
+  themselves once a few herald clips are recorded (until then the robot voice is doing the job). Both can be turned
+  on or off in the Voices section.
 
 ## 7. Look and sound
 
@@ -450,7 +499,9 @@ fixes port both ways.
   - music
   - full screen
   - digit style.
-- **Voices:** Herald and Narrator sections, step-by-step guides, per-voice backups, microphone test.
+- **Record next** (at the top, when anything is missing): the current and next chapter's unrecorded clips (§6).
+- **Voices:** every clip sorted into Always, then each arc and chapter, with progress counts, voice and to-do
+  filters, step-by-step guides, reminder switches, per-voice backups and a microphone test (§6).
 
 ## 11. Later arcs: rough framework
 
