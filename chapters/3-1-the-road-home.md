@@ -21,7 +21,8 @@ Conventions (N:, H:, [Hero], ★★/★, clip keys, {uncle|aunt} steward lines) 
   the whole army (say 34); the herald says it in companies: "We have 3 companies and 4 soldiers!" That way he never
   needs a number past 10 to say it.
 - **Recruiting in arc 3:**
-  - A village with half or more right first time (3 of 5) sends a group: the number right, plus 2 (5 to 7).
+  - A village with half or more right first time (3 of 5) sends a group: one friend for each right answer (3 to 5).
+    (About 20 a chapter in all, as each castle needs 2 companies more than the last, so the fork's choice matters.)
   - A fork's recruit stop sends a whole company if half or more are right (5 soldiers if not).
   - A special stop sends 3 soldiers and a camp treasure.
   - Guards beaten at a skirmish join.
@@ -46,14 +47,14 @@ Conventions (N:, H:, [Hero], ★★/★, clip keys, {uncle|aunt} steward lines) 
 | # | Stop | Kind | Sets | Earns |
 |---|---|---|---|---|
 | 0 | Home from the hills | Opening (first play only) | – | – |
-| 1 | Harvest Hollow | Village | 1 | 5–7 recruits |
+| 1 | Harvest Hollow | Village | 1 | 3–5 recruits |
 | 2 | The Grey Bridge | Skirmish: the first Grey Guards | 1+ | The guards join |
 | 3 | The Crossroads | **Fork** | – | Pick a branch |
 | 3a | Windmill Hill | Recruit stop | 1 | A whole company |
 | 3b | The Apple Orchard | Special | 1 | 3 recruits and a **big orange pumpkin** for the camp |
 | ⛺ | *Camp* | | | |
 | 4 | The Hay Wagons | Skirmish | 1+ | The guards join |
-| 5 | Market Cross | Village | 1 | 5–7 recruits; the steward's big lie |
+| 5 | Market Cross | Village | 1 | 3–5 recruits; the steward's big lie |
 | 6 | The Toll Castle | Troop check, then siege | 3+ | The castle, and the chapter |
 | ⛺ | *Camp: chapter end* | | | |
 
@@ -103,8 +104,8 @@ capital.*
 - **H:** *(fanfare)* "Hello, villagers! Who will join us?" `h_hello_village`
 - ★★ Adding: "3 pumpkins… and 4 more! How many now?" · ★ Count: "How many haystacks?" `how_many_haystacks` · ★
   Taking away (crows fly off with ears of corn) · ★ Find
-- **Half or more right:** a group of farmers marches over, pitchforks and all. **H:** "5 friends join us!" `num_5` +
-  `h_join_us`. The gold disc goes up by 5 at once (20 → 25).
+- **Half or more right:** a group of farmers marches over, pitchforks and all. **H:** "4 friends join us!" `num_4` +
+  `h_join_us`. The gold disc goes up by 4 at once (20 → 24).
 - **N:** "The farmers of Harvest Hollow joined the march." `st3_1_05`
 
 ## 2 · The Grey Bridge (skirmish): the first Grey Guards

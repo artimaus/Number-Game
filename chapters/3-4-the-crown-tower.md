@@ -15,14 +15,14 @@ the whole army: **10 companies, 100 soldiers**. Conventions are as in [chapter 1
 | # | Stop | Kind | Sets | Earns |
 |---|---|---|---|---|
 | 0 | To the sea cliffs | Opening (first play only) | – | – |
-| 1 | Puffin Point | Village | 1 | 5–7 recruits |
+| 1 | Puffin Point | Village | 1 | 3–5 recruits |
 | 2 | The Cliff Path | Skirmish | 1+ | The guards join |
 | 3 | The Lookout Stone | **Fork** | – | Pick a branch |
 | 3a | The Fishing Village | Recruit stop | 1 | A whole company of fisherfolk |
 | 3b | The Smugglers' Cove | Special | 1 | 3 recruits and a **sea chest** for the camp |
 | ⛺ | *Camp* | | | |
 | 4 | The Signal Fires | Skirmish | 1+ | The guards join |
-| 5 | Tower Town | Village | 1 | 5–7 recruits; a warning about the tower |
+| 5 | Tower Town | Village | 1 | 3–5 recruits; a warning about the tower |
 | 6 | The Crown Tower | Troop check, then siege | 3+ | **The crown**, and the arc |
 | 🎉 | *The crown feast (arc end)* | | | The **Crown Medal** and a **royal banner** for the camp; then bad news from the capital |
 

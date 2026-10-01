@@ -14,14 +14,14 @@ and [chapter 9](3-1-the-road-home.md) (guards, companies, forks and troop checks
 | # | Stop | Kind | Sets | Earns |
 |---|---|---|---|---|
 | 0 | Down to the river | Opening (first play only) | – | – |
-| 1 | Riverbend | Village | 1 | 5–7 recruits |
+| 1 | Riverbend | Village | 1 | 3–5 recruits |
 | 2 | The Lock Gates | Skirmish | 1+ | The guards join |
 | 3 | The River Fork | **Fork** | – | Pick a branch |
 | 3a | The Harbour | Recruit stop | 1 | A whole company of sailors |
 | 3b | The Lighthouse | Special | 1 | 3 recruits and a **ship in a bottle** for the camp |
 | ⛺ | *Camp* | | | |
 | 4 | The Fish Market | Skirmish | 1+ | The guards join |
-| 5 | Willowford | Village | 1 | 5–7 recruits; a warning about Captain Plume |
+| 5 | Willowford | Village | 1 | 3–5 recruits; a warning about Captain Plume |
 | 6 | Watergate Castle | Troop check, then siege | 3+ | The castle, the empty chest, and the chapter |
 | ⛺ | *Camp: chapter end* | | | |
 

@@ -14,14 +14,14 @@ Thistlewhip**, who blows her hunting horn at everything. Conventions are as in [
 | # | Stop | Kind | Sets | Earns |
 |---|---|---|---|---|
 | 0 | Into the Grey Forest | Opening (first play only) | – | – |
-| 1 | Fernhollow | Village | 1 | 5–7 recruits |
+| 1 | Fernhollow | Village | 1 | 3–5 recruits |
 | 2 | The Hunting Path | Skirmish | 1+ | The guards join |
 | 3 | The Forked Oak | **Fork** | – | Pick a branch |
 | 3a | The Charcoal Burners | Recruit stop | 1 | A whole company |
 | 3b | The Deer Meadow | Special | 1 | 3 recruits and a **carved wooden deer** for the camp |
 | ⛺ | *Camp* | | | |
 | 4 | The Log Bridge | Skirmish | 1+ | The guards join |
-| 5 | Mossgate | Village | 1 | 5–7 recruits; a warning about Lady Thistlewhip |
+| 5 | Mossgate | Village | 1 | 3–5 recruits; a warning about Lady Thistlewhip |
 | 6 | The Grey Lodge | Troop check, then siege | 3+ | The lodge, the second note, and the chapter |
 | ⛺ | *Camp: chapter end* | | | |
 

@@ -175,6 +175,8 @@ button:focus-visible{outline:4px solid var(--blue);outline-offset:3px}
 /* make a company: the empty spots of the ten frame light up when they're counted */
 #things .spot.on{stroke:#F6D36B;stroke-dasharray:none;stroke-width:7}
 #things .th.pop{animation:pop .45s;transform-box:fill-box;transform-origin:50% 50%}
+#things .tflag.lit{filter:drop-shadow(0 0 10px #F6D36B) drop-shadow(0 0 4px #F6D36B)}
+#things .drw.hopnow{animation:thinghop .32s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:50% 100%}
 /* under a blocked road: dots that light as the child gets closer to clearing it */
 .road .clear{position:absolute;top:38px;left:50%;transform:translateX(-50%);display:flex;gap:4px;padding:4px 6px;border-radius:10px;background:rgba(255,255,255,.75)}
 .road .clear i{width:10px;height:10px;border-radius:50%;background:rgba(29,43,79,.18)}
@@ -225,6 +227,7 @@ button:focus-visible{outline:4px solid var(--blue);outline-offset:3px}
 @keyframes gobrun{to{transform:translateY(-16px)}}
 .gob.hop{animation:gobhop .32s ease-in-out infinite alternate}
 @keyframes gobhop{to{transform:translateY(-46px)}}
+@keyframes thinghop{to{transform:translateY(-16px)}}
 @keyframes puff{to{transform:scale(1.08)}}
 .star-fly{position:absolute;width:34px;height:34px;color:var(--yellow);animation:fly .9s ease-out forwards}
 @keyframes fly{from{transform:translate(0,0) rotate(0) scale(.6);opacity:1}to{transform:translate(var(--dx),var(--dy)) rotate(260deg) scale(1);opacity:0}}
@@ -507,7 +510,10 @@ const NOUNS = {
   flowers:{one:"flower", w:44, h:60},   sacks:{one:"sack", w:52, h:58},      pies:{one:"pie", w:66, h:40},
   soldiers:{one:"soldier", w:44, h:84},
   // arc 3
-  guards:{one:"guard", w:60, h:85},    pumpkins:{one:"pumpkin", w:60, h:52}, haystacks:{one:"haystack", w:70, h:64}
+  guards:{one:"guard", w:60, h:85},    pumpkins:{one:"pumpkin", w:60, h:52}, haystacks:{one:"haystack", w:70, h:64},
+  fish:{one:"fish", w:64, h:36},        crates:{one:"crate", w:56, h:50},     ships:{one:"ship", w:76, h:70},
+  deer:{one:"deer", w:74, h:76},        fawns:{one:"fawn", w:54, h:56},       puffins:{one:"puffin", w:48, h:64},
+  teddies:{one:"teddy bear", w:52, h:60}
 };
 /* Levels. max: highest number asked. cards: answer cards shown. dots: helper dots under numerals.
    arrange: how things to count are laid out. ratio: how many times more one side of "which is more" has.
@@ -525,11 +531,14 @@ const LEVELS = {
   7:{max:20, cards:4, dots:false, arrange:"scatter", ratio:1.2,  moreMax:12, near:true,  sizeTrick:true,  fewer:1 / 3, signs:["+","-","="], bigGap:2, look:5, addMax:5},
   8:{max:20, cards:4, dots:false, arrange:"scatter", ratio:1.2,  moreMax:12, near:true,  sizeTrick:true,  fewer:1 / 3, signs:["+","-","="], bigGap:1, look:6, addMax:10, subMax:5, sentence:true},
   // arc 3: adding and taking away within 10, always with the number sentence
-  9:{max:20, cards:4, dots:false, arrange:"scatter", ratio:1.2,  moreMax:12, near:true,  sizeTrick:true,  fewer:1 / 3, signs:["+","-","="], bigGap:1, look:6, addMax:10, subMax:10, sentence:"always"}
+  9:{max:20, cards:4, dots:false, arrange:"scatter", ratio:1.2,  moreMax:12, near:true,  sizeTrick:true,  fewer:1 / 3, signs:["+","-","="], bigGap:1, look:6, addMax:10, subMax:10, sentence:"always"},
+  10:{max:20, cards:4, dots:false, arrange:"scatter", ratio:1.2, moreMax:12, near:true,  sizeTrick:true,  fewer:1 / 3, signs:["+","-","="], bigGap:1, look:6, addMax:10, subMax:10, sentence:"always"},
+  11:{max:20, cards:4, dots:false, arrange:"scatter", ratio:1.2, moreMax:12, near:true,  sizeTrick:true,  fewer:1 / 3, signs:["+","-","="], bigGap:1, look:6, addMax:10, subMax:10, sentence:"always"},
+  12:{max:20, cards:4, dots:false, arrange:"scatter", ratio:1.2, moreMax:12, near:true,  sizeTrick:true,  fewer:1 / 3, signs:["+","-","="], bigGap:1, look:6, addMax:10, subMax:10, sentence:"always"}
 };
-const MAX_LEVEL = 9, ARC_TOP = {1:4, 2:8, 3:9};        // the highest level each arc plays at
+const MAX_LEVEL = 12, ARC_TOP = {1:4, 2:8, 3:12};        // the highest level each arc plays at
 /* the lowest level each arc 2 task turns up at */
-const TYPE_LEVEL = {sign:5, next:5, cmpc:5, big:6, look:6, back:7, add:7, sub:8, ten:9};
+const TYPE_LEVEL = {sign:5, next:5, cmpc:5, big:6, look:6, back:7, add:7, sub:8, ten:9, hide:10, num:11, diff:11, tens:12, miss:12};
 const LOOKALIKE = [[6, 9], [2, 5], [1, 7]];          // never on one board in arc 1
 const PARTY_MAX = 20, GEAR_MAX = 3;                  // the army never outgrows the numbers taught (to 20); gear: spear, then helmet, shield, cape
 const ARMY_MAX = 100;                                // arc 3: ten companies of ten
@@ -774,6 +783,84 @@ const NARR = {
   st3_1_r2:"Oh no! Grey guards had stopped the windmill!",
   st3_1_r3:"Oh no! Grey guards were putting up silly posters in Market Cross!",
 
+  st3_2_01:"Beyond the drawbridge lay the River Towns, where boats sailed and mill wheels turned.",
+  st3_2_02:"“We saw the steward's boat,” whispered the river folk. “It carried a heavy locked chest up the river.”",
+  st3_2_03:"In Riverbend, the river folk were fishing from the quay.",
+  st3_2_04:"The river folk put down their fishing rods and joined the march.",
+  st3_2_05:"Grey guards had shut the lock gates, and the boats were stuck!",
+  st3_2_06:"The guards opened the lock gates, and the boats sailed through. Toot toot!",
+  st3_2_07:"Where the river split in two, so did the road.",
+  st3_2_08:"The harbour was full of ships, and the sailors were cross: the steward had taken all their sails!",
+  st3_2_09:"The sailors tied their knots, and joined the march. Heave-ho!",
+  st3_2_10:"The steward's guards had blown out the lighthouse lamps. Ships couldn't find their way home!",
+  st3_2_11:"The lighthouse keeper gave the army a tiny ship in a bottle.",
+  st3_2_12:"At the fish market, grey guards were hiding behind the barrels. They thought nobody could see them!",
+  st3_2_13:"The guards came out from behind the barrels, smelling rather fishy, and joined the march.",
+  st3_2_14:"In Willowford, the children were skipping across the stepping stones.",
+  st3_2_15:"“Watergate Castle is next,” said the teacher. “Captain Plume guards it. Listen: A-CHOO!”",
+  st3_2_16:"Watergate Castle stood right across the river. On the tower, Captain Plume's feather tickled his nose. A-CHOO!",
+  st3_2_17:"Inside the castle stood the steward's chest. It was open, and empty! Just a note inside.",
+  st3_2_18:"The note said: “Hide the crown in the Grey Forest.”",
+  st3_2_19:"Captain Plume sneezed all the way to the Grey Forest. A-CHOO! A-CHOO!",
+  st3_2_20:"A thick river fog rolled over the road, and nobody could see the way.",
+  st3_2_21:"The lighthouse shone through the fog, and showed the way!",
+  st3_2_r1:"Oh no! Grey guards were tangling up the fishing nets in Riverbend!",
+  st3_2_r2:"Oh no! Grey guards were rolling barrels into the harbour!",
+  st3_2_r3:"Oh no! Grey guards were blocking the stepping stones at Willowford!",
+
+  st3_3_01:"The road led into the Grey Forest, where the steward liked to go hunting.",
+  st3_3_02:"The trees were tall, the mist was thick, and grey guards hid behind every trunk.",
+  st3_3_03:"In Fernhollow, the foresters lived among ferns taller than a knight!",
+  st3_3_04:"The foresters shouldered their axes and joined the march.",
+  st3_3_05:"Grey guards were blowing hunting horns and scaring all the birds. Toot! Toot!",
+  st3_3_06:"The guards put down their horns, and the birds came back to sing.",
+  st3_3_07:"At the Forked Oak, one path led to the charcoal burners' camp, and one to the deer meadow.",
+  st3_3_08:"The charcoal burners were covered in soot from top to toe. They were very brave, and very sooty!",
+  st3_3_09:"The charcoal burners wiped their faces, which made them even sootier, and joined the march.",
+  st3_3_10:"In the meadow, the little fawns had hidden in the tall grass, scared of the hunting horns.",
+  st3_3_11:"The forest wardens gave the army a little wooden deer, carved just like the mother deer.",
+  st3_3_12:"Grey guards were rolling logs onto the log bridge, so nobody could cross.",
+  st3_3_13:"The guards rolled the logs away again, and joined the march.",
+  st3_3_14:"Mossgate was a village with roofs of soft green moss.",
+  st3_3_15:"“That's Lady Thistlewhip's horn,” said the villagers. “She guards the Grey Lodge, and she toots at everything!”",
+  st3_3_16:"Deep in the forest stood the Grey Lodge. On the balcony, Lady Thistlewhip tooted her horn. TOOT-TOOOOT!",
+  st3_3_17:"Inside the lodge, over the fireplace, hung another note.",
+  st3_3_18:"It said: “Take the crown to the Crown Tower, where nobody will ever find it.”",
+  st3_3_19:"Lady Thistlewhip tooted her horn all the way to the sea cliffs. TOOT! TOOT!",
+  st3_3_20:"Lady Thistlewhip's guards had chopped down trees across the road.",
+  st3_3_21:"The foresters and the charcoal burners sawed up the trees, and the road was open!",
+  st3_3_r1:"Oh no! Grey guards were trampling the ferns in Fernhollow!",
+  st3_3_r2:"Oh no! Grey guards were kicking over the charcoal sacks!",
+  st3_3_r3:"Oh no! Grey guards were pulling the moss off Mossgate's roofs!",
+
+  st3_4_01:"Beyond the forest, the road climbed to the sea cliffs. On the highest cliff stood the Crown Tower.",
+  st3_4_02:{uncle:"Uncle Grimbald was there, with Sir Snivelwick, who carried all the steward's keys.",
+            aunt:"Aunt Grimhilda was there, with Sir Snivelwick, who carried all the steward's keys."},
+  st3_4_03:"Puffin Point was a village where the puffins walked about as if they owned it.",
+  st3_4_04:"The people of Puffin Point joined the march, and so did one very determined puffin.",
+  st3_4_05:"On the cliff path, grey guards held on to their helmets in the wind. “Nobody passes!”",
+  st3_4_06:"The wind blew the grey cloaks away over the sea, and the guards cheered and joined the march.",
+  st3_4_07:"From the Lookout Stone, they could see a fishing village, and a secret cove.",
+  st3_4_08:"In the fishing village, the fisherfolk were mending their nets.",
+  st3_4_09:"The fisherfolk left their nets on the beach, and joined the march.",
+  st3_4_10:"In the cove was the steward's secret boat, full of things taken from the villages!",
+  st3_4_11:"At the bottom of the boat was an old sea chest. “Keep it,” said the villagers. “You've earned it!”",
+  st3_4_12:"Grey guards were lighting signal fires to warn the steward that the army was coming!",
+  st3_4_13:"The guards put out their fires, and joined the march instead.",
+  st3_4_14:"Tower Town sat at the foot of the Crown Tower.",
+  st3_4_15:"“There's a light at the top of the tower every night,” whispered the townsfolk. “Sir Snivelwick goes up and down with his keys, jingle jangle!”",
+  st3_4_16:{uncle:"There stood the Crown Tower. On top stood Uncle Grimbald, with Sir Snivelwick jingling his keys.",
+            aunt:"There stood the Crown Tower. On top stood Aunt Grimhilda, with Sir Snivelwick jingling her keys."},
+  st3_4_17:"At the very top of the tower was a locked chest. One of Sir Snivelwick's keys fitted, and inside was… the crown!",
+  st3_4_18:{uncle:"Uncle Grimbald had hidden it himself, and told everyone it was stolen!", aunt:"Aunt Grimhilda had hidden it herself, and told everyone it was stolen!"},
+  st3_4_19:"The steward jumped on a horse, and galloped away to the capital.",
+  st3_4_20:"Every loyal town in Brightvale came to a feast by the sea, to see the crown safe at last.",
+  st3_4_21:"Then a rider came with news. The steward had locked the gates of the capital, and wouldn't let anyone in.",
+  st3_4_22:"“The king and queen will be home soon,” said our hero. “We must open those gates!”",
+  st3_4_23:"The capital's great gates were shut and barred. The army made camp, and got ready for the siege…",
+  st3_4_r1:"Oh no! Grey guards were chasing the puffins at Puffin Point!",
+  st3_4_r2:"Oh no! Grey guards were back in Tower Town, looking for the keys!",
+
   st_morning:"Morning came, bright and early.",
   st_retreat_guards:"Oops! The grey guards held on that time."
 };
@@ -973,7 +1060,81 @@ const CHAPTERS = [
    end:"st3_1_20", blocked:"st3_1_21", cleared:"st3_1_22",
    raids:[{at:"harvesthollow", line:"st3_1_r1", t:[["add",["pumpkins"],2],["sub",["guards"],1],["count",["guards"],1],["ten",null,1],["find",null,1]]},
           {at:"windmillhill", line:"st3_1_r2", t:[["ten",null,2],["add",["sacks"],1],["count",["guards"],1],["sub",["sacks"],1],["big",null,1]]},
-          {at:"marketcross", line:"st3_1_r3", t:[["sub",["pies"],2],["add",["guards"],1],["count",["guards"],1],["ten",null,1],["next",null,1]]}]}
+          {at:"marketcross", line:"st3_1_r3", t:[["sub",["pies"],2],["add",["guards"],1],["count",["guards"],1],["ten",null,1],["next",null,1]]}]},
+  {n:10, arc:3, name:"The River Towns", level:10, land:"rivervale",
+   open:["st3_2_01","st3_2_02"], openH:["h_locked_chest","h_forward_march"],
+   stops:[
+     {id:"riverbend", name:"Riverbend", kind:"village", place:"riverbend", arrive:"st3_2_03", leave:"st3_2_04",
+      t:[["hide",["ducks"],2],["add",["fish"],1],["sub",["fish"],1],["ten",null,1],["count",["fish"],1]]},
+     {id:"lockgates", name:"The Lock Gates", kind:"skirmish", place:"lockgates", arrive:"st3_2_05", won:"st3_2_06",
+      t:[["hide",["guards"],2],["sub",["guards"],1],["add",["guards"],1],["count",["guards"],1],["big",null,1]]},
+     {id:"riverfork", name:"The River Fork", kind:"fork", place:"riverfork", arrive:"st3_2_07", ask:["fork_harbour","fork_lighthouse"],
+      a:{id:"harbour", name:"The Harbour", kind:"recruit", place:"harbour", arrive:"st3_2_08", leave:"st3_2_09", icon:"anchor",
+         t:[["hide",["crates"],2],["ten",null,1],["add",["crates"],1],["sub",["crates"],1],["count",["ships"],1]]},
+      b:{id:"lighthouse", name:"The Lighthouse", kind:"special", place:"lighthouse", arrive:"st3_2_10", done:"st3_2_11", hLine:"h_light_lamps", icon:"lighthouse",
+         recruit:3, treasure:"shipbottle", t:[["add",["ships"],2],["hide",["ships"],1],["ten",null,1],["sub",["ships"],1],["back",null,1]]}},
+     {id:"fishmarket", name:"The Fish Market", kind:"skirmish", place:"fishmarket", arrive:"st3_2_12", won:"st3_2_13",
+      t:[["hide",["guards"],2],["add",["fish"],1],["sub",["fish"],1],["ten",null,1],["count",["fish"],1]]},
+     {id:"willowford", name:"Willowford", kind:"village", place:"willowford", arrive:"st3_2_14", leave:"st3_2_15",
+      t:[["sub",["villagers"],2],["hide",["villagers"],1],["add",["villagers"],1],["next",null,1],["find",null,1]]},
+     {id:"watergate", name:"Watergate Castle", kind:"siege", place:"watergate", arrive:"st3_2_16", won:["st3_2_17","st3_2_18"], wonH:"h_castle_ours", wonAfter:["h_to_forest"],
+      need:"h_need_ladders_ram", needCo:6, build:["ladders","ram"], minLadders:3,
+      tb:[["find",null,2],["count",["logs"],1],["add",["logs"],1],["ten",null,1],["hide",["logs"],1]],
+      ta:[["hide",["guards"],2],["sub",["guards"],1],["add",["guards"],1],["ten",null,1],["count",["guards"],1]]}
+   ],
+   end:"st3_2_19", blocked:"st3_2_20", cleared:"st3_2_21",
+   raids:[{at:"riverbend", line:"st3_2_r1", t:[["hide",["ducks"],2],["sub",["guards"],1],["count",["guards"],1],["ten",null,1],["add",["fish"],1]]},
+          {at:"harbour", line:"st3_2_r2", t:[["add",["crates"],2],["hide",["guards"],1],["count",["guards"],1],["ten",null,1],["sub",["crates"],1]]},
+          {at:"willowford", line:"st3_2_r3", t:[["sub",["guards"],2],["hide",["villagers"],1],["add",["guards"],1],["count",["guards"],1],["ten",null,1]]}]},
+  {n:11, arc:3, name:"The Grey Forest", level:11, land:"greyforest",
+   open:["st3_3_01","st3_3_02"], openH:["h_stay_together","h_forward_march"],
+   stops:[
+     {id:"fernhollow", name:"Fernhollow", kind:"village", place:"fernhollow", arrive:"st3_3_03", leave:"st3_3_04",
+      t:[["diff",["logs"],2],["num",null,1],["hide",["villagers"],1],["add",["mushrooms"],1],["count",["mushrooms"],1]]},
+     {id:"huntingpath", name:"The Hunting Path", kind:"skirmish", place:"huntingpath", arrive:"st3_3_05", won:"st3_3_06",
+      t:[["num",null,2],["diff",["guards"],1],["sub",["guards"],1],["hide",["guards"],1],["ten",null,1]]},
+     {id:"forkedoak", name:"The Forked Oak", kind:"fork", place:"forkedoak", arrive:"st3_3_07", ask:["fork_charcoal","fork_meadow"],
+      a:{id:"charcoal", name:"The Charcoal Burners", kind:"recruit", place:"charcoal", arrive:"st3_3_08", leave:"st3_3_09", icon:"charcoal",
+         t:[["ten",null,2],["num",null,1],["diff",["sacks"],1],["add",["sacks"],1],["sub",["sacks"],1]]},
+      b:{id:"deermeadow", name:"The Deer Meadow", kind:"special", place:"deermeadow", arrive:"st3_3_10", done:"st3_3_11", hLine:"h_find_fawns", icon:"deer",
+         recruit:3, treasure:"wooddeer", t:[["hide",["fawns"],2],["diff",["deer"],1],["add",["fawns"],1],["num",null,1],["count",["deer"],1]]}},
+     {id:"logbridge", name:"The Log Bridge", kind:"skirmish", place:"logbridge", arrive:"st3_3_12", won:"st3_3_13",
+      t:[["sub",["logs"],2],["num",null,1],["diff",["logs"],1],["ten",null,1],["hide",["guards"],1]]},
+     {id:"mossgate", name:"Mossgate", kind:"village", place:"mossgate", arrive:"st3_3_14", leave:"st3_3_15",
+      t:[["num",null,2],["add",["villagers"],1],["diff",["mushrooms"],1],["hide",["villagers"],1],["back",null,1]]},
+     {id:"greylodge", name:"The Grey Lodge", kind:"siege", place:"greylodge", arrive:"st3_3_16", won:["st3_3_17","st3_3_18"], wonH:"h_lodge_ours", wonAfter:["h_to_tower"],
+      need:"h_need_ladders_ram", needCo:8, build:["ladders","ram"], minLadders:3,
+      tb:[["find",null,2],["count",["logs"],1],["num",null,1],["ten",null,1],["diff",["logs"],1]],
+      ta:[["num",null,2],["diff",["guards"],1],["hide",["guards"],1],["sub",["guards"],1],["ten",null,1]]}
+   ],
+   end:"st3_3_19", blocked:"st3_3_20", cleared:"st3_3_21",
+   raids:[{at:"fernhollow", line:"st3_3_r1", t:[["diff",["guards"],2],["num",null,1],["count",["guards"],1],["hide",["guards"],1],["ten",null,1]]},
+          {at:"charcoal", line:"st3_3_r2", t:[["num",null,2],["sub",["sacks"],1],["count",["guards"],1],["diff",["guards"],1],["hide",["guards"],1]]},
+          {at:"mossgate", line:"st3_3_r3", t:[["hide",["guards"],2],["num",null,1],["diff",["guards"],1],["add",["guards"],1],["ten",null,1]]}]},
+  {n:12, arc:3, finale:3, name:"The Crown Tower", level:12, land:"seacliffs",
+   open:["st3_4_01","st3_4_02"], openH:["h_crown_tower","h_forward_march"],
+   stops:[
+     {id:"puffinpoint", name:"Puffin Point", kind:"village", place:"puffinpoint", arrive:"st3_4_03", leave:"st3_4_04",
+      t:[["miss",null,2],["tens",null,1],["num",null,1],["hide",["puffins"],1],["add",["puffins"],1]]},
+     {id:"cliffpath", name:"The Cliff Path", kind:"skirmish", place:"cliffpath", arrive:"st3_4_05", won:"st3_4_06",
+      t:[["miss",null,2],["diff",["guards"],1],["sub",["guards"],1],["tens",null,1],["hide",["guards"],1]]},
+     {id:"lookout", name:"The Lookout Stone", kind:"fork", place:"lookout", arrive:"st3_4_07", ask:["fork_fishing","fork_cove"],
+      a:{id:"fishingvillage", name:"The Fishing Village", kind:"recruit", place:"fishingvillage", arrive:"st3_4_08", leave:"st3_4_09", icon:"boat",
+         t:[["tens",null,2],["miss",null,1],["ten",null,1],["add",["boats"],1],["sub",["boats"],1]]},
+      b:{id:"smugglerscove", name:"The Smugglers' Cove", kind:"special", place:"smugglerscove", arrive:"st3_4_10", done:"st3_4_11", hLine:"h_give_back", icon:"chest",
+         recruit:3, treasure:"seachest", t:[["sub",["teddies"],2],["miss",null,1],["hide",["teddies"],1],["add",["teddies"],1],["diff",["teddies"],1]]}},
+     {id:"signalfires", name:"The Signal Fires", kind:"skirmish", place:"signalfires", arrive:"st3_4_12", won:"st3_4_13",
+      t:[["tens",null,2],["miss",null,1],["num",null,1],["diff",["guards"],1],["back",null,1]]},
+     {id:"towertown", name:"Tower Town", kind:"village", place:"towertown", arrive:"st3_4_14", leave:"st3_4_15",
+      t:[["miss",null,2],["tens",null,1],["add",["villagers"],1],["sub",["villagers"],1],["hide",["villagers"],1]]},
+     {id:"crowntower", name:"The Crown Tower", kind:"siege", place:"crowntower", arrive:"st3_4_16", won:["st3_4_17","st3_4_18","st3_4_19"], wonH:"h_tower_ours", crown:true,
+      need:"h_need_ladders_ram", needCo:10, build:["ladders","ram"], minLadders:3,
+      tb:[["find",null,2],["tens",null,1],["miss",null,1],["ten",null,1],["num",null,1]],
+      ta:[["miss",null,2],["tens",null,1],["num",null,1],["diff",["guards"],1],["sub",["guards"],1]]}
+   ],
+   end:null, blocked:"st3_4_23", cleared:null,
+   raids:[{at:"puffinpoint", line:"st3_4_r1", t:[["miss",null,2],["hide",["puffins"],1],["count",["guards"],1],["tens",null,1],["sub",["guards"],1]]},
+          {at:"towertown", line:"st3_4_r2", t:[["tens",null,2],["miss",null,1],["count",["guards"],1],["diff",["guards"],1],["num",null,1]]}]}
 ];
 /* every stop of a chapter, the branches of its forks included */
 const allStops = c => c.stops.flatMap(s => s.kind === "fork" ? [s, s.a, s.b] : [s]);
@@ -983,7 +1144,7 @@ const STOP_BY_ID = {}; CHAPTERS.forEach((c, ci) => c.stops.forEach((s, si) => { 
 /* Camp treasures: special stops give their own; raids give the next one on the list. */
 const FIXED_TREASURES = {puppy:"a sheepdog puppy", lantern:"a lantern", boat:"a little boat", applecart:"an apple cart", feast:"a feast table",
   cheese:"a big round cheese", squirrel:"a squirrel", horn:"a mountain horn", nutcracker:"a nutcracker soldier", nutcake:"a nut cake",
-  pumpkin:"a giant pumpkin"};
+  pumpkin:"a giant pumpkin", shipbottle:"a ship in a bottle", wooddeer:"a wooden deer", seachest:"a sea chest", royalbanner:"the royal banner"};
 const RAID_TREASURES = ["flag","drum","bunting","goat","bigtent","pot","bench","bannerpole","pony","hay","scarecrow","hen","cat","bell","weathervane","flowers","birdhouse","kite"];
 const TREASURE_NAMES = {...FIXED_TREASURES, flag:"a flag", drum:"a drum", bunting:"bunting", goat:"a goat", bigtent:"a bigger tent", pot:"a cooking pot",
   bench:"a bench", bannerpole:"a banner pole", pony:"a pony", hay:"hay bales", scarecrow:"a scarecrow", hen:"a hen", cat:"a cat", bell:"a bell",
@@ -998,7 +1159,7 @@ function newProfile(name = "", i = 0){
   return {id:"p" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), name, title:"prince",
     banner:BANNERS[i % BANNERS.length], skin:SKINS[1], hair:HAIRS[0],
     level:1, ch:0, stop:0, blocked:false, arcsDone:[], seenOpen:{}, camped:false, medal:false, medal2:false,
-    party:[], treasures:[], extras:0, freed:[], raidIdx:0, metGoblins:false, metTrolls:false, metGuards:false, forks:{}, firstTapDone:false, seenTypes:{},
+    party:[], treasures:[], extras:0, freed:[], raidIdx:0, metGoblins:false, metTrolls:false, metGuards:false, forks:{}, medal3:false, firstTapDone:false, seenTypes:{},
     known:{q:[], n:[]}, stats:{}, boxes:{}, recent:[], guessy:[], rounds:0};
 }
 let state = null;
@@ -1156,7 +1317,41 @@ const HERALD = [
   ["pony_eats","A pony eats…","Commands","A number plays right after it."],
   ["are_sold","…are sold!","Commands","After a number: “4… are sold!”"],
   ["roll_away","…roll away!","Commands","After a number: “2… roll away!”"],
-  ["go_away","…go away!","Commands","After a number."]
+  ["go_away","…go away!","Commands","After a number."],
+  ["sail_away","…sail away!","Commands","After a number: “3… sail away!”"],
+  ["fly_away","…fly away!","Commands","After a number."],
+  ["we_give_back","We give back…","Commands","A number plays right after it."],
+  // chapter 10
+  ["h_locked_chest","A locked chest?","March and story","Chapter 10's opening, before “Forward, march!”"],
+  ["we_can_see","…we can see…","Commands","“8 boats… we can see… 5…”"],
+  ["how_many_hiding","How many are hiding?","Commands"],
+  ["were_hiding","…were hiding!","Words","After a number: “3… were hiding!”"],
+  ["makes","make","Words","“5… and… 3… make… 8!”"],
+  ["fork_harbour","the Harbour","March and story","A fork's place name."],
+  ["fork_lighthouse","the Lighthouse","March and story","A fork's place name."],
+  ["h_light_lamps","Let's light the lamps!","March and story"],
+  ["h_to_forest","The Grey Forest! Let's go!","Battles","After Watergate Castle falls."],
+  // chapter 11
+  ["is_what","is… what?","Commands","“4… plus… 3… is… what?”"],
+  ["how_many_more","How many more…","Commands","The thing's name and “…are in the long row?” follow."],
+  ["in_long_row","…are in the long row?","Commands"],
+  ["more_than","more than","Words","“7… is… 3… more than… 4!”"],
+  ["fork_charcoal","the Charcoal Burners","March and story","A fork's place name."],
+  ["fork_meadow","the Deer Meadow","March and story","A fork's place name."],
+  ["h_stay_together","Stay together, everyone!","March and story","Chapter 11's opening."],
+  ["h_find_fawns","Let's help the fawns find their mother!","March and story"],
+  ["h_lodge_ours","Hooray! The lodge is ours!","Battles"],
+  ["h_to_tower","The Crown Tower! Onward!","Battles","After the Grey Lodge falls."],
+  // chapter 12
+  ["h_how_many_in","How many soldiers in…","Commands","A number and “companies” follow."],
+  ["what_makes","what makes…","Commands","“4… plus… what makes… 9?”"],
+  ["fork_fishing","the Fishing Village","March and story","A fork's place name."],
+  ["fork_cove","the Smugglers' Cove","March and story","A fork's place name."],
+  ["h_crown_tower","The crown must be in that tower!","March and story","Chapter 12's opening."],
+  ["h_give_back","Let's give everything back!","March and story"],
+  ["h_everyone","That's everyone!","Battles","At the Crown Tower: “We need 10 companies! That's everyone!”"],
+  ["h_tower_ours","Hooray! The tower is ours!","Battles"],
+  ["h_to_capital","To the capital!","March and story","At the end of the crown feast."]
 ];
 const PRAISE = ["praise_huzzah","praise_hooray","praise_splendid","praise_thats_it","praise_bravo","praise_well_done","my_praise_1","my_praise_2","my_praise_3"];
 let CLIPS = {};
@@ -1172,18 +1367,22 @@ const CLIP_SEC = {h_forward_march:"all", w_soldiers:"all", h_raid:"a1", h_goblin
   h_raid_trolls:"a2", h_troll_first:"a2", h_trolls:"a2", h_stomped_away:"a2", st_retreat_trolls:"a2", h_crown_stolen:"c8",
   // said by the game all through arc 3 (they move to "always" once arc 4 uses them too)
   ...Object.fromEntries(["w_company","w_companies","w_soldier","h_new_company","h_join_us","h_whole_company","h_which_way","or","h_come_back",
-    "h_count_army","h_we_need","h_enough","h_go_back","h_loyal_send","h_guards_first","h_guards","h_cloaks_off","h_raid_guards","h_castle_ours","st_retreat_guards","go_away"].map(k => [k, "a3"]))};
+    "h_count_army","h_we_need","h_enough","h_go_back","h_loyal_send","h_guards_first","h_guards","h_cloaks_off","h_raid_guards","h_castle_ours","st_retreat_guards","go_away"].map(k => [k, "a3"])),
+  h_everyone:"c12", h_to_capital:"c12"};
 const CLIP_FROM = {h_three_cheers:4, h_hip_hooray:4, h_need_ram:4, h_ram_part:4, h_ram_more:4, h_ram_ready:4};
 /* what each kind of task says, besides numbers and the things' names */
 const TASK_CLIPS = {find:["find_banner"], count:["lets_count"], more:["this_side_has"], next:["whats_next","lets_count"],
   back:["lets_count_down","whats_next"], cmpc:["lets_count_both","this_side_has","is_more_than"], big:["which_bigger","is_bigger_than","lets_count"],
   look:["look_closely","find_banner"], add:["and","more","how_many_now"], sub:["how_many_left","left"],
-  sign:["h_first_signs","find_the","sign_plus","sign_minus","plus_means","minus_means"], ten:["h_more_company","make_ten","and"]};
+  sign:["h_first_signs","find_the","sign_plus","sign_minus","plus_means","minus_means"], ten:["h_more_company","make_ten","and"],
+  hide:["we_can_see","how_many_hiding","were_hiding","and","makes"], num:["plus","minus","is","is_what","lets_count"], diff:["how_many_more","in_long_row","is","more_than","lets_count"],
+  tens:["h_how_many_in","w_companies","w_soldiers","lets_count"], miss:["plus","what_makes","makes","lets_count"]};
 /* what happens to the things that leave, in taking away: a clip said before the number ("A pony eats… 2") or after it
    ("2… go home for tea!") */
-const subGo = (noun, arc) => arc >= 3 ? ({guards:"go_home", apples:"pony_eats", pies:"are_sold", pumpkins:"roll_away", sacks:"we_give_away"}[noun] || "go_away")
+const subGo = (noun, arc) => arc >= 3 ? ({guards:"go_home", villagers:"go_home", apples:"pony_eats", pies:"are_sold", fish:"are_sold", pumpkins:"roll_away", logs:"roll_away", sacks:"we_give_away",
+    boats:"sail_away", ships:"sail_away", crates:"sail_away", ducks:"fly_away", puffins:"fly_away", teddies:"we_give_back"}[noun] || "go_away")
   : ({nuts:"squirrel_takes", pies:"troll_eats", sacks:"we_give_away"}[noun] || "stomp_off");
-const GO_BEFORE = new Set(["squirrel_takes", "troll_eats", "we_give_away", "pony_eats"]);
+const GO_BEFORE = new Set(["squirrel_takes", "troll_eats", "we_give_away", "pony_eats", "we_give_back"]);
 /* key → the chapter indexes that use it. Tasks run at the child's level, which can be above the chapter's (up to
    the arc's top), so a chapter counts as using whatever its arc's top level can ask. */
 function clipUse(){
@@ -1570,9 +1769,7 @@ function heroInner(p, {pole = true} = {}){
   <rect x="56" y="182" width="19" height="11" rx="5.5" fill="#6B4A2E"/><rect x="75" y="182" width="19" height="11" rx="5.5" fill="#6B4A2E"/>
   <path d="${girl ? "M57 102 Q53 140 48 176 L102 176 Q97 140 93 102 Q75 94 57 102 Z" : "M57 102 Q54 136 52 168 L98 168 Q96 136 93 102 Q75 94 57 102 Z"}" fill="#2E78D0"/>
   <rect x="53" y="138" width="44" height="8" rx="3" fill="#E9A20F"/><rect x="71" y="136" width="8" height="12" rx="2" fill="#F6D36B"/>
-  ${p.medal ? `<g transform="translate(${p.medal2 ? -8 : 0} 0)"><path d="M68 104 L75 118 L82 104" fill="none" stroke="#E5483F" stroke-width="4"/><circle cx="75" cy="122" r="7.5" fill="#F2B233" stroke="#C98A17" stroke-width="2"/><path d="M75 117.5 l1.5 3 3.3.4-2.4 2.2.7 3.2-3.1-1.7-3.1 1.7.7-3.2-2.4-2.2 3.3-.4z" fill="#fff"/></g>`
-             : p.medal2 ? "" : `<path d="M75 112 l2.6 5.4 5.9.6-4.4 4 1.3 5.8-5.4-3-5.4 3 1.3-5.8-4.4-4 5.9-.6z" fill="#F6D36B"/>`}
-  ${p.medal2 && typeof hillMedal === "function" ? hillMedal(p.medal ? 83 : 75, 122) : ""}
+  ${heroMedals(p)}
   <rect x="44" y="104" width="12" height="36" rx="6" fill="#2E78D0"/><circle cx="50" cy="142" r="6.5" fill="${sk}"/>
   <rect x="94" y="104" width="12" height="30" rx="6" fill="#2E78D0" transform="rotate(-40 100 108)"/><circle cx="115" cy="129" r="6.5" fill="${sk}"/>
   <circle cx="75" cy="74" r="30" fill="${sk}"/>
@@ -1580,6 +1777,14 @@ function heroInner(p, {pole = true} = {}){
   <path d="M53 52 L56 36 L65 46 L75 30 L85 46 L94 36 L97 52 Z" fill="#F2B233"/><rect x="52" y="48" width="46" height="8" rx="3" fill="#E9A20F"/><circle cx="75" cy="52" r="2.6" fill="#E5483F"/>
   ${eyes(65, 85, 78, 3.8)}${cheeks(girl ? 60 : 57, girl ? 90 : 93, 88, 5.5)}
   <path d="M68 90 Q75 97 82 90" fill="none" stroke="${INK}" stroke-width="2.6" stroke-linecap="round"/>`;
+}
+/* the medals on the hero's chest, side by side: the Border Medal, the Hill Medal and the Crown Medal (a star until the first) */
+function heroMedals(p){
+  const m = [p.medal && "border", p.medal2 && typeof hillMedal === "function" && "hill", p.medal3 && typeof crownMedal === "function" && "crown"].filter(Boolean);
+  if (!m.length) return `<path d="M75 112 l2.6 5.4 5.9.6-4.4 4 1.3 5.8-5.4-3-5.4 3 1.3-5.8-4.4-4 5.9-.6z" fill="#F6D36B"/>`;
+  return m.map((k, i) => { const x = 75 + (i - (m.length - 1) / 2) * 16;
+    return k === "border" ? `<g transform="translate(${x - 75} 0)"><path d="M68 104 L75 118 L82 104" fill="none" stroke="#E5483F" stroke-width="4"/><circle cx="75" cy="122" r="7.5" fill="#F2B233" stroke="#C98A17" stroke-width="2"/><path d="M75 117.5 l1.5 3 3.3.4-2.4 2.2.7 3.2-3.1-1.7-3.1 1.7.7-3.2-2.4-2.2 3.3-.4z" fill="#fff"/></g>`
+      : k === "hill" ? hillMedal(x, 122) : crownMedal(x, 122); }).join("");
 }
 const heroSVG = p => `<svg viewBox="0 -6 150 206" width="188" height="258" aria-hidden="true"><g class="bob">${heroInner(p)}</g></svg>`;
 const heroBust = p => `<svg viewBox="22 24 106 106" aria-hidden="true">${heroInner(p, {pole:false})}</svg>`;
@@ -3287,7 +3492,7 @@ Object.assign(PLACES, {
       `<g stroke="#8E96A3" stroke-width="10" fill="none" stroke-linecap="round"><path d="M240 -20 L400 -70 M400 -70 L240 -125 M240 -125 L400 -180 M400 -180 L240 -235 M240 -235 L400 -280"/></g>
       <g class="gate"><path d="M284 0 V-86 Q320 -118 356 -86 V0 Z" fill="#2F343F"/><g stroke="#8A6A45" stroke-width="5"><path d="M284 -56 H356 M284 -28 H356"/></g><circle cx="342" cy="-42" r="5" fill="#F2B233"/></g>
       <rect x="306" y="-250" width="28" height="40" rx="14" fill="#F6D36B"/><rect x="306" y="-160" width="28" height="34" rx="14" fill="#2F343F"/>` + flagPole(390, -320, 50)) +
-      at(282 - 60 * .5, GY - 320 - 196 * .5, .5, stewardInner(state.steward === "aunt")) + chiefAt(360, GY - 320, .4, snivelwickInner()),
+      bossAt(282 - 60 * .5, GY - 320 - 196 * .5, .5, stewardInner(state.steward === "aunt")) + chiefAt(360, GY - 320, .4, snivelwickInner()),   // both run off when the tower falls
     guards:[[170, GY + 12], [460, GY + 12], [540, GY + 20]], gate:[320, GY], ram:[320, GY], wall:GY - 300,
     ladders:[[255, GY, 2], [385, GY, 2], [270, GY, 2], [370, GY, 2], [262, GY, 2], [378, GY, 2]]})
 });
@@ -3302,6 +3507,166 @@ Object.assign(BLOCKS, {
   11:`<g transform="translate(300 ${GY})"><rect x="-240" y="-40" width="480" height="44" rx="22" fill="#7C6A55" transform="rotate(-6)"/><rect x="-220" y="-86" width="440" height="40" rx="20" fill="#8A7660" transform="rotate(5)"/>
     <ellipse cx="226" cy="-50" rx="15" ry="21" fill="#C9AE84"/><g fill="#7F9788"><circle cx="-200" cy="-120" r="36"/><circle cx="-150" cy="-140" r="30"/><circle cx="170" cy="-126" r="34"/></g></g>`
 });
+})();
+
+/* ---- chapters 10-12: the River Towns, the Grey Forest and the Crown Tower ---- */
+Object.assign(THING, {fish:() => THING3.fish(), crates:() => THING3.crates(), ships:() => THING3.ships(), deer:() => THING3.deer(),
+  fawns:() => THING3.deer().replace('width="74" height="76"', 'width="54" height="56"'), puffins:() => THING3.puffins(), teddies:() => THING3.teddies()});
+/* the hero's third medal, from the crown feast */
+const crownMedal = (x, y) => `<g transform="translate(${x} ${y})"><path d="M-7 -18 L0 -6 L7 -18" fill="none" stroke="#6A42AE" stroke-width="4"/><circle r="7.5" fill="#F2B233" stroke="#C98A17" stroke-width="2"/><path d="M-4.5 2.5 L-5 -3 L-2.4 -.6 L0 -4.5 L2.4 -.6 L5 -3 L4.5 2.5 Z" fill="#fff"/></g>`;
+(() => {
+const G3 = s => `<g transform="translate(0 ${GY})">${s}</g>`;
+const person = (x, fy, s, inner) => at(x - 60 * s, fy - 162 * s, s, inner);
+const flagPole = (x, y, h, c = GREY.pen) => `<rect x="${x - 2}" y="${y - h}" width="4" height="${h}" fill="#6B4A2E"/><path d="M${x + 2} ${y - h + 2} L${x + 34} ${y - h + 10} L${x + 2} ${y - h + 20} Z" fill="${c}"/>`;
+const thing = (noun, x, y, s = 1) => { const n = NOUNS[noun]; return at(x - n.w * s / 2, y - n.h * s, s, thingSVG(noun, 0)); };
+const W = "#8FB8C8", WD = "#7FA9BA";
+const ripple = (x, y, w = 30) => `<path d="M${x} ${y} q${w / 2} -6 ${w} 0" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" opacity=".6"/>`;
+const barrel = (x, y, s = 1) => at(x, y, s, `<path d="M-20 0 Q-26 -26 -20 -52 H20 Q26 -26 20 0 Z" fill="#A87B4F"/><path d="M-23 -12 H23 M-23 -40 H23" stroke="#6B4A2E" stroke-width="4"/><ellipse cx="0" cy="-52" rx="20" ry="5" fill="#C9A06A"/>`);
+const willow = (x, y, s) => at(x, y, s, `<path d="M-8 0 Q-6 -60 -14 -120 L14 -120 Q6 -60 8 0 Z" fill="#7A5A3A"/><ellipse cx="0" cy="-130" rx="70" ry="40" fill="#8DBE6A"/>` +
+  seq3(9, i => `<path d="M${-60 + i * 15} -120 Q${-64 + i * 15} -70 ${-58 + i * 15} -30" stroke="${i % 2 ? "#7FB25A" : "#9BC97A"}" stroke-width="9" fill="none" stroke-linecap="round"/>`));
+const greyTree = (x, y, s, c = "#6F877A", c2 = "#7F9788") => at(x, y, s, `<rect x="-9" y="-170" width="18" height="170" rx="4" fill="#6B5A4A"/><ellipse cx="0" cy="-200" rx="46" ry="80" fill="${c}"/><ellipse cx="-16" cy="-222" rx="20" ry="38" fill="${c2}"/>`);
+const fern = (x, y, s) => at(x, y, s, `<g fill="none" stroke="#5E8F4A" stroke-width="6" stroke-linecap="round"><path d="M0 0 Q-10 -50 -50 -76"/><path d="M0 0 Q10 -60 44 -92"/></g>`);
+const mound = (x, y, s) => at(x, y, s, `<path d="M-60 0 Q-56 -60 0 -64 Q56 -60 60 0 Z" fill="#5A4636"/><path d="M-40 -30 Q0 -44 40 -30" stroke="#3B2E24" stroke-width="5" fill="none"/>` +
+  `<g fill="#D8DCDF" opacity=".75"><circle cx="0" cy="-80" r="14"/><circle cx="12" cy="-104" r="18"/><circle cx="-4" cy="-132" r="22"/></g>`);
+const beacon = (x, y, s, lit = true) => at(x, y, s, `<rect x="-4" y="-120" width="8" height="120" fill="#5A4636"/><path d="M-22 -128 H22 L14 -110 H-14 Z" fill="#4B5563"/>` +
+  (lit ? `<path d="M-16 -126 Q-18 -160 0 -184 Q4 -160 18 -150 Q20 -134 16 -126 Z" fill="#EA6C1F"/><path d="M-8 -126 Q-8 -146 2 -160 Q6 -144 10 -126 Z" fill="#F6D36B"/>` : ""));
+const boatBig = (x, y, s, c = "#2E78D0") => at(x, y, s, `<path d="M-60 -20 H60 Q50 6 30 8 H-30 Q-50 6 -60 -20 Z" fill="${c}"/><path d="M-60 -20 H60" stroke="#F4EBDD" stroke-width="4"/><rect x="-3" y="-80" width="5" height="62" fill="#6B4A2E"/>`);
+const net = (x0, x1, y) => `<path d="M${x0} ${y} V${y - 70} M${x1} ${y} V${y - 70}" stroke="#8A5A32" stroke-width="5"/><path d="M${x0} ${y - 66} Q${(x0 + x1) / 2} ${y - 30} ${x1} ${y - 66}" fill="#C9B79A" opacity=".55"/>` +
+  `<g stroke="#A8957A" stroke-width="1.5" opacity=".8">${seq3(6, i => `<path d="M${x0 + (i + 1) * (x1 - x0) / 7} ${y - 64} V${y - 40}"/>`)}</g>`;
+/* the edge of a cliff at x: grass at the top, a rock face dropping to the sea on its right */
+const cliff = x => `<path d="M${x - 30} -16 Q${x} -22 ${x + 18} -14 Q${x + 30} 40 ${x + 20} 120 H${x - 10} Q${x - 4} 40 ${x - 30} -16 Z" fill="#A39882"/><path d="M${x - 4} 0 L${x + 6} 60 M${x + 12} 20 L${x + 14} 90" stroke="#8F846F" stroke-width="4"/><path d="M${x - 40} -16 Q${x - 10} -24 ${x + 18} -14" stroke="#9CB36A" stroke-width="8" fill="none" stroke-linecap="round"/>`;
+const signArms = (x, a, b) => `<rect x="${x - 7}" y="-190" width="14" height="196" rx="3" fill="#8A5A32"/>
+  <g transform="rotate(-12 ${x} -160)"><path d="M${x + 7} -176 H${x + 120} L${x + 142} -160 L${x + 120} -144 H${x + 7} Z" fill="#D9B27C" stroke="#8A5A32" stroke-width="3"/>${at(x + 60, -147, .32, a)}</g>
+  <g transform="rotate(10 ${x} -104)"><path d="M${x + 7} -120 H${x + 120} L${x + 142} -104 L${x + 120} -88 H${x + 7} Z" fill="#D9B27C" stroke="#8A5A32" stroke-width="3"/>${at(x + 60, -91, .32, b)}</g>`;
+const iconAnchor = `<path d="M0 -76 V-6 M-26 -50 H26" stroke="#4B5563" stroke-width="9" stroke-linecap="round" fill="none"/><circle cx="0" cy="-82" r="9" fill="none" stroke="#4B5563" stroke-width="7"/><path d="M-34 -30 Q-30 0 0 0 Q30 0 34 -30" stroke="#4B5563" stroke-width="9" fill="none" stroke-linecap="round"/>`;
+const iconLight = `<path d="M-14 0 L-10 -64 H10 L14 0 Z" fill="#F4EBDD" stroke="#8A5A32" stroke-width="4"/><path d="M-12 -24 H12 M-11 -46 H11" stroke="#E5483F" stroke-width="9"/><rect x="-12" y="-80" width="24" height="16" fill="#F6D36B" stroke="#8A5A32" stroke-width="4"/><path d="M-16 -80 L0 -94 L16 -80 Z" fill="#E5483F"/>`;
+const iconSmoke = `<path d="M-34 0 Q-32 -34 0 -36 Q32 -34 34 0 Z" fill="#5A4636"/><g fill="#9AA2AB"><circle cx="0" cy="-48" r="10"/><circle cx="8" cy="-66" r="13"/><circle cx="-2" cy="-88" r="15"/></g>`;
+const iconDeer = `<g transform="translate(-37 -76)">${THING3.deer().replace(/<svg[^>]*>/, "").replace("</svg>", "")}</g>`;
+const iconBoat = `<g transform="translate(-38 -70)">${THING3.ships().replace(/<svg[^>]*>/, "").replace("</svg>", "")}</g>`;
+const iconCave = `<path d="M-40 0 Q-36 -70 0 -74 Q36 -70 40 0 Z" fill="#7C838C"/><path d="M-22 0 Q-20 -40 0 -44 Q20 -40 22 0 Z" fill="#2F343F"/>`;
+const tallGrass = (x, y, s) => at(x, y, s, `<g stroke="#9BC46A" stroke-width="5" stroke-linecap="round" fill="none"><path d="M0 0 Q-6 -30 -14 -50 M6 0 Q8 -36 4 -60 M12 0 Q20 -26 30 -44 M-6 0 Q-16 -20 -28 -30"/></g>`);
+const mossHut = (x, y, s) => cottage(x, y, s, {roof:"#7FA86A", wall:"#E3D7BE", door:"#6B4A2E"});
+
+Object.assign(PLACES, {
+  /* ch 10: cottages along a bend in the river, a little stone quay, washing on a line, ducks */
+  riverbend:() => ({svg:G3(`<path d="M-30 -60 Q160 -140 330 -110 Q500 -80 690 -150 V-96 Q500 -24 330 -54 Q160 -84 -30 -14 Z" fill="${W}"/>` + ripple(120, -70) + ripple(420, -70) + ripple(560, -100) +
+      at(150, -86, .7, thingSVG("ducks", 0)) + at(250, -100, .6, thingSVG("ducks", 1)) + at(470, -96, .6, thingSVG("ducks", 2)) +
+      `<rect x="270" y="-70" width="120" height="18" fill="#B3AB9C"/><rect x="270" y="-74" width="120" height="6" fill="#C9C2B4"/>` +
+      cottage(120, -6, .78, {roof:"#C0673A"}) + cottage(520, -10, .82, {roof:"#2E78D0"}) +
+      `<path d="M240 -36 V-130 M370 -36 V-130" stroke="#8A5A32" stroke-width="5"/><path d="M240 -124 Q305 -110 370 -124" stroke="#6B4A2E" stroke-width="2" fill="none"/>` +
+      `<g>${[["#E5483F", 258], ["#F4EBDD", 288], ["#2E78D0", 318], ["#E9A20F", 344]].map(([c, x]) => `<rect x="${x}" y="-118" width="18" height="24" rx="3" fill="${c}"/>`).join("")}</g>` + ourFlag(520, -150)),
+    door:[520, GY - 10], guards:[[220, GY + 10], [330, GY + 16], [450, GY + 10]]}),
+  /* ch 10 fork: the river splits around an island; masts at the harbour one way, the lighthouse the other */
+  riverfork:() => ({svg:G3(`<path d="M-30 -40 Q200 -150 420 -140 Q560 -136 690 -190 V-90 Q560 -60 420 -70 Q200 -60 -30 10 Z" fill="${W}"/>` +
+      `<path d="M260 -110 Q330 -150 420 -118 Q370 -86 260 -110 Z" fill="#8CC27A"/>` + tree(330, -116, .35, "#7FB86A", "#90C77A") +
+      seq3(3, i => `<rect x="${40 + i * 34}" y="${-150 - i * 6}" width="4" height="60" fill="#6B4A2E"/><path d="M${44 + i * 34} ${-146 - i * 6} Q${60 + i * 34} ${-126} ${44 + i * 34} ${-104}" fill="#F4EBDD"/>`) +
+      at(600, -150, .4, iconLight.replace(/stroke-width="4"/g, 'stroke-width="2"')) + signArms(150, iconAnchor, iconLight) + bush(560, 0, .6, false, "#8CC27A") + reeds(470, -60, .6)),
+    guards:[[250, GY + 10], [380, GY + 14]]}),
+  /* ch 10 recruit stop: a busy harbour, a tall ship at the quay, barrels and crates, sailors */
+  harbour:() => ({svg:G3(`<path d="M260 -40 Q460 -70 690 -60 V60 H260 Z" fill="${W}"/>` + ripple(320, -10) + ripple(520, 10) +
+      at(470, -18, 2.6, THING3.ships().replace(/<svg[^>]*>/, `<g transform="translate(-38 -60)">`).replace("</svg>", "</g>")) +
+      `<rect x="-20" y="-40" width="300" height="40" fill="#B3AB9C"/><rect x="-20" y="-44" width="300" height="8" fill="#C9C2B4"/>` +
+      barrel(40, -40) + barrel(84, -40, .9) + thing("crates", 140, -40, .9) + thing("crates", 190, -40, .8) + thing("crates", 165, -84, .7) +
+      person(240, 14, .58, folkInner("sailor", {sk:3, tu:0, hs:0, hc:1}, {wave:true})) + ourFlag(470, -230)),
+    door:[220, GY], guards:[[170, GY + 14], [320, GY + 18], [440, GY + 16]]}),
+  /* ch 10 skirmish: the fish market on the quay: stalls of fish and crabs, and barrels to hide behind */
+  fishmarket:() => ({svg:G3(`<path d="M-30 -80 Q300 -110 690 -90 V-50 H-30 Z" fill="${W}"/>` + ripple(80, -66) + ripple(560, -70) +
+      [[150, "#2E78D0"], [450, "#1F9A5E"]].map(([x, c]) => `<rect x="${x - 70}" y="-60" width="140" height="60" fill="#B5854F"/><path d="M${x - 80} -58 L${x - 70} -106 H${x + 70} L${x + 80} -58 Z" fill="${c}"/>
+        <path d="M${x - 70} -106 H${x + 70} M${x - 44} -106 L${x - 52} -58 M${x - 15} -106 L${x - 17} -58 M${x + 15} -106 L${x + 17} -58 M${x + 44} -106 L${x + 52} -58" stroke="#fff" stroke-width="6" opacity=".7"/>` +
+        thing("fish", x - 34, -60, .55) + thing("fish", x + 10, -62, .55) + `<circle cx="${x + 46}" cy="-68" r="9" fill="#E5483F"/>`).join("") +
+      barrel(290, 6, 1.1) + barrel(330, 2, 1) + barrel(590, 4, 1.05) + ourFlag(300, -130)),
+    guards:[[250, GY + 12], [370, GY + 16], [540, GY + 12]]}),
+  /* ch 10 village: willows trailing into the river, a ford with stepping stones, a little school */
+  willowford:() => ({svg:G3(`<path d="M380 -150 C360 -90 400 -40 380 0 L470 0 C490 -40 450 -90 470 -150 Z" fill="${W}"/>` + stepStones([[400, -20], [430, -56, .9], [415, -94, .8], [440, -126, .7]]) +
+      willow(300, 0, .9) + willow(560, -10, .8) + cottage(130, -4, .8, {roof:"#E5483F"}) + at(130, -120, .4, TREASURE_ART.bell) +
+      person(220, 14, .5, villagerInner({sk:2, tu:5, hs:1, hc:0}, {wave:true})) + person(520, 10, .45, villagerInner({sk:4, tu:3, hs:2, hc:1})) + ourFlag(130, -170)),
+    door:[130, GY], guards:[[230, GY + 12], [340, GY + 16], [560, GY + 12]]}),
+
+  /* ch 11 skirmish: a path through the grey trees; hunting horns on a branch; the birds flying off */
+  huntingpath:() => ({svg:G3(greyTree(60, -10, .9) + greyTree(560, -20, 1) + greyTree(220, -60, .7, "#869D8E", "#93A99A") + greyTree(440, -70, .7, "#869D8E", "#93A99A") +
+      `<path d="M330 -120 Q300 -60 340 0" stroke="#CBB891" stroke-width="40" fill="none" stroke-linecap="round" opacity=".8"/>` +
+      `<path d="M560 -150 L470 -170" stroke="#6B5A4A" stroke-width="8" stroke-linecap="round"/>` + [490, 520].map(x => `<path d="M${x} -166 V-150" stroke="#6B4A2E" stroke-width="2"/><path d="M${x - 10} -150 Q${x} -130 ${x + 16} -146 L${x + 18} -136 Q${x} -126 ${x - 12} -144 Z" fill="#E9A20F"/>`).join("") +
+      `<g stroke="#4B5563" stroke-width="3" fill="none" stroke-linecap="round"><path d="M200 -250 q8 -8 16 0 q8 -8 16 0 M250 -276 q6 -6 12 0 q6 -6 12 0 M300 -240 q7 -7 14 0 q7 -7 14 0"/></g>` + ourFlag(330, -140)),
+    guards:[[200, GY + 10], [330, GY + 14], [460, GY + 10]]}),
+  /* ch 11 fork: a huge oak whose trunk splits in two; smoke rising one way, a sunny clearing the other */
+  forkedoak:() => ({svg:G3(`<ellipse cx="560" cy="-110" rx="120" ry="40" fill="#F2E6A6" opacity=".7"/><g fill="#D8DCDF" opacity=".7"><circle cx="70" cy="-170" r="18"/><circle cx="84" cy="-200" r="24"/><circle cx="70" cy="-236" r="28"/></g>` +
+      `<path d="M300 0 Q290 -80 320 -150 Q300 -200 260 -240 L290 -250 Q330 -210 340 -170 Q350 -210 390 -250 L418 -238 Q370 -200 356 -150 Q380 -80 370 0 Z" fill="#6B5A4A"/>` +
+      `<g fill="#6F877A"><circle cx="250" cy="-270" r="70"/><circle cx="410" cy="-268" r="70"/><circle cx="330" cy="-300" r="60"/></g>` +
+      `<path d="M300 0 Q200 -40 90 -120" stroke="#CBB891" stroke-width="22" fill="none" stroke-linecap="round" opacity=".85"/><path d="M370 0 Q460 -50 560 -110" stroke="#CBB891" stroke-width="22" fill="none" stroke-linecap="round" opacity=".85"/>` +
+      signArms(140, iconSmoke, iconDeer)),
+    guards:[[250, GY + 10], [420, GY + 14]]}),
+  /* ch 11 recruit stop: the charcoal burners' camp: smoking earth mounds and sacks of charcoal */
+  charcoal:() => ({svg:G3(greyTree(40, -30, .8) + greyTree(600, -40, .85) + mound(230, -20, 1.1) + mound(450, -30, .9) +
+      thing("sacks", 330, 0, .9) + thing("sacks", 370, 4, .8) + thing("sacks", 560, 6, .85) +
+      `<path d="M120 4 L150 -70 M150 -70 l-8 -14 l16 4 Z" stroke="#8A5A32" stroke-width="5" fill="#9AA5B8"/>` +
+      person(120, 16, .55, folkInner("charcoal", {sk:1, tu:5, hs:0, hc:1}, {wave:true})) + ourFlag(230, -170)),
+    door:[200, GY], guards:[[180, GY + 12], [320, GY + 16], [470, GY + 12]]}),
+  /* ch 11 special: a sunny clearing in tall grass; the mother deer calls, the fawns are hiding */
+  deermeadow:() => ({svg:G3(`<ellipse cx="320" cy="-30" rx="330" ry="80" fill="#C9D98A" opacity=".8"/>` + greyTree(30, -40, .8) + greyTree(620, -50, .8) +
+      seq3(9, i => tallGrass(60 + i * 62, -6 - (i % 3) * 18, 1.1)) + at(540, -6, 1.5, THING3.deer().replace(/<svg[^>]*>/, `<g transform="translate(-37 -76)">`).replace("</svg>", "</g>")) +
+      `<g stroke="#9BC46A" stroke-width="5" stroke-linecap="round" fill="none">${seq3(12, i => `<path d="M${40 + i * 40} 20 q-4 -24 -10 -36 M${46 + i * 40} 20 q4 -28 0 -42"/>`)}</g>`),
+    herd:[[90, GY - 6], [170, GY - 20], [240, GY + 4], [130, GY + 24], [300, GY - 14], [210, GY + 30]], herdThing:"fawns",
+    pen:[[450, GY + 10], [490, GY + 24], [420, GY + 30], [470, GY + 40], [510, GY + 6], [440, GY - 6]], guards:[[200, GY + 12], [330, GY + 16]]}),
+  /* ch 11 skirmish: a log bridge over a deep ravine; more logs piled ready to block it */
+  logbridge:() => ({svg:G3(`<path d="M190 -40 Q320 -60 450 -40 L470 80 H170 Z" fill="#4A4038"/><path d="M200 -30 Q320 -46 440 -30 L440 -10 Q320 -26 200 -10 Z" fill="#3B332C"/>` +
+      seq3(5, i => `<rect x="180" y="${-28 + i * 8}" width="290" height="10" rx="5" fill="${i % 2 ? "#8A7660" : "#7C6A55"}"/>`) + `<path d="M180 -32 H470" stroke="#6B5A4A" stroke-width="4"/>` +
+      greyTree(80, -30, .85) + greyTree(590, -36, .9) + `<g>${seq3(3, r => seq3(3 - r, c => `<circle cx="${520 + c * 22 + r * 11}" cy="${-10 - r * 18}" r="11" fill="#8A7660"/><circle cx="${520 + c * 22 + r * 11}" cy="${-10 - r * 18}" r="5" fill="#C9AE84"/>`))}</g>` + ourFlag(320, -110)),
+    guards:[[230, GY - 24], [330, GY - 28], [430, GY - 24]]}),
+  /* ch 11 village: houses with mossy roofs, a gate made of two bent trees */
+  mossgate:() => ({svg:G3(mossHut(120, -6, .8) + mossHut(530, -10, .78) +
+      `<path d="M260 0 Q250 -140 330 -170 Q410 -140 400 0" stroke="#6B5A4A" stroke-width="18" fill="none" stroke-linecap="round"/><g fill="#7FA86A"><circle cx="300" cy="-168" r="26"/><circle cx="350" cy="-174" r="28"/><circle cx="326" cy="-196" r="22"/></g>` +
+      `<g fill="#E5483F">${[[200, 18], [440, 22]].map(([x, y]) => `<path d="M${x - 12} ${y} Q${x} ${y - 20} ${x + 12} ${y} Z"/><rect x="${x - 3}" y="${y}" width="6" height="8" fill="#F4EBDD"/>`).join("")}</g>` + ourFlag(330, -210)),
+    door:[330, GY], guards:[[200, GY + 12], [330, GY + 16], [460, GY + 12]]}),
+
+  /* ch 12 skirmish: a narrow path along the cliff edge, the sea far below, the wind blowing */
+  cliffpath:() => ({svg:G3(`<path d="M430 -14 Q540 -30 690 -20 V120 H440 Z" fill="#6FA7C4"/>` + ripple(520, 40) + ripple(600, 70) + cliff(430) +
+      seq3(6, i => `<rect x="${30 + i * 66}" y="-44" width="6" height="40" fill="#8A5A32"/>`) + `<path d="M33 -38 Q66 -30 99 -38 Q132 -30 165 -38 Q198 -30 231 -38 Q264 -30 297 -38 Q330 -30 363 -38" stroke="#C9A06A" stroke-width="3" fill="none"/>` +
+      `<g stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".7"><path d="M80 -150 h60 M160 -190 h40 M300 -160 h70"/></g>` + at(560, -60, .6, PUFFIN) + ourFlag(250, -110)),
+    guards:[[160, GY + 10], [290, GY + 14], [400, GY + 10]]}),
+  /* ch 12 fork: the Lookout Stone: a big flat rock; a fishing village down one way, a hidden cove the other */
+  lookout:() => ({svg:G3(`<path d="M-30 -80 Q300 -120 690 -90 V-40 H-30 Z" fill="#6FA7C4"/>` + cottage(60, -84, .3, {roof:"#E5483F"}) + cottage(110, -86, .28, {roof:"#2E78D0"}) + boatBig(150, -76, .3) +
+      `<path d="M520 -86 Q560 -170 640 -150 L660 -86 Z" fill="#7C838C"/><path d="M570 -86 Q580 -126 610 -126 Q630 -110 630 -86 Z" fill="#2F343F"/>` +
+      `<path d="M220 0 Q230 -60 320 -66 Q410 -60 430 0 Z" fill="#A39882"/><path d="M230 -40 Q320 -76 420 -40" stroke="#B9AE98" stroke-width="10" fill="none" stroke-linecap="round"/>` +
+      signArms(120, iconBoat, iconCave) + at(470, -10, .6, PUFFIN)),
+    guards:[[250, GY + 10], [400, GY + 14]]}),
+  /* ch 12 recruit stop: a fishing village: boats pulled up on the shingle, nets drying, lobster pots */
+  fishingvillage:() => ({svg:G3(`<path d="M-30 -70 Q300 -100 690 -80 V-40 H-30 Z" fill="#6FA7C4"/><path d="M-30 -40 Q300 -60 690 -44 V0 H-30 Z" fill="#D8CDB4"/>` +
+      cottage(90, -46, .55, {roof:"#E5483F"}) + cottage(570, -48, .55, {roof:"#2E78D0"}) + net(200, 300, -10) + boatBig(400, -6, 1, "#E9A20F") + boatBig(560, 10, .85, "#1F9A5E") +
+      `<g fill="#A87B4F">${[[150, 6], [176, 10]].map(([x, y]) => `<path d="M${x - 14} ${y} Q${x - 14} ${y - 26} ${x} ${y - 28} Q${x + 14} ${y - 26} ${x + 14} ${y} Z"/>`).join("")}</g>` +
+      person(260, 18, .55, folkInner("fisher", {sk:2, tu:0, hs:0, hc:1}, {wave:true})) + ourFlag(90, -140)),
+    door:[260, GY], guards:[[170, GY + 14], [330, GY + 18], [470, GY + 16]]}),
+  /* ch 12 skirmish: beacon fires on the cliffs, lit to warn the tower */
+  signalfires:() => ({svg:G3(`<path d="M500 -16 Q580 -36 690 -28 V120 H500 Z" fill="#6FA7C4"/>` + cliff(500) + beacon(130, -4, 1) + beacon(310, -16, .9) + beacon(450, -10, .85) +
+      `<g fill="#9AA2AB" opacity=".6"><circle cx="140" cy="-210" r="14"/><circle cx="150" cy="-236" r="18"/><circle cx="318" cy="-200" r="12"/><circle cx="326" cy="-222" r="16"/></g>` + ourFlag(230, -110)),
+    guards:[[200, GY + 10], [370, GY + 14], [520, GY + 8]]}),
+  /* ch 12 village: Tower Town at the foot of the cliff; high above, the Crown Tower with a light in its window */
+  towertown:() => ({svg:G3(`<path d="M380 -80 Q440 -260 560 -280 L690 -280 V-80 Z" fill="#9C8C70"/><rect x="520" y="-420" width="60" height="150" fill="#5E6674"/>` + battlementsP(512, 588, -420, 10, 12, "#5E6674") +
+      `<rect x="542" y="-400" width="16" height="22" rx="8" fill="#F6D36B"/>` + cottage(140, -4, .78, {roof:"#C0673A"}) + cottage(360, -8, .72, {roof:"#8657D3"}) + cottage(560, -6, .7, {roof:"#E5483F"}) +
+      person(250, 16, .5, villagerInner({sk:1, tu:4, hs:1, hc:2}, {wave:true})) + ourFlag(360, -150)),
+    door:[360, GY - 8], guards:[[240, GY + 12], [460, GY + 16], [300, GY + 20]]}),
+  /* the crown feast: long tables on the clifftop at sunset, lanterns, every loyal town; the crown on a cushion */
+  crownfeast:() => ({svg:`<path d="M20 ${GY - 160} Q310 ${GY - 120} 600 ${GY - 160}" stroke="#8A5A32" stroke-width="2" fill="none"/>` +
+    [70, 150, 230, 310, 390, 470, 550].map((x, i) => `<path d="M${x} ${GY - 160 + Math.sin(i / 6 * Math.PI) * 26} v10" stroke="#8A5A32" stroke-width="2"/><rect x="${x - 8}" y="${GY - 148 + Math.sin(i / 6 * Math.PI) * 26}" width="16" height="20" rx="4" fill="#F6D36B" stroke="#C98A17" stroke-width="2"/>`).join("") +
+    at(310, GY, 2.1, TREASURE_ART.feast) + at(310, GY - 88, .55, `<ellipse cx="0" cy="-6" rx="56" ry="16" fill="#8657D3"/>` + TREASURE3.crown) +
+    person(110, GY, .6, folkInner("farmer", {sk:1, tu:1, hs:0, hc:0}, {wave:true})) + person(500, GY, .6, folkInner("sailor", {sk:3, tu:0, hs:0, hc:1}, {wave:true})) +
+    person(40, GY + 10, .55, folkInner("fisher", {sk:5, tu:0, hs:0, hc:1}, {wave:true})) + person(580, GY + 8, .55, folkInner("forester", {sk:4, tu:4, hs:0, hc:3}, {wave:true})) + at(420, GY + 14, .7, PUFFIN)})
+});
+function battlementsP(x0, x1, y, h, w, c){ let s = ""; for (let x = x0; x < x1; x += w * 2) s += `<rect x="${x}" y="${y - h}" width="${Math.min(w, x1 - x)}" height="${h}" fill="${c}"/>`; return s; }
+/* the lighthouse brings ships home through the fog; the Smugglers' Cove gives everything back */
+const lh = PLACES.lighthouse;
+PLACES.lighthouse = () => { const p = lh(); p.svg = p.svg.replace(/<g transform="translate\(120 70\) scale\(0\.8\)">.*?<\/g><\/g>/s, ""); return Object.assign(p,
+  {drift:[[50, GY + 36], [120, GY + 58], [190, GY + 40], [80, GY + 84], [160, GY + 96], [230, GY + 74]], driftThing:"ships",
+   dock:[[470, GY + 64], [540, GY + 70], [600, GY + 60], [500, GY + 96], [570, GY + 100], [630, GY + 92]]}); };
+const sc = PLACES.smugglerscove;
+PLACES.smugglerscove = () => { const p = sc(); p.svg = p.svg.replace(/<g transform="translate\(210 34\).*$/s, "") + "</g>"; return Object.assign(p,
+  {spill:[[230, GY + 30], [270, GY + 34], [310, GY + 30], [350, GY + 34], [390, GY + 30], [430, GY + 34], [250, GY + 10], [330, GY + 12]], spillThing:"teddies",
+   cartIn:[[600, GY + 90], [640, GY + 86], [620, GY + 110], [660, GY + 104], [580, GY + 112], [650, GY + 126]]}); };
+/* after the arc: the capital's great gates, shut and barred */
+BLOCKS[12] = `<g transform="translate(310 ${GY})"><rect x="-320" y="-260" width="640" height="264" fill="#C9C2B4"/>${battlementsP(-320, 320, -260, 20, 26, "#C9C2B4")}
+  <path d="M-110 4 V-150 Q0 -230 110 -150 V4 Z" fill="#5A3B22"/><g stroke="#4A3020" stroke-width="5"><path d="M-80 4 V-170 M-40 4 V-190 M0 4 V-196 M40 4 V-190 M80 4 V-170"/></g>
+  <rect x="-130" y="-100" width="260" height="22" rx="6" fill="#6B7280"/><rect x="-130" y="-46" width="260" height="22" rx="6" fill="#6B7280"/>
+  <rect x="-300" y="-330" width="90" height="334" fill="#B3AB9C"/><rect x="210" y="-330" width="90" height="334" fill="#B3AB9C"/><path d="M-310 -326 L-255 -400 L-200 -326 Z M200 -326 L255 -400 L310 -326 Z" fill="#6A42AE"/>
+  <rect x="-258" y="-260" width="12" height="28" rx="6" fill="#3B2A1E"/><rect x="246" y="-260" width="12" height="28" rx="6" fill="#3B2A1E"/></g>`;
 })();
 
 /* ================= screens ================= */
@@ -3380,9 +3745,9 @@ function foeDisc(spots){
 }
 const TROLL_KINDS = ["moss", "stone", "bark"];
 /* How many hold a stop: a goblin camp has 2 to 5, a fort 4 to 6. Trolls are big: 1 to 3 in a camp, 3 to 5 in a fort.
-   Grey guards: 3 to 5 at a skirmish (they join us when it's won), 4 to 6 at a castle. */
+   Grey guards: 2 to 4 at a skirmish (they join us when it's won), 4 to 6 at a castle. */
 const foesFor = kind => (G.foes = arcNow() === 2 ? (kind === "siege" ? 3 : 1) + Math.floor(Math.random() * 3)
-  : arcNow() >= 3 && kind !== "siege" ? 3 + Math.floor(Math.random() * 3)
+  : arcNow() >= 3 && kind !== "siege" ? 2 + Math.floor(Math.random() * 3)
   : kind === "siege" ? 4 + Math.floor(Math.random() * 3) : 2 + Math.floor(Math.random() * 4));
 /* Walk one screen to the right: the land scrolls (far hills slower), the old place slides away, the new one in. */
 async function marchTo(placeId, {guards = 0, pot = false, dur = 2600} = {}){
@@ -3533,7 +3898,7 @@ function morePair(max = LV().moreMax){
   for (let b = 2; b <= max; b++) for (let a = 1; a < b; a++) if (b / a >= L.ratio - 1e-9) pairs.push([a, b]);
   return rand(pairs);
 }
-const PRACTICE_NOUNS = {count:["villagers","chickens"], more:["goblins","chickens"], cmpc:["trolls","goats"], add:["goats","soldiers"], sub:["nuts","trolls","pies","sacks"]};
+const PRACTICE_NOUNS = {count:["villagers","chickens"], more:["goblins","chickens"], cmpc:["trolls","goats"], add:["goats","soldiers"], sub:["nuts","trolls","pies","sacks"], hide:["ducks","guards","villagers"], diff:["deer","guards","logs"]};
 function makeTask(spec){
   // a task type waits for its level (the child may have dropped a level since the chapter began)
   const lv = levelNow(), ok = spec.filter(([type]) => !TYPE_LEVEL[type] || lv >= TYPE_LEVEL[type]);
@@ -4101,12 +4466,13 @@ async function runVillage(stop){
   for (const k of [].concat(stop.arrive)) { await narrate(k); ck(); }
   SFX.fanfare(); await wait(700); ck(); await say(["h_hello_village"]); ck();
   // arcs 1-2: one soldier joins when half or more were right first time (the same line a fight is won at).
-  // Arc 3: a village sends the number right plus 2; a recruit stop a whole company (5 if under half).
+  // Arc 3: a village sends one friend for each right answer (3 to 5); a recruit stop a whole company (5 if under half).
+  // About 20 a chapter, as each castle needs 2 companies more than the last: the recruit branch keeps just ahead.
   const first = await runSet(stop.t), joined = first * 2 >= setSize(), recruitStop = stop.kind === "recruit"; ck();
   if (recruitStop) {
     if (joined) { await say(["h_whole_company"]); ck(); await addSoldiers(10, {sayIt:false}); } else await addSoldiers(5);
     ck();
-  } else if (joined) { if (inCompanies()) await addSoldiers(first + 2); else await recruit(); ck(); }
+  } else if (joined) { if (inCompanies()) await addSoldiers(first); else await recruit(); ck(); }
   else { await say(["h_still_thinking"]); ck(); }
   if (P.party.length) { renderTroops("pop"); await say(["we_have", ...armyWords()]); ck(); }
   if (joined || recruitStop || !/join/.test(narrText(stop.leave))) { await narrate(stop.leave); ck(); }   // no "friends joined" line when nobody did
@@ -4196,7 +4562,14 @@ async function runSiege(stop){
     if (won) break;
   }
   await say([stop.wonH || "h_fort_ours"]); ck();
+  let crown = null;
+  if (stop.crown) {                                          // at the top of the tower, in a locked chest: the crown!
+    crown = document.createElement("div"); crown.className = "treasure-pop crownpop"; crown.style.left = "700px"; crown.style.top = "250px"; crown.style.width = crown.style.height = "230px";
+    crown.innerHTML = `<svg viewBox="-70 -130 140 140">${TREASURE_ART.crown}</svg>`; $("#fx").appendChild(crown); confetti(); SFX.cheer();
+  }
   for (const k of [].concat(stop.won)) { await narrate(k); ck(); }
+  if (crown) crown.remove();
+  for (const k of stop.wonAfter || []) { await say([k]); ck(); }
 }
 /* Arc 3: before a castle the army is counted, company by company. Too few? Work out the gap ("6 soldiers. How many
    more make a company?"), march back to the fork's other branch, and if that's not enough the loyal villages send
@@ -4207,10 +4580,11 @@ async function troopCheck(stop){
   for (;;) {
     await say(["h_count_army"]); ck();
     const comps = $$("#party .fig.comp");
-    if (comps.length) { await say(range(1, comps.length).map(i => "num_" + i), {gap:400, onStep:i => { comps[i]?.classList.add("lit"); SFX.count(i); }}); ck(); }
+    const inTens = levelNow() >= 12;                       // from chapter 12 the companies are counted in tens: "10, 20, 30…"
+    if (comps.length) { await say(range(1, comps.length).map(i => "num_" + (inTens ? i * 10 : i)), {gap:400, onStep:i => { comps[i]?.classList.add("lit"); SFX.count(i); }}); ck(); }
     renderTroops("big"); await say(["we_have", ...armyWords()]); ck();
     await wait(300); ck(); comps.forEach(c => c.classList.remove("lit"));
-    await say(["h_we_need", "num_" + stop.needCo, "w_companies"]); ck();
+    await say(["h_we_need", "num_" + stop.needCo, "w_companies", ...(stop.needCo * 10 >= ARMY_MAX ? ["h_everyone"] : [])]); ck();
     if (P.party.length >= need) { await say(["h_enough"]); ck(); return; }
     const loose = P.party.length % 10;
     if (need - P.party.length < 10 && loose) { await runTask(companyTask(loose), true); ck(); }
@@ -4230,6 +4604,12 @@ async function troopCheck(stop){
 /* ---- a fork in the road: two signposts, the child picks one ---- */
 const PLACE_ICON = {
   mill:`<svg viewBox="0 0 24 24"><path d="M8 22 L9.6 11 H14.4 L16 22 Z" fill="#F4EBDD" stroke="#8A5A32" stroke-width="1.2" stroke-linejoin="round"/><path d="M8.8 11.4 L12 8 L15.2 11.4 Z" fill="#C0673A"/><path d="M11 22 V18.5 Q12 17.4 13 18.5 V22 Z" fill="#8A5A32"/><g stroke="#8A5A32" stroke-width="1.6" stroke-linecap="round"><path d="M12 9.2 L4.5 2.5 M12 9.2 L19.5 2.5 M12 9.2 L4.5 15.9 M12 9.2 L19.5 15.9"/></g><g fill="#F4EBDD" stroke="#8A5A32" stroke-width=".8"><path d="M5.2 3.1 L8 5.6 L6.6 7 L3.9 4.5 Z M18.8 3.1 L16 5.6 L17.4 7 L20.1 4.5 Z M5.2 15.3 L8 12.8 L6.6 11.4 L3.9 13.9 Z M18.8 15.3 L16 12.8 L17.4 11.4 L20.1 13.9 Z"/></g><circle cx="12" cy="9.2" r="1.3" fill="#8A5A32"/></svg>`,
+  anchor:`<svg viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="4.5" r="2.2"/><path d="M12 6.7 V21 M7 10 H17 M4 14 Q4.5 21 12 21 Q19.5 21 20 14"/></svg>`,
+  lighthouse:`<svg viewBox="0 0 24 24"><path d="M9 22 L10 9 H14 L15 22 Z" fill="#F4EBDD" stroke="#8A5A32" stroke-width="1"/><path d="M9.6 13 H14.4 M9.3 17.5 H14.7" stroke="#E5483F" stroke-width="2.4"/><rect x="9.5" y="5" width="5" height="4" fill="#F6D36B" stroke="#8A5A32" stroke-width="1"/><path d="M8.5 5 L12 2 L15.5 5 Z" fill="#E5483F"/><path d="M15.5 6.5 L21 4 M15.5 7.5 L21 9" stroke="#F2B233" stroke-width="1.4" stroke-linecap="round"/></svg>`,
+  charcoal:`<svg viewBox="0 0 24 24"><path d="M3 21 Q3.5 13 12 12.5 Q20.5 13 21 21 Z" fill="#5A4636"/><g fill="#9AA2AB"><circle cx="12" cy="9.5" r="2.4"/><circle cx="13.5" cy="6" r="3"/><circle cx="12" cy="2.6" r="2.4"/></g></svg>`,
+  deer:`<svg viewBox="0 0 24 24"><g fill="#8A5A32"><rect x="7" y="15" width="1.8" height="7" rx=".9"/><rect x="10" y="15.5" width="1.8" height="6.5" rx=".9"/><rect x="15" y="15" width="1.8" height="7" rx=".9"/><rect x="18" y="15.5" width="1.8" height="6.5" rx=".9"/></g><ellipse cx="13.5" cy="14" rx="7.5" ry="4" fill="#C07A45"/><path d="M7 13 Q5 8 6 5.5 Q8 5 9 9 Z" fill="#C07A45"/><ellipse cx="5.8" cy="5.5" rx="2.6" ry="2" fill="#C07A45"/><path d="M5 3.5 L3.5 1 M6.5 3.5 L7.5 1" stroke="#8A5A32" stroke-width="1.2" stroke-linecap="round"/><g fill="#F4EBDD"><circle cx="11" cy="13" r=".8"/><circle cx="14" cy="12" r=".8"/><circle cx="17" cy="13" r=".8"/></g></svg>`,
+  boat:`<svg viewBox="0 0 24 24"><path d="M2 15 H22 Q20 21 15 21 H9 Q4 21 2 15 Z" fill="#E9A20F"/><rect x="11" y="3" width="1.6" height="12" fill="#6B4A2E"/><path d="M12.6 4 Q19 9 12.6 14 Z" fill="#fff" stroke="#8A5A32" stroke-width=".8"/></svg>`,
+  chest:`<svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="10" rx="1.5" fill="#8A5A32"/><path d="M3 11 Q3 5 12 5 Q21 5 21 11 Z" fill="#A0714F"/><path d="M7 5.6 V21 M17 5.6 V21" stroke="#C9A06A" stroke-width="1.6"/><rect x="10" y="9.5" width="4" height="4" rx="1" fill="#F2B233"/></svg>`,
   apple:`<svg viewBox="0 0 24 24"><circle cx="9.5" cy="14" r="6.5" fill="#E5483F"/><circle cx="14.5" cy="14" r="6.5" fill="#E5483F"/><path d="M12 8 q1 -4 4 -5" stroke="#6B4A2E" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M13 6 q4 -3 7 0 q-4 3 -7 0 Z" fill="#4E8F3A"/><ellipse cx="8.5" cy="12" rx="1.6" ry="2.4" fill="#fff" opacity=".5"/></svg>`
 };
 function chooseFork(stop){
@@ -4380,22 +4760,26 @@ async function chapterEnd(){
   $("#fx").appendChild(tro);
   await wait(2600); ck(); tro.remove();
   if (ch.finale && !P.arcsDone.includes(ch.arc)) {                    // the arc's victory feast
-    const two = ch.arc === 2;
-    await marchTo(two ? "feast2" : "feast"); ck();
-    await narrate(two ? "st2_4_17" : "st1_4_17"); ck();
+    const F = FEASTS[ch.arc];
+    await marchTo(F.place); ck();
+    await narrate(F.line); ck();
     await say(["h_three_cheers", ...heroKeys(), "h_hip_hooray"]); ck();
     confetti(); SFX.cheer();
-    if (two) P.medal2 = true; else P.medal = true;
+    P[F.medal] = true;
     save(); renderParty();
-    await giveTreasure(two ? "nutcake" : "feast"); ck();
-    if (two) { await messenger(); ck(); } else { await narrate("st1_4_18"); ck(); }
+    await giveTreasure(F.gift); ck();
+    if (F.rider) { await messenger(F.rider.lines, F.rider.h); ck(); } else { for (const k of F.after) { await narrate(k); ck(); } }
     P.arcsDone.push(ch.arc); save();
   }
   if (canAdvance()) { P.ch++; P.stop = 0; } else P.blocked = true;
   save(); renderRoad();
 }
-/* Hoofbeats: a royal messenger gallops up the hill. The crown has been stolen! */
-async function messenger(){
+/* each arc's victory feast: where, the story line, the medal the hero gets, the treasure, and what comes next */
+const FEASTS = {1:{place:"feast", line:"st1_4_17", medal:"medal", gift:"feast", after:["st1_4_18"]},
+  2:{place:"feast2", line:"st2_4_17", medal:"medal2", gift:"nutcake", rider:{lines:["st2_4_18", "st2_4_19"], h:"h_crown_stolen"}},
+  3:{place:"crownfeast", line:"st3_4_20", medal:"medal3", gift:"royalbanner", rider:{lines:["st3_4_21", "st3_4_22"], h:"h_to_capital"}}};
+/* Hoofbeats: a royal messenger gallops up. The crown has been stolen! (Arc 3: the steward has shut the capital's gates.) */
+async function messenger(lines, h){
   const ck = guard$(), m = document.createElement("div"); m.className = "messenger";
   m.innerHTML = `<svg viewBox="-90 -170 190 176" width="285" height="264" overflow="visible"><g class="bob">${at(-34, -150, .56, villagerInner({sk:2, tu:4, hs:2, hc:1}))}${TREASURE_ART.pony}
     <rect x="-44" y="-58" width="34" height="18" rx="4" fill="#6A42AE"/></g></svg>`;
@@ -4404,9 +4788,8 @@ async function messenger(){
   m.classList.add("gallop");
   await tween(m, [{transform:`translate(${E.right + 40 - 780}px, 0) scaleX(-1)`}, {transform:"translate(0, 0) scaleX(-1)"}], {duration:2400 * SPEED, easing:"ease-out"});
   clearInterval(hoof); m.classList.remove("gallop"); ck();
-  await narrate("st2_4_18"); ck();
-  await narrate("st2_4_19"); ck();
-  await say(["h_crown_stolen"]); ck();
+  for (const k of lines) { await narrate(k); ck(); }
+  await say([h]); ck();
   await wait(400); ck(); m.remove();
 }
 async function makeCamp(){
@@ -4917,6 +5300,216 @@ Object.assign(TASKS2, {
   }
 });
 
+/* ---- shared pieces for chapters 10-12 ---- */
+/* a wooden board with a number sentence on it: items like [4, "+", "?", "=", 9]; the "?" can be filled in later */
+function boardSentence(items, cx, cy, size = 72){
+  const wOf = v => typeof v === "number" ? String(v).length * size * .56 + 10 : v === "?" ? size * .7 : size * .78;
+  const total = items.reduce((s, v) => s + wOf(v), 0) + (items.length - 1) * 12;
+  let x = cx - total / 2, out = "";
+  items.forEach(v => { const w = wOf(v), mx = x + w / 2;
+    out += typeof v === "number" ? `<text x="${mx}" y="${cy + size * .36}" text-anchor="middle" font-family="Andika, sans-serif" font-weight="700" font-size="${size}" fill="${INK}">${v}</text>`
+      : v === "?" ? `<text class="q" x="${mx}" y="${cy + size * .36}" text-anchor="middle" font-family="Andika, sans-serif" font-weight="700" font-size="${size}" fill="#E9A20F">?</text>`
+      : signBars(v, mx, cy, size * .5, size * .15, INK);
+    x += w + 12; });
+  return `<g class="board"><rect x="${cx - total / 2 - 30}" y="${cy - size * .72}" width="${total + 60}" height="${size * 1.44}" rx="18" fill="#D9B27C" stroke="#8A5A32" stroke-width="6"/>${out}</g>`;
+}
+function fillQ(n){ const q = $("#things .board .q"); if (q) { q.textContent = n; q.setAttribute("fill", INK); q.animate([{transform:"scale(1.3)"}, {transform:"none"}], {duration:400 * SPEED}); } }
+/* a soldier's head in a spot of a row (the missing number) */
+const spotHead = (x, y, sk, pop = false) => `<g transform="translate(${x} ${y})"><g class="th${pop ? " pop" : ""}"><circle r="24" fill="#fff"/><circle cy="3" r="15" fill="${VSKIN[sk % VSKIN.length]}"/>
+  <path d="M-16 0 Q-15 -18 0 -18 Q15 -18 16 0 Z" fill="#9AA5B8"/><rect x="-19" y="-3" width="38" height="6" rx="3" fill="#7C879B"/><circle cx="-5" cy="7" r="2" fill="${INK}"/><circle cx="5" cy="7" r="2" fill="${INK}"/></g></g>`;
+/* what hides things in "how many are hiding?": an island, tall grass, rocks, a hedge or a wall */
+const COVER = {ducks:"island", ships:"island", boats:"island", fish:"island", fawns:"grass", deer:"grass", puffins:"rock", villagers:"hedge", teddies:"hedge", logs:"hedge", mushrooms:"hedge", guards:"wall", crates:"wall"};
+function coverSVG(kind){
+  if (kind === "island") return `<ellipse cx="1070" cy="540" rx="110" ry="30" fill="#8FC0D4"/><path d="M965 545 Q980 330 1070 320 Q1160 330 1172 545 Z" fill="#8CC27A"/><path d="M990 470 Q1070 440 1150 470" stroke="#7DB85C" stroke-width="8" fill="none"/>` + tree(1070, 360, .5, "#7FB86A", "#90C77A");
+  if (kind === "grass") return `<g stroke-linecap="round" fill="none">${seq3(16, i => `<path d="M${975 + i * 12} 560 Q${970 + i * 12 + (i % 3) * 6} ${430 - (i % 4) * 20} ${980 + i * 12} ${330 + (i % 5) * 12}" stroke="${i % 2 ? "#9BC46A" : "#86B456"}" stroke-width="13"/>`)}</g>`;
+  if (kind === "rock") return `<path d="M962 560 Q955 420 1010 380 Q1040 320 1100 340 Q1170 360 1172 460 L1172 560 Z" fill="#9AA2AB"/><path d="M1000 420 Q1060 390 1120 410" stroke="#B3BAC2" stroke-width="10" fill="none" stroke-linecap="round"/>`;
+  if (kind === "wall") return `<rect x="968" y="340" width="204" height="220" rx="8" fill="#C9C2B4"/>${seq3(5, r => seq3(4, c => `<rect x="${974 + c * 50 + (r % 2) * 25 - (r % 2 && c === 3 ? 25 : 0)}" y="${346 + r * 43}" width="${r % 2 && c === 3 ? 20 : 44}" height="37" rx="5" fill="#B9B1A2"/>`))}`;
+  return `<g fill="#6FAE4E"><circle cx="1010" cy="470" r="70"/><circle cx="1110" cy="460" r="74"/><circle cx="1060" cy="380" r="64"/><rect x="960" y="470" width="212" height="90" rx="20"/></g><g fill="#5E9A42"><circle cx="1030" cy="420" r="14"/><circle cx="1110" cy="500" r="16"/></g>`;
+}
+/* a row of little dots under the scene, one for each thing in all */
+const dotRow = (n, y = 592) => { const gap = 34, x0 = 875 - (n - 1) * gap / 2;
+  return `<g class="drow">${range(0, n - 1).map(i => `<circle class="dd" data-i="${i}" cx="${x0 + i * gap}" cy="${y}" r="11" fill="#fff" stroke="#8A5A32" stroke-width="3"/>`).join("")}</g>`; };
+const dotXY = i => { const c = $(`#things .dd[data-i="${i}"]`); return c ? {x:+c.getAttribute("cx"), y:+c.getAttribute("cy")} : {x:875, y:592}; };
+const lightDot = i => { const c = $(`#things .dd[data-i="${i}"]`); if (c) { c.setAttribute("fill", "#F2B233"); c.setAttribute("stroke", "#B97F06"); } };
+
+Object.assign(TASKS2, {
+  /* How many are hiding? A sign says how many in all; some are in view, the rest behind an island, a wall, a bush. */
+  hide:{
+    make(noun){
+      const T = 3 + Math.floor(Math.random() * 8), hidden = 1 + Math.floor(Math.random() * Math.min(T - 1, 6)), seen = T - hidden;
+      return {type:"hide", noun, total:T, seen, target:hidden, cards:nearCards(hidden, 4, Math.max(6, T)),
+        prompt:["num_" + T, "w_" + noun, "we_can_see", "num_" + seen, "how_many_hiding"], key:`hide:${T}-${seen}`};
+    },
+    render(t){
+      const {w, h} = NOUNS[t.noun], slots = layout(t.noun, t.total, "frames", {x:700, y:290, w:262, h:240});
+      const s = slots[0].s, back = range(0, t.target - 1).map(j => ({x:1000 + (j % 3) * 48, y:370 + Math.floor(j / 3) * 70}));
+      G.hideFrom = back.map((b, j) => ({dx:b.x - slots[t.seen + j].x, dy:b.y - slots[t.seen + j].y}));
+      $("#things").innerHTML = `<ellipse class="glowspot" cx="880" cy="440" rx="300" ry="170" fill="#fff" opacity=".45"/>
+        <rect x="636" y="330" width="10" height="120" fill="#8A5A32"/><rect x="596" y="266" width="92" height="76" rx="10" fill="#D9B27C" stroke="#8A5A32" stroke-width="5"/>
+        <text x="642" y="324" text-anchor="middle" font-family="Andika, sans-serif" font-weight="700" font-size="54" fill="${INK}">${t.total}</text>` +
+        slots.slice(0, t.seen).map((p, i) => thingG(t.noun, p, i)).join("") +
+        slots.slice(t.seen).map((p, j) => `<g class="hid" data-j="${j}" style="transform:translate(${G.hideFrom[j].dx}px, ${G.hideFrom[j].dy}px)">${thingG(t.noun, p, t.seen + j)}</g>`).join("") +
+        coverSVG(COVER[t.noun] || "hedge") + dotRow(t.total);
+      renderNumCards(t, "shield");
+    },
+    sayOpts(t){ return {onStep:(i, k) => { if (k === "num_" + t.seen && i === 3) range(0, t.seen - 1).forEach(lightDot); }}; },
+    async right(t, el, first, live){
+      // the hidden ones come out, one by one, counting on from the ones we could see: "6, 7, 8!"
+      range(0, t.seen - 1).forEach(lightDot);
+      await say(range(t.seen + 1, t.total).map(i => "num_" + i), {gap:400, onStep:i => {
+        const g = $(`#things .hid[data-j="${i}"]`); if (g) { g.style.transition = `transform ${.5 * SPEED}s ease-out`; g.style.transform = "none"; }
+        lightDot(t.seen + i); SFX.count(t.seen + i);
+      }});
+      if (!live()) return;
+      await say([150, "num_" + t.target, "were_hiding"]); if (!live()) return;
+      await say(["num_" + t.seen, "and", "num_" + t.target, "makes", "num_" + t.total, 120, ...praise(first)]);
+    },
+    async help(t, el, live){
+      if (G.misses === 1) return "fade";
+      // count on together from the ones we can see, pointing at the dots still dark: "6, 7, 8: that's 3!"
+      await say(["lets_count"]); if (!live()) return;
+      await say(range(t.seen + 1, t.total).map(i => "num_" + i), {gap:400, onStep:i => { lightDot(t.seen + i); const p = dotXY(t.seen + i); numBadge(p.x, p.y - 14, i + 1); SFX.count(i); }});
+      if (!live()) return;
+      await wait(500); clearBadges();
+      range(t.seen, t.total - 1).forEach(i => { const c = $(`#things .dd[data-i="${i}"]`); if (c) { c.setAttribute("fill", "#fff"); c.setAttribute("stroke", "#8A5A32"); } });
+    }
+  },
+  /* Just the numbers: the sentence on its own (4 + 3 = ?). The pictures only come back as help. */
+  num:{
+    make(){
+      if (Math.random() < .5) {
+        const t = 2 + Math.floor(Math.random() * 9), b = 1 + Math.floor(Math.random() * Math.min(t - 1, 5)), a = t - b;
+        return {type:"num", op:"+", a, b, target:t, cards:nearCards(t, 4, 10), prompt:["num_" + a, "plus", "num_" + b, "is_what"], key:`+:${a}+${b}`};
+      }
+      const n = 2 + Math.floor(Math.random() * 9), k = 1 + Math.floor(Math.random() * Math.min(n - 1, 6));
+      return {type:"num", op:"-", a:n, b:k, target:n - k, cards:nearCards(n - k, 4, 10), prompt:["num_" + n, "minus", "num_" + k, "is_what"], key:`-:${n}-${k}`};
+    },
+    render(t){
+      $("#things").innerHTML = boardSentence([t.a, t.op, t.b, "=", "?"], 878, 360, 84) + `<g class="numdots"></g>`;
+      renderNumCards(t, "shield");
+    },
+    async right(t, el, first, live){
+      fillQ(t.target); showNumDots(t, true); await wait(400); if (!live()) return;
+      await say([150, "num_" + t.a, t.op === "+" ? "plus" : "minus", "num_" + t.b, "is", "num_" + t.target, 120, ...praise(first)]);
+    },
+    async help(t, el, live){
+      if (G.misses === 1) return "fade";
+      // the pictures come back: the dots under the numbers, counted together
+      const dots = showNumDots(t, false);
+      await say(["lets_count"]); if (!live()) return;
+      await say(range(1, t.target).map(i => "num_" + i), {gap:400, onStep:i => { dots[i]?.setAttribute("stroke", "#F6D36B"); dots[i]?.setAttribute("stroke-width", "6"); SFX.count(i); }});
+      if (!live()) return;
+      await wait(400);
+    }
+  },
+  /* How many more? Two rows lined up one to one; the ones in the long row with nobody underneath are the answer. */
+  diff:{
+    make(noun){
+      const big = 4 + Math.floor(Math.random() * 7), small = Math.max(1, big - 1 - Math.floor(Math.random() * Math.min(big - 1, 6)));
+      return {type:"diff", noun, big, small, target:big - small, cards:nearCards(big - small, 4, 8), prompt:["how_many_more", "w_" + noun, "in_long_row"], key:`diff:${big}-${small}`};
+    },
+    render(t){
+      const {w, h} = NOUNS[t.noun], cell = Math.min(56, 540 / t.big), s = Math.min(1, (cell - 6) / w, 74 / h), x0 = 875 - (t.big - 1) * cell / 2;
+      const at_ = (i, y) => ({x:x0 + i * cell - w * s / 2, y:y - h * s, s});
+      G.diffX = range(0, t.big - 1).map(i => x0 + i * cell);
+      $("#things").innerHTML = `<ellipse class="glowspot" cx="875" cy="420" rx="320" ry="170" fill="#fff" opacity=".45"/><g class="pairs"></g>` +
+        range(0, t.big - 1).map(i => `<g class="drw top" data-i="${i}">${thingG(t.noun, at_(i, 380), i)}</g>`).join("") +
+        range(0, t.small - 1).map(i => `<g class="drw" data-i="${i}">${thingG(t.noun, at_(i, 540), t.big + i)}</g>`).join("");
+      renderNumCards(t, "shield");
+    },
+    async right(t, el, first, live){
+      pairUp(t, t.small); await wait(500); if (!live()) return;
+      // the ones with no partner hop as they're counted
+      await say(range(1, t.target).map(i => "num_" + i), {gap:400, onStep:i => { const g = $(`#things .drw.top[data-i="${t.small + i}"]`); if (g) g.classList.add("hopnow"); numBadge(G.diffX[t.small + i], 286, i + 1); SFX.count(i); }});
+      if (!live()) return;
+      await say([150, "num_" + t.big, "is", "num_" + t.target, "more_than", "num_" + t.small, 120, ...praise(first)]);
+    },
+    async help(t, el, live){
+      if (G.misses === 1) return "fade";
+      await say(["lets_count"]); if (!live()) return;
+      for (let i = 1; i <= t.small; i++) { pairUp(t, i); SFX.pop(); await wait(260); if (!live()) return; }
+      await say(range(1, t.target).map(i => "num_" + i), {gap:400, onStep:i => { numBadge(G.diffX[t.small + i], 286, i + 1); SFX.count(i); }});
+      if (!live()) return;
+      await wait(500); clearBadges(); $("#things .pairs").innerHTML = "";
+    }
+  },
+  /* Count the companies: each banner is ten soldiers, so count in tens. */
+  tens:{
+    make(){
+      const n = pickTarget("tens", range(2, 9)), lo = Math.max(1, n - 3, Math.min(7, n - Math.floor(Math.random() * 4)));
+      return {type:"tens", n, target:n * 10, cards:range(lo, lo + 3).map(x => x * 10), prompt:["h_how_many_in", "num_" + n, "w_companies"], key:"tens:" + n};
+    },
+    render(t){
+      const rows = t.n > 5 ? 2 : 1, per = Math.ceil(t.n / rows), s = rows > 1 ? .78 : .95, cw = Math.min(112, 560 / per), x0 = 875 - (per - 1) * cw / 2 - 40 * s;
+      $("#things").innerHTML = `<ellipse class="glowspot" cx="875" cy="430" rx="320" ry="180" fill="#fff" opacity=".45"/>` + range(0, t.n - 1).map(i => {
+        const r = Math.floor(i / per), c = i % per, x = x0 + c * cw, y = rows > 1 ? 430 + r * 172 : 560;
+        return `<g class="tflag" data-i="${i}" transform="translate(${x} ${y})"><g transform="scale(${s})">${companyFlag(P.banner, 10)}</g>
+          <text class="tl" x="${40 * s}" y="${22 * s + 10}" text-anchor="middle" font-family="Andika, sans-serif" font-weight="700" font-size="30" fill="${INK}" style="opacity:0">${(i + 1) * 10}</text></g>`; }).join("");
+      renderNumCards(t, "shield");
+    },
+    async right(t, el, first, live){
+      await countTens(t, live); if (!live()) return;
+      await say([150, "num_" + t.n, "w_companies", "num_" + t.target, "w_soldiers", 120, ...praise(first)]);
+    },
+    async help(t, el, live){
+      if (G.misses === 1) return "fade";
+      await say(["lets_count"]); if (!live()) return;
+      await countTens(t, live); if (!live()) return;
+      await wait(500); $$("#things .tflag").forEach(f => { f.classList.remove("lit"); f.querySelector(".tl").style.opacity = 0; });
+    }
+  },
+  /* The missing number: 4 + ? = 9, over a row of 9 spots with soldiers in 4. */
+  miss:{
+    make(){
+      const T = 3 + Math.floor(Math.random() * 8), a = 1 + Math.floor(Math.random() * (T - 1)), b = T - a;
+      return {type:"miss", a, total:T, target:b, cards:nearCards(b, 4, T), prompt:["num_" + a, "plus", "what_makes", "num_" + T], key:`miss:${a}+${b}`};
+    },
+    render(t){
+      const gap = Math.min(58, 540 / t.total), x0 = 875 - (t.total - 1) * gap / 2;
+      G.missX = range(0, t.total - 1).map(i => x0 + i * gap);
+      $("#things").innerHTML = `<ellipse class="glowspot" cx="875" cy="430" rx="320" ry="170" fill="#fff" opacity=".45"/>` + boardSentence([t.a, "+", "?", "=", t.total], 878, 330, 76) +
+        G.missX.map((x, i) => i < t.a ? spotHead(x, 500, i * 5 + 1) : `<circle class="spot" data-i="${i}" cx="${x}" cy="500" r="${Math.min(22, gap / 2 - 3)}" fill="none" stroke="#8A5A32" stroke-width="4" stroke-dasharray="7 6"/>`).join("");
+      renderNumCards(t, "shield");
+    },
+    async right(t, el, first, live){
+      await say(range(t.a + 1, t.total).map(i => "num_" + i), {gap:400, onStep:i => {
+        const k = t.a + i; $(`#things .spot[data-i="${k}"]`)?.remove(); $("#things").insertAdjacentHTML("beforeend", spotHead(G.missX[k], 500, k * 3 + 2, true)); SFX.count(k);
+      }});
+      if (!live()) return;
+      fillQ(t.target); SFX.flag();
+      await say([150, "num_" + t.a, "plus", "num_" + t.target, "makes", "num_" + t.total, 120, ...praise(first)]);
+    },
+    async help(t, el, live){
+      if (G.misses === 1) return "fade";
+      await say(["lets_count"]); if (!live()) return;
+      const spots = range(t.a, t.total - 1).map(i => $(`#things .spot[data-i="${i}"]`));
+      await say(range(1, t.target).map(i => "num_" + i), {gap:400, onStep:i => { spots[i]?.classList.add("on"); numBadge(G.missX[t.a + i], 470, i + 1); SFX.count(i); }});
+      if (!live()) return;
+      await wait(400); clearBadges(); spots.forEach(s => s && s.classList.remove("on"));
+    }
+  }
+});
+/* the dots under "just the numbers": the first number's, then the second's (taking away crosses the last ones out) */
+function showNumDots(t, done){
+  const n = t.op === "+" ? t.target : t.a, gap = 40, x0 = 875 - (n - 1) * gap / 2, cols = palette();
+  const g = $("#things .numdots"); if (!g) return [];
+  g.innerHTML = range(0, n - 1).map(i => { const second = t.op === "+" ? i >= t.a : i >= t.target;
+    return `<circle cx="${x0 + i * gap}" cy="500" r="14" fill="${second ? (t.op === "+" ? cols[2] : "#D5DDEB") : cols[1]}" stroke="none"/>` +
+      (t.op === "-" && second ? `<path d="M${x0 + i * gap - 10} 490 L${x0 + i * gap + 10} 510" stroke="${INK}" stroke-width="4" stroke-linecap="round"/>` : ""); }).join("");
+  g.animate([{opacity:0}, {opacity:1}], {duration:300 * SPEED});
+  return [...g.querySelectorAll("circle")].filter((c, i) => t.op === "+" || i < t.target);
+}
+/* dotted lines joining each pair, top row to bottom row */
+function pairUp(t, upto){
+  $("#things .pairs").innerHTML = range(0, upto - 1).map(i => `<path d="M${G.diffX[i]} 388 V474" stroke="#8A5A32" stroke-width="4" stroke-dasharray="6 6" stroke-linecap="round"/>`).join("");
+}
+/* count the banners in tens, each one lighting up as it's counted: "10, 20, 30, 40!" */
+async function countTens(t, live){
+  await say(range(1, t.n).map(i => "num_" + i * 10), {gap:450, onStep:i => {
+    const f = $(`#things .tflag[data-i="${i}"]`); if (f) { f.classList.add("lit"); f.querySelector(".tl").style.opacity = 1; } SFX.count(i);
+  }});
+}
+
 /* ================= recording & import ================= */
 function toMono(buf){ const n = buf.numberOfChannels, len = buf.length, out = new Float32Array(len);
   for (let c = 0; c < n; c++) { const d = buf.getChannelData(c); for (let i = 0; i < len; i++) out[i] += d[i] / n; } return out; }
@@ -5231,12 +5824,16 @@ function whereText(E){
 const LEVEL_TEXT = {1:"numbers 1–3, 3 cards with dots, things in a row", 2:"numbers 1–5, dots, dice patterns", 3:"numbers 1–7, 4 cards, no dots, scattered, size trick, sometimes “which has fewer”", 4:"numbers 1–10, close amounts",
   5:"numbers 1–12, 4 tasks per stop; the + and − signs, what comes next, count and compare", 6:"numbers 1–20 (in rows of 5 above 10); the = sign, which number is bigger, look closely",
   7:"first adding (totals to 5, with pictures), counting down from 10", 8:"adding to 10 with the number sentence (3 + 2 = 5), a first taste of taking away",
-  9:"5 tasks per stop; adding and taking away within 10, always with the number sentence; make a company (how many more make ten?)"};
+  9:"5 tasks per stop; adding and taking away within 10, always with the number sentence; make a company (how many more make ten?)",
+  10:"hiding: how many can't we see? (8 is 5 and 3)", 11:"just the numbers (4 + 3 = ?, no pictures); how many more? (two rows lined up)",
+  12:"count the companies in tens (to 100); the missing number (4 + ? = 9)"};
 /* the tasks a grown-up can try for each chapter (the new ones first) */
 const TRY_TASKS = {5:[["sign","Find the sign"],["next","What comes next?"],["cmpc","Count and compare"],["count","Count them"]],
   6:[["big","Which number is bigger?"],["look","Look closely"],["count","Count to 20"],["find","Find the number"]],
   7:[["add","First adding"],["back","Countdown"],["more","Which is more?"]], 8:[["add","Adding with the sentence"],["sub","Taking away"],["big","Which number is bigger?"]],
-  9:[["ten","Make a company"],["add","Adding within 10"],["sub","Taking away within 10"],["count","Count to 20"]]};
+  9:[["ten","Make a company"],["add","Adding within 10"],["sub","Taking away within 10"],["count","Count to 20"]],
+  10:[["hide","How many are hiding?"],["ten","Make a company"],["add","Adding"]], 11:[["num","Just the numbers"],["diff","How many more?"],["hide","Hiding"]],
+  12:[["tens","Count the companies"],["miss","The missing number"],["num","Just the numbers"]]};
 const ARC_NAMES = {1:"the Goblin Border", 2:"the Troll Hills", 3:"the Stolen Crown"};
 /* first-try record for the arc 2 kinds of task */
 function typeStats(E, prefix){ const ks = Object.keys(E.stats).filter(k => k.startsWith(prefix)); const n = ks.reduce((a, k) => a + E.stats[k].n, 0), f = ks.reduce((a, k) => a + E.stats[k].f, 0); return n ? `${f} of ${n} right first time` : "not played yet"; }
@@ -5289,7 +5886,7 @@ function renderParent(){
     <h3>Numerals (find the number)</h3>${progressTiles(E, "n:", range(1, E.ch >= 4 ? 20 : 10))}
     <p class="small" style="margin-top:10px">Which is more: ${E.stats.cmp ? `${E.stats.cmp.f} of ${E.stats.cmp.n} right first time` : "not played yet"}. Which is fewer (from level 3): ${E.stats.cmpf ? `${E.stats.cmpf.f} of ${E.stats.cmpf.n} right first time` : "not played yet"}.</p>
     ${E.ch >= 4 ? `<p class="small">Arc 2. Signs: ${typeStats(E, "sign:")}. What comes next: ${typeStats(E, "next:")}. Counting down: ${typeStats(E, "back:")}. Which number is bigger: ${typeStats(E, "big")}. Adding: ${typeStats(E, "+:")}. Taking away: ${typeStats(E, "-:")}.</p>` : ""}
-    ${E.ch >= 8 ? `<p class="small">Arc 3. Make a company: ${typeStats(E, "ten:")}.</p>` : ""}
+    ${E.ch >= 8 ? `<p class="small">Arc 3. Make a company: ${typeStats(E, "ten:")}. Hiding: ${typeStats(E, "hide:")}. How many more: ${typeStats(E, "diff:")}. Counting in tens: ${typeStats(E, "tens:")}. The missing number: ${typeStats(E, "miss:")}.</p>` : ""}
     <p class="small">The army: ${E.party.length} soldier${E.party.length === 1 ? "" : "s"}${E.party.length ? `, ${E.party.filter(s => s.gear >= 3).length} fully kitted out` : ""}. Camp treasures: ${E.treasures.length ? E.treasures.map(t => TREASURE_NAMES[t]).join(", ") : "none yet"}${E.extras ? ` and ${E.extras} extra flag${E.extras > 1 ? "s" : ""}` : ""}.</p>
     <div style="margin-top:12px"><button class="btn danger" id="resetStats">Start the campaign over for this player</button></div>
   </div>

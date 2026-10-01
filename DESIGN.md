@@ -3,11 +3,12 @@
 Maths for toddlers through 3rd grade, played as a young prince or princess leading an army in a righteous cause.
 Built on Letter Hunt's tablet framework.
 
-**Status:** **arcs 1 and 2 (the Goblin Border and the Troll Hills) are built and playable**:
-[`Number-Game.html`](Number-Game.html). They have all eight chapters, raids, camp, the grown-up panel, and herald and
-narrator recording. The brainstorm decisions are recorded in §2. Both arcs are scripted in [`chapters/`](chapters).
-**Arc 3 (the Stolen Crown) is being built** (§5.6): chapter 9 is playable, with the army in companies, Grey
-Guards who join, the first fork and the troop check; chapters 10–12 are next. Arcs 4–5 (§11) are a rough framework. Items marked *(proposal)* haven't been agreed yet.
+**Status:** **arcs 1, 2 and 3 (the Goblin Border, the Troll Hills and the Stolen Crown) are built and playable**:
+[`Number-Game.html`](Number-Game.html). They have all twelve chapters, raids, camp, the grown-up panel, and herald
+and narrator recording. Arc 3 adds the army in companies, Grey Guards who join, a fork in every chapter, the troop
+checks and the crown found in the steward's tower (§5.6). The brainstorm decisions are recorded in §2; every built
+chapter is scripted in [`chapters/`](chapters). Arcs 4–5 (§11) are a rough framework. Items marked *(proposal)*
+haven't been agreed yet.
 
 **Testing hooks:** open the game with `#test` in the address to expose its state as `window.NK`, and `#fast` to run
 every pause 20× faster. A bot can then play a whole arc in about two minutes.
@@ -281,7 +282,7 @@ Each level keeps the earlier task types in the mix, with harder numbers, so noth
   then the bigger number loses, and the enemies come back at full strength for the next try.
 - **Both discs fade out while a task is up**, so a number overhead never gives away (or muddles) an answer.
 
-### 5.6 Arc 3: The Stolen Crown *(chapter 9 built; 10–12 to come)*
+### 5.6 Arc 3: The Stolen Crown
 The storm clears and the army marches home out of the hills, to find grey-cloaked guards on every bridge and the
 steward on the throne: "The crown has been stolen, so I shall rule until it is found!" The army rallies Brightvale's
 loyal towns and follows a trail: river folk who saw the steward's boat carry a locked chest upriver, an empty chest
@@ -309,10 +310,12 @@ begins. Scripts:
   When the loose ones reach ten: "Ten soldiers! A new company!" The gold disc shows the whole army (say 34); the herald
   says "We have 3 companies and 4 soldiers!" The cap is **10 companies (100)**; beyond it, recruits become gear.
 - **Recruiting**, with 5 tasks a stop and 3 right first time as the line:
-  - a village sends a group: the number right, plus 2 (5 to 7);
+  - a village sends a group: one friend for each right answer (3 to 5);
   - a fork's recruit stop sends a whole company (5 soldiers if under half right);
   - a special stop sends 3 soldiers and a camp treasure;
-  - a won skirmish brings over the guards.
+  - a won skirmish brings over the guards (2 to 4 hold a skirmish, 4 to 6 a castle).
+  - That's about 20 a chapter with the recruit branch (each castle needs 2 companies more than the last), and about
+    15 with the special branch, so taking the treasure usually means marching back before the castle.
 - **The fork.** Once a chapter, after the first skirmish, Buckleberry holds up two signposts with pictures: "Which way
   shall we go? Windmill Hill… or the Apple Orchard?" The road strip splits there and joins again before the castle.
   One branch is a recruit stop (more soldiers); the other is a special stop (fewer soldiers, and a treasure).
@@ -347,6 +350,9 @@ begins. Scripts:
   the Border and Hill Medals).
 - **Starting in arc 3** (a grown-up setting) brings 2 companies from the hills. **After arc 3** (until arc 4 exists):
   the capital's gates are shut, every stop is a raid on any village freed in arc 3, and the level stays at 12.
+- **As built:** the companies are counted in tens at the Crown Tower ("10, 20, 30…"), which needs everyone ("We need
+  10 companies! That's everyone!"). The crown appears when the tower falls; the steward and Sir Snivelwick run off
+  with the guards. The feast gives the Crown Medal, worn beside the Border and Hill Medals.
 - **New clips:** about 100 narrator lines and 70 herald clips over the arc, including the tens `num_30`…`num_100` for
   chapter 12. Each chapter script lists its own.
 
