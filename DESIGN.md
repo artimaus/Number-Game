@@ -5,8 +5,8 @@ Built on Letter Hunt's tablet framework.
 
 **Status:** **arcs 1 and 2 (the Goblin Border and the Troll Hills) are built and playable**:
 [`Number-Game.html`](Number-Game.html). They have all eight chapters, raids, camp, the grown-up panel, and herald and
-narrator recording. The brainstorm decisions are recorded in §2. Both arcs are scripted in [`chapters/`](chapters);
-later arcs (§11) are a rough framework. Items marked *(proposal)* haven't been agreed yet.
+narrator recording. The brainstorm decisions are recorded in §2. Both arcs are scripted in [`chapters/`](chapters).
+**Arc 3 (the Stolen Crown) is scripted for review** (§5.6), not built yet; arcs 4–5 (§11) are a rough framework. Items marked *(proposal)* haven't been agreed yet.
 
 **Testing hooks:** open the game with `#test` in the address to expose its state as `window.NK`, and `#fast` to run
 every pause 20× faster. A bot can then play a whole arc in about two minutes.
@@ -52,10 +52,14 @@ the play space opens up from a single road, to forks, to a full campaign map.
 | Voices | A **herald** (commands, praise, gentle "not quite"s; robot voice if not recorded) and an optional **narrator** (story; silent if not recorded, text always shown). Each can be recorded by a different person |
 | Art | Simple custom SVG |
 | Herald | **Buckleberry**, a round, cheerful trumpet herald: fanfare before each command, a sad little "wah-wah" toot for a miss |
-| Names | The kingdom of Brightvale · Buckleberry the herald · the steward Uncle Grimbald **or** Aunt Grimhilda (a grown-up setting) · the goblin chief Snagglenose · the Goblin King Grubbins the Great |
+| Names | The kingdom of Brightvale · Buckleberry the herald · the steward Uncle Grimbald **or** Aunt Grimhilda (a grown-up setting) · the goblin chief Snagglenose · the Goblin King Grubbins the Great · the Troll King Nuttletusk · arc 3's captains: Sergeant Stompwell, Captain Plume, Lady Thistlewhip, and the steward's key-keeper Sir Snivelwick |
 | Narration | The narrator says **"our hero"**, never the name, so one recording fits every player. Only the herald says the hero's name |
 | First tap | A brand-new player's very first task: if nothing is tapped for 4 s, the right card glows softly. Once only |
 | Build order | Linear → forks → full map. Get the linear game really dialled in first |
+| Grey Guards (arc 3) | **Mix by stop:** the steward's guards are Brightvale folk in grey cloaks. Beaten at a skirmish, they throw off their cloaks and **join the army**; at a fort they run off with their captain |
+| Forks (arc 3) | **Troops matter:** one fork a chapter, a recruit stop or a special stop. Each castle needs a number of companies; if the army is short, it marches back to the branch it skipped, and the loyal villages make up any rest. Nobody is ever stuck |
+| Arc 3 army | **Companies of ten, up to 10 companies (100).** The herald says it in companies ("3 companies and 4 soldiers"), so he never needs a number past 10 to say it. At the cap, recruits become gear |
+| Arc 3 ending | **The crown recovered:** the steward had hidden it all along. The steward flees to the capital and shuts the gates, which sets up arc 4 |
 
 ## 3. The five arcs
 
@@ -63,13 +67,15 @@ the play space opens up from a single road, to forks, to a full campaign map.
 |---|---|---|---|---|---|---|
 | 1 | **The Goblin Border** | Sent to guard the border villages from goblin raiders | Linear march | Counting and numerals to 10; more or less | Party: 5 in chapter 1, +5 a chapter | 3 |
 | 2 | **The Troll Hills** | King Nuttletusk's trolls shake the hill villages' nut trees bare; his keep is inside the Great Walnut Tree | Linear march | Numbers to 20; order; the signs + − =; which is bigger; first adding within 5; a first taste of taking away | Party, up to 20 | 4 |
-| 3 | **The Stolen Crown** | Coming home to find the uncle/aunt has seized the throne; rallying loyal towns | Forks (pick one of two) | Adding and taking away within 10 | Companies of ten | 5 |
+| 3 | **The Stolen Crown** | Coming home to find the uncle/aunt on the throne, saying the crown was stolen; rallying loyal towns and following the trail to the crown | Forks (pick one of two) | Adding and taking away within 10; make ten; hiding (part–whole); how many more; counting in tens to 100 | Companies of ten: 2 → 10 (100 soldiers) | 5 |
 | 4 | **Siege of the Capital** | Retaking the kingdom, castle by castle, ending at the capital | Forks | Within 20; tens and ones; 2-digit numbers | Companies of ten | 6 |
 | 5 | **The Invasion** | A foreign kingdom invades; drive them back | Full map | Within 100 → equal groups → times tables → light division | Companies + unit types | 6–8 |
 
 **Story frame:** the king and queen sail off on a peace voyage and leave the hero's Uncle Grimbald (or Aunt Grimhilda) as
 steward. The steward sends the young hero to the goblin border, "for experience", really to get them out of the
-way. Arc 2 ends with a messenger: "Come home! The crown has been stolen!" Arc 4 ends with the capital retaken and the
+way. Arc 2 ends with a messenger: "Come home! The crown has been stolen!" Arc 3 ends with the crown found at the
+top of the steward's own Crown Tower (the steward hid it and blamed a thief), and the steward shutting the capital's
+gates. Arc 4 ends with the capital retaken and the
 king and queen home. In arc 5 the family stands together against the invaders.
 
 ## 4. How play works
@@ -131,7 +137,7 @@ Progress is saved after every stop, so the game can be left at any moment. A sto
 from its start. If the game is left during a chapter's celebration (the trophy, or the victory feast at the end of
 the arc), the celebration plays at the start of the next march.
 
-## 5. The linear arcs in detail
+## 5. The arcs in detail (1–3)
 
 ### 5.1 The marching scene
 - **Layout (landscape):** a side-view landscape fills the screen from edge to edge. The scene is laid out on a
@@ -240,13 +246,17 @@ any village freed in arc 2, and the level stays at 8.
 | 6 | 2 · Trolltree Hills | 1–20 | Signs + − = · Which number is bigger? · Look closely | 4–6 |
 | 7 | 2 · The Echo Pass | 1–20 | First adding within 5 (pictures) · Countdown (counting back) | 4 |
 | 8 | 2 · The Troll King's Keep | 1–20 | First adding with the number sentence · Taking away, a first taste | 4 |
+| 9 | 3 · The Road Home | 1–20; sums within 10 | Adding and taking away with the sentence · Make a company (how many more make ten?) | 4 |
+| 10 | 3 · The River Towns | Within 10 | Hiding (how many can't we see?) | 4 |
+| 11 | 3 · The Grey Forest | Within 10 | Just the numbers (no pictures) · How many more? | 4 |
+| 12 | 3 · The Crown Tower | Within 10; tens to 100 | Count the companies (in tens) · The missing number (4 + ? = 9) | 4 |
 
 Each level keeps the earlier task types in the mix, with harder numbers, so nothing learned drops out.
 
 - Within a level, the numbers asked come from what the child knows plus the next two, as with Letter Hunt's known
   sounds. The level sets the ceiling.
 - **Start point:** when adding a player, the grown-up picks a starting chapter by age (2 → ch. 1, 3 → ch. 2, 4 → ch.
-  4, 5 → ch. 6). This can be changed later.
+  4, 5 → ch. 6, 6 → ch. 9 *(proposal)*). This can be changed later.
 
 ### 5.5 The party
 - The party starts as just the hero and the herald: "Let's find brave friends to join us!" The first villages bring
@@ -270,6 +280,69 @@ Each level keeps the earlier task types in the mix, with harder numbers, so noth
   then the bigger number loses, and the enemies come back at full strength for the next try.
 - **Both discs fade out while a task is up**, so a number overhead never gives away (or muddles) an answer.
 
+### 5.6 Arc 3: The Stolen Crown *(scripted, for review)*
+The storm clears and the army marches home out of the hills, to find grey-cloaked guards on every bridge and the
+steward on the throne: "The crown has been stolen, so I shall rule until it is found!" The army rallies Brightvale's
+loyal towns and follows a trail: river folk who saw the steward's boat carry a locked chest upriver, an empty chest
+with a note ("Hide the crown in the Grey Forest"), and a second note in the Grey Lodge ("Take the crown to the Crown
+Tower"). At the top of the steward's own Crown Tower, in a chest that one of Sir Snivelwick's keys opens, is the
+crown: the steward hid it all along. The steward gallops to the capital and shuts its gates, which is where arc 4
+begins. Scripts:
+[9 The Road Home](chapters/3-1-the-road-home.md) ·
+[10 The River Towns](chapters/3-2-the-river-towns.md) ·
+[11 The Grey Forest](chapters/3-3-the-grey-forest.md) ·
+[12 The Crown Tower](chapters/3-4-the-crown-tower.md).
+
+| Ch. | Landscape | Captain and castle | Needs | Fork: recruit stop / special stop (treasure) | Block |
+|---|---|---|---|---|---|
+| 9 | Autumn farmland | Sergeant Stompwell (stomps his enormous boots) · the Toll Castle | 4 companies | Windmill Hill / the Apple Orchard (a big pumpkin) | The drawbridge is up |
+| 10 | River valley to the sea | Captain Plume (his feather makes him sneeze) · Watergate Castle | 6 companies | The Harbour / the Lighthouse (a ship in a bottle) | River fog |
+| 11 | The steward's hunting forest | Lady Thistlewhip (toots her hunting horn at everything) · the Grey Lodge | 8 companies | The Charcoal Burners / the Deer Meadow (a carved wooden deer) | Fallen trees |
+| 12 | Sea cliffs at sunset | The steward and Sir Snivelwick (the key-keeper) · the Crown Tower | 10 companies | The Fishing Village / the Smugglers' Cove (a sea chest) | *(arc end)* |
+
+- **The Grey Guards** replace goblins and trolls. They're ordinary Brightvale folk whose tall grey helmets wobble
+  down over their eyes, and their hearts aren't in it. **At a skirmish,** once beaten, they throw their grey cloaks in
+  the air and join the army ("We never liked those scratchy cloaks anyway!"): as many join as the red disc showed,
+  and the red disc flies over and adds to the gold one. **At a castle,** they run off with their captain.
+- **Companies of ten.** Every ten soldiers march under a company banner, with up to nine loose soldiers in front.
+  When the loose ones reach ten: "Ten soldiers! A new company!" The gold disc shows the whole army (say 34); the herald
+  says "We have 3 companies and 4 soldiers!" The cap is **10 companies (100)**; beyond it, recruits become gear.
+- **Recruiting**, with 5 tasks a stop and 3 right first time as the line:
+  - a village sends a group: the number right, plus 2 (5 to 7);
+  - a fork's recruit stop sends a whole company (5 soldiers if under half right);
+  - a special stop sends 3 soldiers and a camp treasure;
+  - a won skirmish brings over the guards.
+- **The fork.** Once a chapter, after the first skirmish, Buckleberry holds up two signposts with pictures: "Which way
+  shall we go? Windmill Hill… or the Apple Orchard?" The road strip splits there and joins again before the castle.
+  One branch is a recruit stop (more soldiers); the other is a special stop (fewer soldiers, and a treasure).
+- **Troops matter.** Before each castle the herald counts the army with the child, company by company.
+  - Enough: on to the siege.
+  - Short by less than a company: a make-a-company task on the gap ("3 companies and 6 soldiers. How many more make 4
+    companies?"), then the army marches back to the branch it skipped, recruits there, and returns.
+  - Still short after both branches: "The loyal villages sent more friends!", until the army is big enough.
+  - A child who does well on the recruit branches rarely needs to go back; the special branches usually leave the
+    army a few short, so the treasure has a small price.
+- **Sieges** are as in arc 2: ladders (minimum 3), then the ram (log and wheels), then the assault.
+- **New tasks,** one or two a chapter, each keeping the earlier ones in the mix; arc 2's find the sign, count and
+  compare, and look closely drop out.
+
+| Task | Level | Herald says | On screen | Tracked |
+|---|---|---|---|---|
+| **Make a company** | 9 | "7 soldiers. How many more make a company?" | A company banner with a ten frame, 7 spots filled | `ten:7` |
+| **Hiding** | 10 | "8 boats… we can see 5. How many are hiding?" | 5 in view, the rest behind an island; a sign says 8 | `hide:8-5` |
+| **Just the numbers** | 11 | "4 plus 3 is… what?" | Only the sentence on a signpost; the dots come back as help | `+:4+3` |
+| **How many more?** | 11 | "How many more deer are in the long row?" | Two rows lined up one to one | `diff:7-4` |
+| **Count the companies** | 12 | "How many soldiers in 4 companies?" | 4 company banners; counted "10, 20, 30, 40" | `tens:4` |
+| **The missing number** | 12 | "4 plus what makes 9?" | 4 + ? = 9 over a row of 9 spots | `miss:4+5` |
+
+- **Treasures:** the special stops give a pumpkin, a ship in a bottle, a wooden deer and a sea chest; raids keep
+  giving the next one from the raid list. The crown feast adds a **royal banner** and the **Crown Medal** (next to
+  the Border and Hill Medals).
+- **Starting in arc 3** (a grown-up setting) brings 2 companies from the hills. **After arc 3** (until arc 4 exists):
+  the capital's gates are shut, every stop is a raid on any village freed in arc 3, and the level stays at 12.
+- **New clips:** about 100 narrator lines and 70 herald clips over the arc, including the tens `num_30`…`num_100` for
+  chapter 12. Each chapter script lists its own.
+
 ## 6. Voices
 
 The same modular clip system as Letter Hunt: named clips joined at play time (`say(["find_banner", "n_4"])`), each
@@ -280,11 +353,16 @@ recordable, importable by file name, and backed up. **Two roles:**
 | **Herald** | Commands, praise, "not quite"s, battle calls, counting | Robot voice (a child can't read commands) | "Find the banner with…", "How many goblins?", "Huzzah!", "Not quite!", "Charge!", "Retreat!", "Let's try again!", "Rest now, brave…" |
 | **Narrator** | The story: chapter openings, stop arrivals, victories, camp | **Silent**; the caption is always shown so a grown-up can read it aloud | "The village of Millbrook! The villagers wave hello." |
 
-- **Herald clip groups:** numbers `n_0`…`n_20`; signs `sign_plus`, `sign_minus`, `sign_equals`; whole command
+- **Herald clips:** numbers `num_0`…`num_100`; signs `sign_plus`, `sign_minus`, `sign_equals`; whole command
   phrases per noun ("How many goblins?", "How many sheep?", which sounds more natural than joining "how many" +
   "goblins"); praise and "not quite"s; battle, build and camp calls; titles `title_prince`, `title_princess`; the
   child's name `child_<name>`. So praise can be ["well_done", "title_princess", "child_mia"]: "Well done, Princess
   Mia!"
+- **Numbers to 100 from 29 recordings:** 1–20 and the tens (30, 40 … 100) are recorded; 21–99 are joined from a
+  tens clip and a ones clip, overlapped a little so they run together ("thirty" + "three"). Any whole number can be
+  recorded too (optional), and then it's used instead. If either half isn't recorded, the robot says the whole
+  number, so a number never comes out half in one voice and half in another. The tens aren't needed until arc 3,
+  where the army counts in companies.
 - **Narrator clips:** one per story line, grouped by chapter. The step-by-step guide works per chapter ("Record
   chapter 1's story").
 - **Uncle or aunt:** the steward is a grown-up setting. Story lines that mention them have two texts
@@ -297,6 +375,50 @@ recordable, importable by file name, and backed up. **Two roles:**
   clips. So Dad can record the herald on the tablet and Mum the narrator on her phone, then combine them.
 - **Robot herald:** the speech-synthesis voice at a slightly lower pitch, a bit slower, with a fanfare before it.
 
+### How the recordings are sorted
+The grown-up panel lists every clip the way the game needs it, so recording can follow the child through the story:
+- **Always:** clips used all through the game: numbers, commands, praise, battle and camp calls, names, and the
+  shared story lines (making camp, morning). Clips that aren't needed at the start say so ("From chapter 5"); the
+  tens say "Not needed yet" until arc 3 is built.
+- **Each arc:** first **Across the arc** (clips used in several of its chapters, such as the goblin or troll calls),
+  then **chapter by chapter**: that chapter's story lines, its special stop's call, and the things first counted
+  there.
+- Where a clip goes is worked out from the chapters themselves: a clip used in one chapter belongs to it, one used
+  in several chapters of an arc belongs to the arc, and one used in more than one arc is "always". So when a new
+  arc is added, its clips sort themselves, and clips that turn out to be shared move up to "always".
+- Each part opens on a tap and shows its progress ("Herald 12 of 17 · Story 20 of 27"). Filters show one voice or
+  both, and everything or just what's **to do**. Every part and group has **Step through**, which walks through its
+  clips one at a time.
+
+### When a clip isn't recorded (or can't be used)
+Nothing is ever silent by accident, and nothing half-right is played:
+
+| Situation | Herald | Narrator |
+|---|---|---|
+| Not recorded | The robot voice says it. Neighbouring robot pieces are joined into one sentence | The caption shows long enough to read aloud |
+| A number above 20 without its own recording | Joined from the tens and ones clips; the robot says the whole number if either is missing | – |
+| Recorded for the other steward | Not played; treated as not recorded | Not played; the caption shows |
+| The recording won't play on this device | Treated as not recorded (the robot fills in), and flagged in the panel | The caption shows; flagged |
+| The words changed in a game update since it was recorded | Still plays; flagged "record it again" | Still plays; flagged |
+| A clip the catalogue doesn't know (a bug or a future key) | The robot still says sensible words ("How many geese?") | – |
+| The device has no robot voice | The panel warns that unrecorded herald clips will be silent, so numbers and commands get recorded first | – |
+
+- **Takes that are silent or a blip are turned away** ("That was too quiet… try again"), so a slip never replaces a
+  good recording.
+- **Backups:** after 5 new recordings the Voices section reminds the grown-up that recordings live only on this
+  device, until a backup is saved. Voice backups carry which steward each line was recorded for and which words it
+  was recorded to.
+
+### Record next: a living, ongoing process
+Nobody records 300 clips before the first game. Instead the game asks for what's coming up:
+- **Record next** at the top of the grown-up panel: the player's current and next chapter, and how many story lines
+  and herald clips they still need. One tap steps through exactly those clips, in the order they'll be heard.
+- **A quiet note on the home screen** for grown-ups: "Grown-ups: 18 story lines for Mia's next chapters aren't
+  recorded yet. Hold the gear to record them." **Not now** puts it off until that player reaches the next chapter.
+- Story reminders are on from the start, since unrecorded story lines are silent. Herald reminders switch on by
+  themselves once a few herald clips are recorded (until then the robot voice is doing the job). Both can be turned
+  on or off in the Voices section.
+
 ## 7. Look and sound
 
 - **Style sheet (draft for approval):** https://claude.ai/artifact/Q7wWZQ5H31hpSnMkZWWkpD. It has the march screen at
@@ -305,6 +427,11 @@ recordable, importable by file name, and backed up. **Two roles:**
 - **Arc 2 art (draft for approval):** https://claude.ai/artifact/Wdx4Cp7jw9SXRfuTXNteco. It has the march arriving at
   the Little Bridge with both number discs, a landscape for each chapter, the trolls and their chiefs (King
   Nuttletusk included), friends and treasures, the places and forts, and every new task as the child sees it.
+- **Arc 3 art (draft for approval):** https://claude.ai/artifact/HWeszGyfhjunEgKhai5diL. It has the march arriving
+  at the Grey Bridge with the army in companies, the four landscapes, the Grey Guards (on guard, helmet wobbling,
+  cloak flying off, joined) and their captains, the steward and Sir Snivelwick, the company banners and a
+  100-soldier army, friends, things and treasures, the places and forts with their blocked roads, and the new tasks,
+  the fork and the troop check as the child sees them.
 - **Art:** flat, chunky SVG drawn in code, recoloured with CSS variables.
   - Characters: hero (prince or princess), herald, villager/soldier with gear layers, goblin, goblin king, troll,
     troll king.
@@ -349,6 +476,9 @@ fixes port both ways.
   - `sign:+` the signs
   - arc 2: `next:6` (what comes next), `back:2` (counting down), `big` (which number is bigger), and facts
     (`+:3+1`, `-:4-1`), shown as first-try rates in the panel.
+  - arc 3: `ten:7` (make a company), `hide:8-5` (hiding), `diff:7-4` (how many more), `tens:4` (count the
+    companies) and `miss:4+5` (the missing number). "Just the numbers" shares the `+:`/`-:` facts, so the panel shows
+    each fact with pictures and without.
 - **Look-alikes:** numerals 6/9, 2/5 and 1/7 stay off the same board until arc 2.
 - **Sound-alikes:** 13/30 … 19/90 stay apart until arc 4.
 - **Reversals:** 12/21 are mixed only on purpose, in arc 4.
@@ -374,14 +504,16 @@ fixes port both ways.
   - music
   - full screen
   - digit style.
-- **Voices:** Herald and Narrator sections, step-by-step guides, per-voice backups, microphone test.
+- **Record next** (at the top, when anything is missing): the current and next chapter's unrecorded clips (§6).
+- **Voices:** every clip sorted into Always, then each arc and chapter, with progress counts, voice and to-do
+  filters, step-by-step guides, reminder switches, per-voice backups and a microphone test (§6).
 
 ## 11. Later arcs: rough framework
 
 Kept loose on purpose; to be designed once the linear arcs are dialled in.
 
-- **Forks (arcs 3–4):** at a crossroads, the herald offers two places by picture and voice ("The mill, or the
-  bridge?"). The child taps one. Forts now need **enough troops**, and a fork always offers a recruit stop.
+- **Forks (arcs 3–4):** designed for arc 3 in §5.6. Arc 4 might offer two forks a chapter, or a fork between two
+  castles.
 - **Full map (arc 5):** choose freely among towns, forts, castles and special places. Failed attacks return to the
   map. Planning matters: recruit, build, then attack.
 - **Places for later:**
@@ -389,11 +521,9 @@ Kept loose on purpose; to be designed once the linear arcs are dialled in.
   - **Special places:** caves, secluded lakes and rivers, sacred groves, watchtowers (they reveal the map), farms
     (supplies).
   - **Collectibles** hidden around the map.
-- **Army:** companies of ten under banners (arcs 3–4); unit types — foot soldiers, archers, knights, catapults — in
-  arc 5.
+- **Army:** companies of ten under banners (arc 3 in §5.6; arc 4 goes past 100 as tens and ones); unit types —
+  foot soldiers, archers, knights, catapults — in arc 5.
 - **Themed task ideas for later maths:**
-  - taking away ("3 goblins ran off, how many are left?")
-  - hiding ("5 goblins, 2 visible, how many in the woods?")
   - tens and ones (companies and loose soldiers)
   - 10 more / 10 less (a company joins or leaves)
   - equal groups and arrays (formations: 3 rows of 4)
