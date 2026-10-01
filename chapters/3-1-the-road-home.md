@@ -130,7 +130,7 @@ capital.*
 - **N:** "'We never liked those scratchy cloaks anyway,' said the guards, and they joined the march." `st3_1_07`
 
 **Not yet (0 to 2 of 5)**
-- The retreat, as in arcs 1–2. **N:** "Oops! The grey guards held the bridge that time." `st_retreat_guards` (shared by
+- The retreat, as in arcs 1–2. **N:** "Oops! The grey guards held on that time." `st_retreat_guards` (shared by
   all of arc 3). **H:** "That's all right. Let's try again!" `h_try_again`
 
 ## 3 · The Crossroads (fork)
@@ -199,7 +199,7 @@ round man with a moustache and enormous boots, stomping.*
   soldiers!" (the gold disc pops), then "We need 4 companies!" `h_we_need` + `num_4` + `w_companies`
 - **Enough:** "Enough soldiers! Let's take the castle!" `h_enough`
 - **Short, by less than ten:** a make-a-company task with the loose soldiers on the company banner: "6 soldiers. How
-  many more make a company?" Right: "4 more!" `num_4` + `more_q`. Then: "Let's go back for more friends!"
+  many more make a company?" Right: "4 more!" `num_4` + `more`. Then: "Let's go back for more friends!"
   `h_go_back`
   - The army marches back to the crossroads and down the branch it skipped (Windmill Hill or the Apple Orchard), then
     returns and counts again.
@@ -252,14 +252,15 @@ If the child isn't at level 10 yet when the castle falls:
   - The fork: `h_which_way` "Which way shall we go?", `or` "…or…", `h_come_back` "We can come back for the other one!",
     `fork_windmill` "Windmill Hill", `fork_orchard` "the Apple Orchard"
   - Troop check: `h_count_army` "Let's count our army!", `h_we_need` "We need…", `h_enough` "Enough soldiers! Let's
-    take the castle!", `more_q` "more!", `h_go_back` "Let's go back for more friends!", `h_loyal_send` "The loyal
+    take the castle!", `h_go_back` "Let's go back for more friends!", `h_loyal_send` "The loyal
     villages sent more friends!"
   - Guards: `h_guards_first` "Guards in grey! Don't worry,", `h_guards` "Grey guards! Let's be clever!",
     `h_cloaks_off` "They threw off their grey cloaks! They're on our side!", `h_raid_guards` "Grey guards are back! To
     the village!", `h_castle_ours` "Hooray! The castle is ours!"
   - Make a company: `h_more_company` "How many more make a company?", `make_ten` "make ten!"
   - `h_find_crown` "Let's find that crown!", `h_pick_apples` "Let's pick up the apples!", `go_home` "…go home for
-    tea!", `pony_eats` "A pony eats…"
+    tea!", `pony_eats` "A pony eats…", `are_sold` "…are sold!", `roll_away` "…roll away!" (and `go_away` "…go away!"
+    for anything else that leaves). Flour sacks use arc 2's "We give away…".
   - `how_many_haystacks`, `w_guards`, `w_haystacks`, `w_pumpkins` and the which-more clips for the new things
 - **Narrator:** `st3_1_01` … `st3_1_22`, `st3_1_r1` … `st3_1_r3`, and the shared `st_retreat_guards`. That's 26
   lines.

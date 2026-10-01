@@ -6,7 +6,8 @@ Built on Letter Hunt's tablet framework.
 **Status:** **arcs 1 and 2 (the Goblin Border and the Troll Hills) are built and playable**:
 [`Number-Game.html`](Number-Game.html). They have all eight chapters, raids, camp, the grown-up panel, and herald and
 narrator recording. The brainstorm decisions are recorded in §2. Both arcs are scripted in [`chapters/`](chapters).
-**Arc 3 (the Stolen Crown) is scripted for review** (§5.6), not built yet; arcs 4–5 (§11) are a rough framework. Items marked *(proposal)* haven't been agreed yet.
+**Arc 3 (the Stolen Crown) is being built** (§5.6): chapter 9 is playable, with the army in companies, Grey
+Guards who join, the first fork and the troop check; chapters 10–12 are next. Arcs 4–5 (§11) are a rough framework. Items marked *(proposal)* haven't been agreed yet.
 
 **Testing hooks:** open the game with `#test` in the address to expose its state as `window.NK`, and `#fast` to run
 every pause 20× faster. A bot can then play a whole arc in about two minutes.
@@ -280,7 +281,7 @@ Each level keeps the earlier task types in the mix, with harder numbers, so noth
   then the bigger number loses, and the enemies come back at full strength for the next try.
 - **Both discs fade out while a task is up**, so a number overhead never gives away (or muddles) an answer.
 
-### 5.6 Arc 3: The Stolen Crown *(scripted, for review)*
+### 5.6 Arc 3: The Stolen Crown *(chapter 9 built; 10–12 to come)*
 The storm clears and the army marches home out of the hills, to find grey-cloaked guards on every bridge and the
 steward on the throne: "The crown has been stolen, so I shall rule until it is found!" The army rallies Brightvale's
 loyal towns and follows a trail: river folk who saw the steward's boat carry a locked chest upriver, an empty chest
@@ -322,7 +323,13 @@ begins. Scripts:
   - Still short after both branches: "The loyal villages sent more friends!", until the army is big enough.
   - A child who does well on the recruit branches rarely needs to go back; the special branches usually leave the
     army a few short, so the treasure has a small price.
-- **Sieges** are as in arc 2: ladders (minimum 3), then the ram (log and wheels), then the assault.
+- **Sieges** are as in arc 2: ladders (minimum 3), then the ram (log and wheels), then the assault. The castles' walls
+  are taller, so their ladders are drawn longer.
+- **On screen** (as built in chapter 9): the companies march in rows behind a short line of loose soldiers, drawn
+  smaller than in arcs 1–2 so the banners stay in view. At the fork two big wooden signposts with pictures take the
+  place of the answer cards, and the road strip shows both branches, one over the other, with the one taken
+  standing out. Guards who join step out of the dust cloud, fling their cloaks in the air and walk over; the red
+  disc flies to the gold one.
 - **New tasks,** one or two a chapter, each keeping the earlier ones in the mix; arc 2's find the sign, count and
   compare, and look closely drop out.
 
