@@ -1565,13 +1565,20 @@ function ensureAudio(){
       const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
     } catch(e) { ac = null; }
   }
-  if (ac && ac.state === "suspended") ac.resume();
+  if (ac && ac.state !== "running") ac.resume().catch(() => {});       // "suspended" before the first tap; "interrupted" on an iPad after a call or Siri
 }
-function decode(ab){ return new Promise((res, rej) => { const p = ac.decodeAudioData(ab, res, rej); if (p && p.then) p.then(res, rej); }); }
+/* a decode that never settles (seen on some tablets) counts as a bad recording rather than a silent wait */
+function decode(ab){ return new Promise((res, rej) => {
+  const t = setTimeout(() => rej(new Error("decode timed out")), 8000);
+  const ok = v => { clearTimeout(t); res(v); }, bad = e => { clearTimeout(t); rej(e); };
+  const p = ac.decodeAudioData(ab, ok, bad); if (p && p.then) p.then(ok, bad); }); }
+const BUFFERS_MAX = 60;                                   // decoded clips kept in memory (the most recently played)
 async function getBuffer(k){
-  if (buffers.has(k)) return buffers.get(k);
+  if (buffers.has(k)) { const buf = buffers.get(k); buffers.delete(k); buffers.set(k, buf); return buf; }
   const b = clipBlobs.get(k); if (!b || !ac) return null;
-  try { const buf = await decode(await b.arrayBuffer()); buffers.set(k, buf); broken.delete(k); return buf; } catch(e) { broken.add(k); return null; }
+  try { const buf = await decode(await b.arrayBuffer()); buffers.set(k, buf); broken.delete(k);
+    while (buffers.size > BUFFERS_MAX) buffers.delete(buffers.keys().next().value);
+    return buf; } catch(e) { broken.add(k); return null; }
 }
 let voice = null;
 function pickVoice(){
@@ -1581,15 +1588,18 @@ function pickVoice(){
   voice = pref.map(n => vs.find(v => v.name.includes(n))).find(Boolean) || vs.find(v => /en-(GB|US)/i.test(v.lang)) || vs[0] || null;
 }
 if ("speechSynthesis" in window) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+let lastCancel = -1e9, curUtt = null;                      // WebKit drops an utterance spoken right after cancel(), and forgets one nothing holds on to
 function tts(text, gen, vol = 1){
   return new Promise(res => {
     if (!("speechSynthesis" in window) || !text || gen !== speakGen) return res();
     const u = new SpeechSynthesisUtterance(text);
     u.rate = .9; u.pitch = 1.0; u.volume = vol; u.lang = voice ? voice.lang : "en-GB"; if (voice) u.voice = voice;
-    let done = false; const fin = () => { if (!done) { done = true; res(); } };
+    let done = false; const fin = () => { if (!done) { done = true; if (curUtt === u) curUtt = null; res(); } };
     u.onend = fin; u.onerror = fin; setTimeout(fin, (1000 + text.length * 95) * Math.max(SPEED, .02));
     if (SPEED < 1) return setTimeout(fin, 40);
-    speechSynthesis.speak(u);
+    const speak = () => { if (gen !== speakGen) return fin(); if (speechSynthesis.paused) speechSynthesis.resume(); curUtt = u; speechSynthesis.speak(u); };
+    const gap = 150 - (performance.now() - lastCancel);
+    if (gap > 0) setTimeout(speak, gap); else speak();
   });
 }
 let speakGen = 0, curSrc = null;
@@ -1598,7 +1608,7 @@ function stopSpeech(){
   speakGen++; clearRepeat();
   if (curSrc) { try { curSrc.stop(); } catch(e) {} curSrc = null; }
   echoSrcs.forEach(s => { try { s.stop(); } catch(e) {} }); echoSrcs = [];
-  if ("speechSynthesis" in window) speechSynthesis.cancel();
+  if ("speechSynthesis" in window && (speechSynthesis.speaking || speechSynthesis.pending)) { speechSynthesis.cancel(); lastCancel = performance.now(); }
   talking(false);
 }
 function talking(on){ $("#speakBtn").classList.toggle("talking", on); const h = $("#herald"); if (h) h.classList.toggle("talk", on); }
@@ -1760,7 +1770,11 @@ function startMusic(){
   }, 100);
 }
 function stopMusic(){ if (musicTimer) { clearInterval(musicTimer); musicTimer = null; } if (ac) musicOut.gain.setTargetAtTime(0, ac.currentTime, .1); }
-document.addEventListener("visibilitychange", () => { if (document.hidden) { stopMusic(); stopSpeech(); } else if (!$("#start").classList.contains("on") && !$("#parent").classList.contains("on")) startMusic(); });
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) { stopMusic(); stopSpeech(); return; }
+  if (ac && ac.state !== "running") ac.resume().catch(() => {});       // back from a call, Siri or the lock screen
+  if (!$("#start").classList.contains("on") && !$("#parent").classList.contains("on")) startMusic();
+});
 
 /* ================= full screen ================= */
 const fsEl = document.documentElement;
@@ -4927,6 +4941,7 @@ $("#profiles").addEventListener("click", e => {
   const b = e.target.closest(".prof"); if (!b) return;
   ensureAudio();
   if (G.locked) { say(["h_go_find"]); return; }
+  if (G.starting) return; G.starting = true; setTimeout(() => { G.starting = false; }, 1500);   // a double tap starts one sitting, not two
   P = profById(b.dataset.id); enterFS(); SFX.tap();
   show("play"); startMusic(); G.session++; run(sitting());
 });
@@ -5595,6 +5610,20 @@ function wav(data, sr){
   for (let i = 0; i < data.length; i++) { const s = Math.max(-1, Math.min(1, data[i])); v.setInt16(44 + i * 2, s < 0 ? s * 0x8000 : s * 0x7fff, true); }
   return new Blob([buf], {type:"audio/wav"});
 }
+/* Takes are kept at 22 kHz: plenty for a voice, and less than half the space of the tablet's 44/48 kHz. */
+const CLIP_SR = 22050;
+async function resample(data, sr){
+  if (sr === CLIP_SR) return data;
+  const n = Math.ceil(data.length * CLIP_SR / sr), OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+  if (OAC) {
+    try { const oc = new OAC(1, n, CLIP_SR), b = oc.createBuffer(1, data.length, sr); b.copyToChannel(data, 0);
+      const s = oc.createBufferSource(); s.buffer = b; s.connect(oc.destination); s.start();
+      return (await oc.startRendering()).getChannelData(0); } catch(e) {}
+  }
+  const out = new Float32Array(n), r = sr / CLIP_SR;                     // plain linear interpolation if the browser can't
+  for (let i = 0; i < n; i++) { const x = i * r, j = Math.floor(x), f = x - j; out[i] = data[j] * (1 - f) + (data[Math.min(j + 1, data.length - 1)] || 0) * f; }
+  return out;
+}
 /* A take that's silent or a blip is turned away, so a slip of the finger never replaces a good recording. */
 let storeErr = "";
 async function processBlob(blob){
@@ -5604,7 +5633,7 @@ async function processBlob(blob){
     if (peak < .01) { storeErr = "quiet"; return null; }
     if (state.autoTrim) d = trim(d, buf.sampleRate);
     if (d.length < buf.sampleRate * .12) { storeErr = "short"; return null; }
-    storeErr = ""; return wav(normalize(d), buf.sampleRate); } catch(e) { return null; }
+    storeErr = ""; return wav(await resample(normalize(d), buf.sampleRate), CLIP_SR); } catch(e) { return null; }
 }
 const STORE_ERR = {quiet:"That was too quiet to hear. Move a little closer to the microphone and try again.",
   short:"That was too short. Say it once, clearly, then stop.", unreadable:"That recording couldn’t be read. Try again.",
@@ -5629,7 +5658,7 @@ async function narratePreview(k){
 let mic = null, rec = null, recKey = null, recTimer = null, recTick = null;
 const MIC_OPTS = {audio:{echoCancellation:false, noiseSuppression:true, autoGainControl:false}};
 const micError = e => `The microphone couldn’t start (${e && e.name ? e.name : "error"}). Tap “Test microphone” to see why.`;
-/* the microphone, opened once and kept while the panel is open (a locked screen ends the track on iPads: then it's opened again) */
+/* the microphone, opened for each take and closed after it (holding it changes an iPad's sound route; a locked screen ends the track anyway) */
 async function openMic(){
   if (mic && mic.getTracks().some(t => t.readyState === "ended")) releaseMic();
   if (!mic) mic = await navigator.mediaDevices.getUserMedia(MIC_OPTS);
@@ -5650,6 +5679,7 @@ async function toggleRecord(k, btn, onDone){
     clearTimeout(recTimer); clearInterval(recTick); btn.classList.remove("recording");
     if (rec === r) { rec = null; recKey = null; }
     const ok = await storeClip(k, new Blob(chunks, {type:r.mimeType || "audio/webm"}));
+    releaseMic();                                           // the tablet goes back to its normal sound route for the listen-back (and the volume with it)
     const why = ok ? "" : STORE_ERR[storeErr] || STORE_ERR.unreadable;
     status(ok ? `Saved ${clipName(k)}.` : why);
     refreshClipRow(k); if (ok) playAny(k);
@@ -5712,26 +5742,32 @@ const blobToB64 = b => new Promise(res => { const r = new FileReader(); r.onload
 const b64ToBlob = s => { const bin = atob(s), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return new Blob([u], {type:"audio/wav"}); };
 let downloads = null;
 const standalone = !(window.claude && window.claude.use);
+const onIPad = /iP(hone|ad|od)/.test(navigator.platform) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const homeScreenApp = navigator.standalone === true || (window.matchMedia && matchMedia("(display-mode: standalone)").matches);
 const canBackup = () => !!downloads || standalone;
 if (window.claude && window.claude.use) window.claude.use("downloads").then(d => { downloads = d; if ($("#parent").classList.contains("on")) renderParent(); }).catch(() => {});
-async function saveFile(filename, data){
+async function saveFile(filename, data){                   // data: a string or a Blob
   if (!downloads) {
     const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([data], {type:"application/json"}));
     a.download = filename; document.body.appendChild(a); a.click();
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
     status("Saved to your downloads."); return true;
   }
-  try { await downloads.save({filename, data}); status("Saved."); return true; } catch(e) { if (!e || e.code !== "declined") status("The file couldn’t be saved here."); return false; }
+  try { await downloads.save({filename, data:typeof data === "string" ? data : await data.text()}); status("Saved."); return true; } catch(e) { if (!e || e.code !== "declined") status("The file couldn’t be saved here."); return false; }
 }
+/* The file is put together from pieces (one per recording) rather than one giant string, so a full set of
+   recordings doesn't need two or three copies of itself in memory at once. */
 async function backup(role){
   if (!canBackup()) return;
-  const clips = {}, variants = {}, sigs = {};
-  for (const [k, b] of clipBlobs) { if (role && (!CLIPS[k] || CLIPS[k].role !== role)) continue; clips[k] = await blobToB64(b);
+  const variants = {}, sigs = {}, parts = [];
+  for (const [k, b] of clipBlobs) { if (role && (!CLIPS[k] || CLIPS[k].role !== role)) continue;
+    parts.push((parts.length ? "," : "") + JSON.stringify(k) + ':"' + await blobToB64(b) + '"');
     if (state.clipVariant[k]) variants[k] = state.clipVariant[k]; if (state.clipSig[k]) sigs[k] = state.clipSig[k]; }
-  let ok;
-  if (role) ok = await saveFile(`number-knights-${role}-voice.json`, JSON.stringify({app:"number-knights", kind:"voice", role, variants, sigs, clips}));
-  else { const {profiles, ...settings} = state;
-    ok = await saveFile("number-knights-backup.json", JSON.stringify({app:"number-knights", kind:"full", version:1, settings, profiles:profiles.map(({slug, ...p}) => p), clips})); }
+  const {profiles, ...settings} = state;
+  const head = JSON.stringify(role ? {app:"number-knights", kind:"voice", role, variants, sigs}
+    : {app:"number-knights", kind:"full", version:1, settings, profiles:profiles.map(({slug, ...p}) => p)});
+  const data = new Blob([head.slice(0, -1) + ',"clips":{', ...parts, "}}"], {type:"application/json"});
+  const ok = await saveFile(role ? `number-knights-${role}-voice.json` : "number-knights-backup.json", data);
   if (ok) { for (const r of role ? [role] : ["herald", "narrator"]) state.unsaved[r] = 0; save(); renderRecCounts(); }
 }
 $("#fileBackup").addEventListener("change", async e => {
@@ -5990,6 +6026,7 @@ function renderParent(){
   <div class="sec" id="voicesSec">
     <h2>Voices</h2>
     <p class="note">Two voices, which can be two people. <b>Buckleberry the herald</b> gives every command; anything not recorded uses the device's robot voice. <b>The narrator</b> tells the story; lines not recorded stay silent while their caption shows, so a grown-up can read them aloud. The list is sorted the way the game needs it: what's used all through the game first, then each arc, chapter by chapter. Recordings stay on this device, so save a backup when you're done. Each voice can be saved and added on its own, so two people can record on two devices.</p>
+    ${onIPad && !homeScreenApp && /^https?:/.test(location.protocol) ? `<p class="note warn"><b>On an iPad, add this page to the Home Screen</b> (the Share button, then “Add to Home Screen”) and open it from there. Otherwise Safari deletes the recordings and progress after a week without a visit; from the Home Screen they're kept, and the game opens full screen.</p>` : ""}
     ${robotOK() ? "" : `<p class="note warn norobot"><b>This device has no robot voice.</b> Any herald clip that isn't recorded will be silent, so record the herald's numbers and commands first.</p>`}
     ${MIC_OK ? "" : `<p class="note"><b>Recording isn't available in this viewer.</b> Record clips with any voice recorder (a phone's voice memo app works), name each file by its code (for example <code>num_3.m4a</code> or <code>st1_1_05.m4a</code>) and add them with Import files. Opening the game file directly in a browser lets you record here.</p>`}
     ${storeOk === false ? `<p class="note" style="color:var(--red)">This browser isn’t letting the game save anything when it’s opened this way, so recordings and progress will be lost when the page closes. Open the game from a web address instead.</p>` : ""}

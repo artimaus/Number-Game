@@ -398,6 +398,8 @@ The grown-up panel lists every clip the way the game needs it, so recording can 
   chapter 12" for the tens); zero waits for a later arc. Every counted thing has a plural clip ("chickens") and a
   singular one for after "1" ("chicken"), and the taking-away calls have singular twins ("1… stomps off!"); the robot
   voice fills in any that aren't recorded.
+- **Takes** are trimmed, normalised and stored as 22 kHz mono WAV (about 44 KB a second), so a full set of
+  recordings is roughly 80 MB; the game keeps the 60 most recently played clips decoded in memory.
 - **Each arc:** first **Across the arc** (clips used in several of its chapters, such as the goblin or troll calls),
   then **chapter by chapter**: that chapter's story lines, its special stop's call, and the things first counted
   there.

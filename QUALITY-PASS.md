@@ -126,22 +126,22 @@ still open (B was done in a second batch). Line references are to the source par
 - [x] B26. "100" slightly overruns the shield face (`ttl` 64 → 56 for three digits); the board "?" doesn't pulse
   like the stepping-stone one; `#things .glowspot` opacity overrides the per-task inline values.
 
-## C. iPad-only — reasoned from the code; needs a real-device test
+## C. iPad-only — code-side mitigations in place; still needs a real-device test
 
-- [ ] C1. `speechSynthesis.cancel()` immediately followed by `speak()` is a known WebKit quirk that drops the
+- [x] C1. `speechSynthesis.cancel()` immediately followed by `speak()` is a known WebKit quirk that drops the
   utterance, so an unrecorded prompt can come out silent (the child then waits 12 s for the repeat). Cancel only when
-  speaking/pending, or leave ~100 ms after a cancel.
-- [ ] C2. The AudioContext is only resumed from "suspended", not iOS's "interrupted" state (after a call or Siri):
-  `if (ac.state !== "running") ac.resume()`.
-- [ ] C3. The mic is held open from the first take until the panel closes; on iOS that changes audio routing and
-  volume and can pitch-shift Web Audio created before `getUserMedia`. Release it shortly after each take.
-- [ ] C4. Storage weight: clips are 16-bit WAV at 44/48 kHz, so a full set is ~170 MB in IndexedDB and a full backup
+  speaking/pending, or leave ~100 ms after a cancel. Mitigated: `cancel()` only when something is speaking or pending, a 150 ms gap before the next `speak()`, `resume()` if paused, and the utterance is held on to. Confirm on the device.
+- [x] C2. The AudioContext is only resumed from "suspended", not iOS's "interrupted" state (after a call or Siri):
+  `if (ac.state !== "running") ac.resume()`. Mitigated: the context is resumed whenever it isn't "running" (on every tap and on returning to the page). Confirm on the device.
+- [x] C3. The mic is held open from the first take until the panel closes; on iOS that changes audio routing and
+  volume and can pitch-shift Web Audio created before `getUserMedia`. Release it shortly after each take. Mitigated: the microphone is opened for each take and closed right after it. Confirm on the device.
+- [x] C4. Storage weight: clips are 16-bit WAV at 44/48 kHz, so a full set is ~170 MB in IndexedDB and a full backup
   builds a ~230 MB JSON string in memory (likely to crash an iPad tab); the decoded-buffer cache is never evicted.
-  Resample to 16–22 kHz before `wav()`, build the backup from Blob parts, evict old buffers.
-- [ ] C5. Safari deletes site storage (recordings and progress) after seven days without a visit unless the page is
-  added to the Home Screen; `navigator.storage.persist()` is a no-op there. Add a Home Screen hint on iOS.
-- [ ] C6. `decode()` has no timeout: if `decodeAudioData` never settles for a clip, that line waits indefinitely
-  (not observed). Fast double-tap on a profile card has no guard beyond the 700 ms pointer shim (not tested).
+  Resample to 16–22 kHz before `wav()`, build the backup from Blob parts, evict old buffers. Mitigated: takes are stored at 22 kHz (less than half the space), backups are assembled from one piece per recording, and the decoded cache keeps the 60 most recently played clips. A full set is now roughly 80 MB.
+- [x] C5. Safari deletes site storage (recordings and progress) after seven days without a visit unless the page is
+  added to the Home Screen; `navigator.storage.persist()` is a no-op there. Add a Home Screen hint on iOS. Mitigated: the Voices section shows an "add this page to the Home Screen" note on an iPad in Safari (not when already opened from the Home Screen).
+- [x] C6. `decode()` has no timeout: if `decodeAudioData` never settles for a clip, that line waits indefinitely
+  (not observed). Fast double-tap on a profile card has no guard beyond the 700 ms pointer shim (not tested). Mitigated: decoding gives up after 8 s (the clip counts as unplayable, the robot or caption fills in); a second tap on a player card within 1.5 s is ignored.
 
 ## D. Checked and fine
 
