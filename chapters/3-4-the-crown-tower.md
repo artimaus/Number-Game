@@ -71,7 +71,7 @@ tower.*
 *Cottages on the clifftop, puffins everywhere: on the roofs, the walls, the washing lines.*
 - **N:** "Puffin Point was a village where the puffins walked about as if they owned it." `st3_4_03`
 - ★★ The missing number · ★ Count the companies · ★ Just the numbers · ★ Hiding (puffins in their burrows) · ★
-  Adding
+  Adding · ★ Taking away ("3 puffins fly away!")
 - **Half or more right:** a group joins. **N:** "The people of Puffin Point joined the march, and so did one very
   determined puffin." `st3_4_04`
 

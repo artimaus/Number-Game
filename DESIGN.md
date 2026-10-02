@@ -8,7 +8,8 @@ Built on Letter Hunt's tablet framework.
 and narrator recording. Arc 3 adds the army in companies, Grey Guards who join, a fork in every chapter, the troop
 checks and the crown found in the steward's tower (§5.6). The brainstorm decisions are recorded in §2; every built
 chapter is scripted in [`chapters/`](chapters). Arcs 4–5 (§11) are a rough framework. Items marked *(proposal)*
-haven't been agreed yet.
+haven't been agreed yet. The findings of the October 2026 quality pass, fixed and open, are in
+[`QUALITY-PASS.md`](QUALITY-PASS.md).
 
 **Testing hooks:** open the game with `#test` in the address to expose its state as `window.NK`, and `#fast` to run
 every pause 20× faster. A bot can then play a whole arc in about two minutes.
@@ -391,8 +392,10 @@ recordable, importable by file name, and backed up. **Two roles:**
 ### How the recordings are sorted
 The grown-up panel lists every clip the way the game needs it, so recording can follow the child through the story:
 - **Always:** clips used all through the game: numbers, commands, praise, battle and camp calls, names, and the
-  shared story lines (making camp, morning). Clips that aren't needed at the start say so ("From chapter 5"); the
-  tens say "Not needed yet" until arc 3 is built.
+  shared story lines (making camp, morning). Clips that aren't needed at the start say so ("From chapter 5", "From
+  chapter 12" for the tens); zero waits for a later arc. Every counted thing has a plural clip ("chickens") and a
+  singular one for after "1" ("chicken"), and the taking-away calls have singular twins ("1… stomps off!"); the robot
+  voice fills in any that aren't recorded.
 - **Each arc:** first **Across the arc** (clips used in several of its chapters, such as the goblin or troll calls),
   then **chapter by chapter**: that chapter's story lines, its special stop's call, and the things first counted
   there.

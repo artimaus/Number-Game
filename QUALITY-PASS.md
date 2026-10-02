@@ -1,0 +1,152 @@
+# Number Knights — quality pass (October 2026)
+
+A full pass over the built game after arc 3: four focused reviews (game flow, maths tasks, audio and recordings,
+words), a visual sweep of every scene in all twelve chapters and every task type at its level, the grown-up panel at
+six screen sizes and in dark mode, hands-on interaction tests, and full regression runs of all three arcs.
+
+**Verdict:** the core is solid. About 150,000 generated tasks produced no wrong answers, no run threw a page error,
+playback chains can't hang, and the interaction edge cases (double taps, Home mid-task, rotating, speak-button spam,
+switching players) behaved. What was found is listed below, most important first. `[x]` means fixed; `[ ]` means
+still open. Line references are to the source parts in the build tree (`30-core.js`, `60-game.js`, …).
+
+## A. Fix first — a child or parent would hit these
+
+- [x] **A1. Chapter 1's Goblin Lookout drew the chapter 12 Lookout Stone.** Both stops used `id:"lookout",
+  place:"lookout"`, and the arc 3 `PLACES` override won: goblins stood in front of the sea and two signposts on the
+  meadow, and the flag-raise after the win was skipped (no `.ourflag`). Fixed: the chapter 12 stop and place are
+  `lookoutstone`. Stop ids are now unique across the game.
+- [x] **A2. Singulars after "1".** "We have 1 soldiers!", "1 chickens!", "1 villagers!", "1 … stomp off!",
+  "1 … are sold!", "1 were hiding!", "4 plus 5 make 9". Fixed: every counted thing has a singular clip (`w1_<thing>`,
+  "chicken"), the taking-away calls have singular twins (`stomp_off_1` "…stomps off!", `go_home_1`, `are_sold_1`,
+  `roll_away_1`, `go_away_1`, `sail_away_1`, `fly_away_1`), plus `were_hiding_1` "…was hiding!" and `makes_1`
+  "makes" for the missing number; `w_soldier` is used after 1 in every arc. The robot voice fills in until they're
+  recorded. (Decision: the full set, 33 nouns + 9 twins.)
+- [x] **A3. Counting stayed at 1–3 for a child started at a later chapter.** Count/Find targets only grow as numbers
+  become "known", and "Start at chapter" never seeded that list; the "Count to 20" try-it button showed 1–3 too.
+  Fixed: moving a player forward marks 1…(previous chapter's max) as known for counting and numerals (moving back
+  changes nothing; the grown-up can still untick numbers), and practice uses the level's whole range.
+- [x] **A4. Answer cards overshot the level's range** (21/22 in "numbers to 20", a 13 at level 5, 9–12 for "7 + 3"
+  in the within-10 levels, "11 more make ten"). Fixed in `nearCards`: distractors stay inside the level's numbers
+  unless there aren't enough; What comes next keeps its cards at or below the top; the missing number always has four
+  cards.
+- [x] **A5. Part of the army was off-screen on a 4:3 iPad.** Company slots at x −60 and −125 only exist on wider
+  screens. Fixed: the slots fill the on-screen positions first, so the first seven companies are always visible and
+  only companies 8–10 sit at the left edge. (Decision: reorder rather than shrink.)
+- [x] **A6. Recording UI error paths.** Fixed all four: a microphone denial or an unsupported browser now tells the
+  guide (which no longer sits on "Stop / Recording…") and status messages show inside the guide while it's open; a
+  microphone track that iOS has ended (screen lock) is reopened, and a `MediaRecorder.start()` failure is reported
+  instead of silently killing recording for the session; "Saved" is only shown when the clip was actually stored,
+  otherwise a clear "couldn't be saved on this device" message; restoring a *full* backup asks first when the device
+  already has recordings or progress.
+- [x] **A7. "A ladder!" was never heard** (`say` not awaited; the next prompt cancelled it within a millisecond).
+  Fixed: awaited at both call sites.
+- [x] **A8. Two Home-button races.** Home while the herald was asking left `G.hearing` stuck (dead "hear again" and
+  no repeat on the next fork); Home mid-march let the abandoned march overwrite the next player's scene. Fixed:
+  `goHome`/`openParent` reset `hearing`/`repeats`; `marchTo` checks its session before writing the scene; `sceneFor`
+  cancels any sliding place and clears `#placeNext`.
+- [x] **A9. "…Sir Snivelwick jingling her keys"** in the Aunt Grimhilda line (`st3_4_16`). Fixed: "his keys".
+- [x] **A10. Clips the parent was asked to record for nothing.** `fly_away` (filed under Always, so in a brand-new
+  player's Record next) — Puffin Point now has a taking-away task so "3 puffins fly away!" is heard (decision: use
+  it rather than drop it); `w_berries` (berries only ever compared) — thing-name clips are now only made for the
+  kinds of task that say them; `go_away`, `w_company` — marked optional; both `title_prince` and `title_princess`
+  demanded for every player — filtered to the player's own title; `h_pick_apples` duplicated `h_apples_back` —
+  removed, the orchard uses the chapter 4 call; the tens (30–100) now live in "Numbers" with "From chapter 12"
+  instead of under a note saying "Not needed yet".
+
+## B. Worth doing
+
+### Flow edges
+- [ ] B1. A fork choice is saved before the branch is played (`runFork`); quit mid-branch and the resumed fork can be
+  answered the other way, after which the troop check sends the army "back" for a third helping of recruits. Record
+  the choice after the branch returns (keep a transient choice for the road strip).
+- [ ] B2. The camp right after the Troll King's Keep announces "1 company and 7 soldiers" before the army is topped
+  up to 20 (`chapterEnd` advances `P.ch` before `makeCamp`). Top up and redraw after `P.ch++`.
+- [ ] B3. "Start at chapter" leaves old fork choices (`forks`) and "opening seen" flags (`seenOpen`), so a replayed
+  chapter skips its opening and shows both branches lit. Clear them for the chapter moved to.
+- [ ] B4. The blocked-road drawing can appear on the last raid's land (a snowdrift on chapter 1's meadow): re-render
+  the chapter's land before showing the block.
+- [ ] B5. Locking the tablet mid-narration leaves the cut caption over the next task, and the repeat timer disarms
+  itself while hidden; on return the prompt isn't repeated (the speak button still works). Hide the caption when
+  `narrate` is cut; re-ask on `visibilitychange` → visible.
+- [ ] B6. Leaks that are only cosmetic: `joinUp`'s timer and `nutRain` can draw into a new session within a second;
+  `chooseFork`'s promise is never settled by Home; `addRam` caps at 4 but the fifth right answer still says
+  "h_ram_part"; `G.stepFirst` and `n0` are dead.
+
+### Pedagogy and tasks
+- [ ] B7. "Count the companies" never asks for 100 (100 is only ever a distractor).
+- [ ] B8. The arithmetic types (add, sub, num, hide, diff, miss) have no recent-list or spaced repetition, unlike
+  counting; the same sum can repeat back to back.
+- [ ] B9. Practice "Taking away" at level 8 is the harder stop-4+ version, not the "first taste"; "Find the sign"
+  can only be tried at level 5, so the `=` version can't be tried. `sub.sentence` is an object in practice (code
+  smell: `late = G.practice || …`).
+- [ ] B10. "Which number is bigger?" draws trolls holding the shields in arc 3; the scripts say guards.
+- [ ] B11. `hide.sayOpts` lights the seen dots by prompt index, which shifts on the re-ask (no visible effect; test
+  the key only). "Which is more?" at level 6 can pair 1 vs 12 while the level text says "close amounts".
+
+### Recording polish
+- [ ] B12. Record-next narrator lines aren't in the order they're heard: the camp and retreat lines a chapter 1
+  child hears on day one are items 50–54 of the guide. Sort narrator lines by `from` like the herald's.
+- [ ] B13. The guide's 3-2-1 countdown runs before the microphone permission prompt, so the first-ever take is
+  "too short". Acquire the mic before the countdown.
+- [ ] B14. 15 s narrator cap with no warning (the longest lines read storybook-slow get close); suggest 25 s and a
+  visible countdown. Silence trimming at −18 dB with a 100 ms tail may clip a final "s"; use 200 ms.
+- [ ] B15. Editing an aunt line flags the uncle recording as changed (`sigOf` hashes both variants); the caption
+  fallback is capped at 7 s, too short for long lines; declining the download prompt still clears the "unsaved"
+  count; `echo()` buffers can't be stopped by `stopSpeech`; imported clips with unknown keys stay in IndexedDB
+  invisibly; `robotOK()` reads voices before `voiceschanged` and can wrongly warn there's no robot voice.
+- [ ] B16. "Record next" wording: "Still to record for chapter 12: 31 story lines and 155 herald clips" counts
+  every clip the chapter uses, most of them the everyday ones; say so.
+
+### Words and docs
+- [ ] B17. British spelling: "toward" ×2 (`st1_2_17`, `st3_1_01`) → "towards"; "skipping stones" (`st2_1_10`) →
+  "skimming"; "Pee-yew!" (`st1_4_11`) is American; "Ta-ra!" (`h_intro`) reads as "bye" in Britain.
+- [ ] B18. Chapter 8→9 join: "At last… / At last…" back to back (`st2_4_21`, `st3_1_01`), and `st2_4_21` mentions
+  snow while the block is a storm. Suggested: "The storm blew itself out, and the mountain road was open again."
+- [ ] B19. Panel copy: "Counts: reliably counts to 0" on a fresh profile; "Which is fewer?" → "Which has fewer?";
+  the age table ("…8+ → 9") disagrees with DESIGN.md §5.4's; `we_have`'s hint doesn't mention companies.
+- [ ] B20. Straight and curly apostrophes are mixed across NARR/HERALD/panel; "Grey Guards" vs "grey guards" is
+  inconsistent (pick proper name or description); "Siege of the Capital" is the only arc title without "The".
+- [ ] B21. Chapter scripts vs game: "Which pile/rock has more…" (game says "Which side"); "Let's show him" (clip says
+  "them"); "Harvest Hollow sent more friends!" (clip: "The loyal villages sent…"); chapter 1 says "cap of 10" (it's
+  5); a lantern listed as a raid treasure; "New clips" lists in arc 3 name old clips; 2-4's "after arc 2" section is
+  stale now that arc 3 exists.
+- [ ] B22. DESIGN.md staleness: example lines that aren't in the game (§4 "The woodcutters cleared the road!",
+  "Which camp has more goblins?", "n_4"/"well_done" keys), "(proposal)" markers on settled things (camp after 4,
+  two ladders, §5.4, the steward warning), §5.4's age table vs the panel's, "3rd grade", gear list (five pieces;
+  the game has three), card counts (Find 3–9 banners → 3–4, Look closely 4–9 → up to 6), "Numbers to 100 from 29
+  recordings" (28), "one palette per chapter (meadow, woods, marsh, hills, pass)" (twelve lands plus night),
+  "more or less" → "more or fewer".
+- [ ] B23. Longest narrator lines (23–25 words with a quote) — `st3_4_15`, `st2_2_14` — could lose a clause for a
+  four-year-old listening.
+
+### Visual
+- [ ] B24. Dark mode: `--muted` isn't redefined, so the panel's helper text is dark grey on dark navy.
+- [ ] B25. The number-sentence board shows as a blank white strip for about a second before "9 − 3 = ?" writes
+  itself in; draw it with the first piece.
+- [ ] B26. "100" slightly overruns the shield face (`ttl` 64 → 56 for three digits); the board "?" doesn't pulse
+  like the stepping-stone one; `#things .glowspot` opacity overrides the per-task inline values.
+
+## C. iPad-only — reasoned from the code; needs a real-device test
+
+- [ ] C1. `speechSynthesis.cancel()` immediately followed by `speak()` is a known WebKit quirk that drops the
+  utterance, so an unrecorded prompt can come out silent (the child then waits 12 s for the repeat). Cancel only when
+  speaking/pending, or leave ~100 ms after a cancel.
+- [ ] C2. The AudioContext is only resumed from "suspended", not iOS's "interrupted" state (after a call or Siri):
+  `if (ac.state !== "running") ac.resume()`.
+- [ ] C3. The mic is held open from the first take until the panel closes; on iOS that changes audio routing and
+  volume and can pitch-shift Web Audio created before `getUserMedia`. Release it shortly after each take.
+- [ ] C4. Storage weight: clips are 16-bit WAV at 44/48 kHz, so a full set is ~170 MB in IndexedDB and a full backup
+  builds a ~230 MB JSON string in memory (likely to crash an iPad tab); the decoded-buffer cache is never evicted.
+  Resample to 16–22 kHz before `wav()`, build the backup from Blob parts, evict old buffers.
+- [ ] C5. Safari deletes site storage (recordings and progress) after seven days without a visit unless the page is
+  added to the Home Screen; `navigator.storage.persist()` is a no-op there. Add a Home Screen hint on iOS.
+- [ ] C6. `decode()` has no timeout: if `decodeAudioData` never settles for a clip, that line waits indefinitely
+  (not observed). Fast double-tap on a profile card has no guard beyond the 700 ms pointer shim (not tested).
+
+## D. Checked and fine
+
+All referenced clips exist and all 300 narrator lines are reachable; every chapter script matches the game's stops
+and names; every generator keeps the answer among the cards, never duplicates a card, and never produces a zero or
+negative; the difficulty ramp is monotonic; all 90-odd places render on their lands; the siege, feast, crown and
+rider sequences run; portrait works (letterboxed); the DOM stays light (3,700 nodes with a 100-soldier army, 10 ms
+to redraw); `numJoin` handles 0/10/20/100 and >100; `stale`/`changed`/`todo`/`remindOn` match DESIGN.md §6.

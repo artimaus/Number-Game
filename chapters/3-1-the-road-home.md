@@ -158,7 +158,7 @@ capital.*
 *Rows of apple trees, ladders, baskets. The grey guards have kicked the baskets over, and apples have rolled
 everywhere.*
 - **N:** "In the orchard, the grey guards had kicked over the apple baskets!" `st3_1_11`
-- **H:** "Let's pick up the apples!" `h_pick_apples`
+- **H:** "Let's pick up the apples!" `h_apples_back` (the same call as the Stolen Cart in chapter 4)
 - ★★ Adding: "4 apples in the basket… and 3 more!" · ★ Taking away: "9 apples… a pony eats 2!" `pony_eats` · ★ Make a
   company (a basket with ten places) · ★ Count apples · ★ Which number is bigger?
 - **Each first-try right answer:** a few apples roll back into a basket.
@@ -259,7 +259,7 @@ If the child isn't at level 10 yet when the castle falls:
     `h_cloaks_off` "They threw off their grey cloaks! They're on our side!", `h_raid_guards` "Grey guards are back! To
     the village!", `h_castle_ours` "Hooray! The castle is ours!"
   - Make a company: `h_more_company` "How many more make a company?", `make_ten` "make ten!"
-  - `h_find_crown` "Let's find that crown!", `h_pick_apples` "Let's pick up the apples!", `go_home` "…go home for
+  - `h_find_crown` "Let's find that crown!", `go_home` "…go home for
     tea!", `pony_eats` "A pony eats…", `are_sold` "…are sold!", `roll_away` "…roll away!" (and `go_away` "…go away!"
     for anything else that leaves). Flour sacks use arc 2's "We give away…".
   - `how_many_haystacks`, `w_guards`, `w_haystacks`, `w_pumpkins` and the which-more clips for the new things

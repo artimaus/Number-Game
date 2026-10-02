@@ -850,7 +850,7 @@ const NARR = {
   st3_4_14:"Tower Town sat at the foot of the Crown Tower.",
   st3_4_15:"“There's a light at the top of the tower every night,” whispered the townsfolk. “Sir Snivelwick goes up and down with his keys, jingle jangle!”",
   st3_4_16:{uncle:"There stood the Crown Tower. On top stood Uncle Grimbald, with Sir Snivelwick jingling his keys.",
-            aunt:"There stood the Crown Tower. On top stood Aunt Grimhilda, with Sir Snivelwick jingling her keys."},
+            aunt:"There stood the Crown Tower. On top stood Aunt Grimhilda, with Sir Snivelwick jingling his keys."},
   st3_4_17:"At the very top of the tower was a locked chest. One of Sir Snivelwick's keys fitted, and inside was… the crown!",
   st3_4_18:{uncle:"Uncle Grimbald had hidden it himself, and told everyone it was stolen!", aunt:"Aunt Grimhilda had hidden it herself, and told everyone it was stolen!"},
   st3_4_19:"The steward jumped on a horse, and galloped away to the capital.",
@@ -1046,7 +1046,7 @@ const CHAPTERS = [
      {id:"crossroads", name:"The Crossroads", kind:"fork", place:"crossroads", arrive:"st3_1_08", ask:["fork_windmill","fork_orchard"],
       a:{id:"windmillhill", name:"Windmill Hill", kind:"recruit", place:"windmillhill", arrive:"st3_1_09", leave:"st3_1_10", icon:"mill",
          t:[["ten",null,2],["add",["sacks"],1],["sub",["sacks"],1],["count",["sacks"],1],["find",null,1]]},
-      b:{id:"orchard", name:"The Apple Orchard", kind:"special", place:"orchard", arrive:"st3_1_11", done:"st3_1_12", hLine:"h_pick_apples", icon:"apple",
+      b:{id:"orchard", name:"The Apple Orchard", kind:"special", place:"orchard", arrive:"st3_1_11", done:"st3_1_12", hLine:"h_apples_back", icon:"apple",
          recruit:3, treasure:"pumpkin", t:[["add",["apples"],2],["sub",["apples"],1],["ten",null,1],["count",["apples"],1],["big",null,1]]}},
      {id:"haywagons", name:"The Hay Wagons", kind:"skirmish", place:"haywagons", arrive:"st3_1_13", won:"st3_1_14",
       t:[["add",["guards"],2],["ten",null,1],["sub",["guards"],1],["count",["guards"],1],["next",null,1]]},
@@ -1115,10 +1115,10 @@ const CHAPTERS = [
    open:["st3_4_01","st3_4_02"], openH:["h_crown_tower","h_forward_march"],
    stops:[
      {id:"puffinpoint", name:"Puffin Point", kind:"village", place:"puffinpoint", arrive:"st3_4_03", leave:"st3_4_04",
-      t:[["miss",null,2],["tens",null,1],["num",null,1],["hide",["puffins"],1],["add",["puffins"],1]]},
+      t:[["miss",null,2],["tens",null,1],["num",null,1],["hide",["puffins"],1],["add",["puffins"],1],["sub",["puffins"],1]]},
      {id:"cliffpath", name:"The Cliff Path", kind:"skirmish", place:"cliffpath", arrive:"st3_4_05", won:"st3_4_06",
       t:[["miss",null,2],["diff",["guards"],1],["sub",["guards"],1],["tens",null,1],["hide",["guards"],1]]},
-     {id:"lookout", name:"The Lookout Stone", kind:"fork", place:"lookout", arrive:"st3_4_07", ask:["fork_fishing","fork_cove"],
+     {id:"lookoutstone", name:"The Lookout Stone", kind:"fork", place:"lookoutstone", arrive:"st3_4_07", ask:["fork_fishing","fork_cove"],
       a:{id:"fishingvillage", name:"The Fishing Village", kind:"recruit", place:"fishingvillage", arrive:"st3_4_08", leave:"st3_4_09", icon:"boat",
          t:[["tens",null,2],["miss",null,1],["ten",null,1],["add",["boats"],1],["sub",["boats"],1]]},
       b:{id:"smugglerscove", name:"The Smugglers' Cove", kind:"special", place:"smugglerscove", arrive:"st3_4_10", done:"st3_4_11", hLine:"h_give_back", icon:"chest",
@@ -1312,7 +1312,6 @@ const HERALD = [
   ["h_castle_ours","Hooray! The castle is ours!","Battles"],
   ["h_more_company","How many more make a company?","Commands","After a number and “soldiers”."],
   ["make_ten","make ten!","Words","“7… and… 3… make ten!”"],
-  ["h_pick_apples","Let's pick up the apples!","March and story"],
   ["go_home","…go home for tea!","Commands","After a number: “3… go home for tea!”"],
   ["pony_eats","A pony eats…","Commands","A number plays right after it."],
   ["are_sold","…are sold!","Commands","After a number: “4… are sold!”"],
@@ -1327,6 +1326,16 @@ const HERALD = [
   ["how_many_hiding","How many are hiding?","Commands"],
   ["were_hiding","…were hiding!","Words","After a number: “3… were hiding!”"],
   ["makes","make","Words","“5… and… 3… make… 8!”"],
+  // the forms that follow "1": "1… stomps off!", "1… was hiding!" (the plural clips above follow every other number)
+  ["stomp_off_1","…stomps off!","Commands","After “1”: “1… stomps off!”"],
+  ["go_home_1","…goes home for tea!","Commands","After “1”: “1… goes home for tea!”"],
+  ["are_sold_1","…is sold!","Commands","After “1”: “1… is sold!”"],
+  ["roll_away_1","…rolls away!","Commands","After “1”: “1… rolls away!”"],
+  ["go_away_1","…goes away!","Commands","After “1”."],
+  ["sail_away_1","…sails away!","Commands","After “1”: “1… sails away!”"],
+  ["fly_away_1","…flies away!","Commands","After “1”: “1… flies away!”"],
+  ["were_hiding_1","…was hiding!","Words","After “1”: “1… was hiding!”"],
+  ["makes_1","makes","Words","“4… plus… 5… makes… 9!”"],
   ["fork_harbour","the Harbour","March and story","A fork's place name."],
   ["fork_lighthouse","the Lighthouse","March and story","A fork's place name."],
   ["h_light_lamps","Let's light the lamps!","March and story"],
@@ -1363,10 +1372,10 @@ const ARC_TITLES = {1:"The Goblin Border", 2:"The Troll Hills", 3:"The Stolen Cr
 /* Where each clip belongs, so recordings can be sorted and a grown-up reminded about the ones coming up:
    used in one chapter → that chapter ("c6"); in several chapters of one arc → that arc ("a2"); in more than one
    arc, or all through the game → "all". Most of it is worked out from the chapters; these are said by the game itself. */
-const CLIP_SEC = {h_forward_march:"all", w_soldiers:"all", h_raid:"a1", h_goblins_first:"a1", h_goblins:"a1", st_retreat:"a1",
+const CLIP_SEC = {h_forward_march:"all", w_soldiers:"all", w_soldier:"all", h_raid:"a1", h_goblins_first:"a1", h_goblins:"a1", st_retreat:"a1",
   h_raid_trolls:"a2", h_troll_first:"a2", h_trolls:"a2", h_stomped_away:"a2", st_retreat_trolls:"a2", h_crown_stolen:"c8",
   // said by the game all through arc 3 (they move to "always" once arc 4 uses them too)
-  ...Object.fromEntries(["w_company","w_companies","w_soldier","h_new_company","h_join_us","h_whole_company","h_which_way","or","h_come_back",
+  ...Object.fromEntries(["w_company","w_companies","h_new_company","h_join_us","h_whole_company","h_which_way","or","h_come_back",
     "h_count_army","h_we_need","h_enough","h_go_back","h_loyal_send","h_guards_first","h_guards","h_cloaks_off","h_raid_guards","h_castle_ours","st_retreat_guards","go_away"].map(k => [k, "a3"])),
   h_everyone:"c12", h_to_capital:"c12"};
 const CLIP_FROM = {h_three_cheers:4, h_hip_hooray:4, h_need_ram:4, h_ram_part:4, h_ram_more:4, h_ram_ready:4};
@@ -1375,8 +1384,10 @@ const TASK_CLIPS = {find:["find_banner"], count:["lets_count"], more:["this_side
   back:["lets_count_down","whats_next"], cmpc:["lets_count_both","this_side_has","is_more_than"], big:["which_bigger","is_bigger_than","lets_count"],
   look:["look_closely","find_banner"], add:["and","more","how_many_now"], sub:["how_many_left","left"],
   sign:["h_first_signs","find_the","sign_plus","sign_minus","plus_means","minus_means"], ten:["h_more_company","make_ten","and"],
-  hide:["we_can_see","how_many_hiding","were_hiding","and","makes"], num:["plus","minus","is","is_what","lets_count"], diff:["how_many_more","in_long_row","is","more_than","lets_count"],
-  tens:["h_how_many_in","w_companies","w_soldiers","lets_count"], miss:["plus","what_makes","makes","lets_count"]};
+  hide:["we_can_see","how_many_hiding","were_hiding","were_hiding_1","and","makes"], num:["plus","minus","is","is_what","lets_count"], diff:["how_many_more","in_long_row","is","more_than","lets_count"],
+  tens:["h_how_many_in","w_companies","w_soldiers","lets_count"], miss:["plus","what_makes","makes_1","lets_count"]};
+/* the kinds of task that say a thing's name right after a number ("3… chickens!", "1… chicken!") */
+const NAMES_THINGS = new Set(["count", "add", "sub", "hide", "diff"]), ONE_THING = new Set(["count", "add", "sub"]);
 /* what happens to the things that leave, in taking away: a clip said before the number ("A pony eats… 2") or after it
    ("2… go home for tea!") */
 const subGo = (noun, arc) => arc >= 3 ? ({guards:"go_home", villagers:"go_home", apples:"pony_eats", pies:"are_sold", fish:"are_sold", pumpkins:"roll_away", logs:"roll_away", sacks:"we_give_away",
@@ -1402,10 +1413,11 @@ function clipUse(){
       if (type === "sign" && L.signs && L.signs.includes("=")) ["sign_equals","equals_means"].forEach(k => add(k, ci));
       if ((type === "add" || type === "sub") && L.sentence) [type === "add" ? "plus" : "minus", "is"].forEach(k => add(k, ci));
       (nouns || []).forEach(n => {
-        add("w_" + n, ci);
+        if (NAMES_THINGS.has(type)) add("w_" + n, ci);
+        if (ONE_THING.has(type)) add("w1_" + n, ci);
         if (type === "count") add("how_many_" + n, ci);
         if (type === "more" || type === "cmpc") { add("which_more_" + n, ci); if (L.fewer) add("which_fewer_" + n, ci); }
-        if (type === "sub") add(subGo(n, c.arc), ci);
+        if (type === "sub") { const g = subGo(n, c.arc); add(g, ci); if (!GO_BEFORE.has(g)) add(g + "_1", ci); }
       });
     });
   });
@@ -1413,13 +1425,14 @@ function clipUse(){
 }
 /* Which nouns the game counts, compares or names, from every task list in the campaign (and the grown-ups' try-it). */
 function nounsUsed(){
-  const u = {count:new Set(["villagers","chickens"]), more:new Set(["goblins","chickens"]), word:new Set(["villagers","chickens","goblins"])};
+  const u = {count:new Set(["villagers","chickens"]), more:new Set(["goblins","chickens"]), word:new Set(["villagers","chickens","goblins"]), one:new Set(["villagers","chickens","goblins"])};
   const specs = [T_SKIRM, T_COUNT_GOB, T_BUILD, T_ASSAULT];
   CHAPTERS.forEach(c => { allStops(c).forEach(s => specs.push(s.t || [], s.tb || [], s.ta || [])); c.raids.forEach(r => specs.push(r.t)); });
   specs.flat().forEach(([type, nouns]) => (nouns || []).forEach(n => {
     if (type === "count") u.count.add(n);
     if (type === "more" || type === "cmpc") u.more.add(n);
-    u.word.add(n);
+    if (NAMES_THINGS.has(type)) u.word.add(n);
+    if (ONE_THING.has(type)) u.one.add(n);
   }));
   return u;
 }
@@ -1437,7 +1450,7 @@ function buildClips(){
   for (let n = 0; n <= 100; n++) {
     const whole = n > 20 && n % 10 > 0, tens = n > 20 && !whole;
     const from = n === 0 ? null : n <= 20 ? numFrom(n) : tens ? 12 : null;
-    CLIPS["num_" + n] = {role:"herald", sec:"all", from, opt:whole, group:whole ? "Whole numbers 21–99" : n > 20 || !n ? "Numbers for later arcs" : "Numbers",
+    CLIPS["num_" + n] = {role:"herald", sec:"all", from, opt:whole, group:whole ? "Whole numbers 21–99" : !n ? "Numbers for later arcs" : "Numbers",
       label:`${n}: “${numWord(n)}”`, tts:numWord(n), big:String(n),
       hint:whole ? `Optional. Until it's recorded, the game joins “${TENS[Math.floor(n / 10)]}” and “${NUM_WORDS[n % 10]}”.`
         : tens ? (n === 100 ? "Arc 3: the whole army, 10 companies." : `Arc 3: counting companies in tens. It's also the first half of ${n + 1}–${n + 9}.`)
@@ -1445,6 +1458,7 @@ function buildClips(){
   }
   HERALD.forEach(([k, t, g, hint, tts]) => place(k, {role:"herald", group:g, label:`“${t}”`, hint:hint || "", tts:tts ?? t}));
   ["my_praise_1","my_praise_2","my_praise_3"].forEach(k => CLIPS[k].opt = true);      // only if you want to
+  ["go_away","go_away_1","w_company"].forEach(k => CLIPS[k].opt = true);              // no chapter says these (practice can)
   const used = nounsUsed();
   for (const k of Object.keys(NOUNS)) {
     if (used.count.has(k)) place("how_many_" + k, {role:"herald", group:"Commands", label:`“How many ${k}?”`, hint:"", tts:`How many ${k}?`});
@@ -1453,6 +1467,7 @@ function buildClips(){
       place("which_fewer_" + k, {role:"herald", group:"Commands", label:`“Which side has fewer ${k}?”`, hint:"From level 3.", tts:`Which side has fewer ${k}?`});
     }
     if (used.word.has(k)) place("w_" + k, {role:"herald", group:"Words", label:`“${k}”`, hint:"Just the word, after a number: “3… " + k + "!”", tts:k});
+    if (used.one.has(k)) place("w1_" + k, {role:"herald", group:"Words", label:`“${NOUNS[k].one}”`, hint:"After “1”: “1… " + NOUNS[k].one + "!”", tts:NOUNS[k].one});
   }
   place("w_soldiers", {role:"herald", group:"Words", label:"“soldiers”", hint:"After a number: “We have… 5… soldiers!”", tts:"soldiers"});
   state.profiles.forEach(p => { if (p.slug) CLIPS["child_" + p.slug] = {role:"herald", sec:"all", from:1, group:"Names", label:p.name, hint:"Say it the way you usually do.", tts:p.name}; });
@@ -3624,7 +3639,7 @@ Object.assign(PLACES, {
       `<g stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".7"><path d="M80 -150 h60 M160 -190 h40 M300 -160 h70"/></g>` + at(560, -60, .6, PUFFIN) + ourFlag(250, -110)),
     guards:[[160, GY + 10], [290, GY + 14], [400, GY + 10]]}),
   /* ch 12 fork: the Lookout Stone: a big flat rock; a fishing village down one way, a hidden cove the other */
-  lookout:() => ({svg:G3(`<path d="M-30 -80 Q300 -120 690 -90 V-40 H-30 Z" fill="#6FA7C4"/>` + cottage(60, -84, .3, {roof:"#E5483F"}) + cottage(110, -86, .28, {roof:"#2E78D0"}) + boatBig(150, -76, .3) +
+  lookoutstone:() => ({svg:G3(`<path d="M-30 -80 Q300 -120 690 -90 V-40 H-30 Z" fill="#6FA7C4"/>` + cottage(60, -84, .3, {roof:"#E5483F"}) + cottage(110, -86, .28, {roof:"#2E78D0"}) + boatBig(150, -76, .3) +
       `<path d="M520 -86 Q560 -170 640 -150 L660 -86 Z" fill="#7C838C"/><path d="M570 -86 Q580 -126 610 -126 Q630 -110 630 -86 Z" fill="#2F343F"/>` +
       `<path d="M220 0 Q230 -60 320 -66 Q410 -60 430 0 Z" fill="#A39882"/><path d="M230 -40 Q320 -76 420 -40" stroke="#B9AE98" stroke-width="10" fill="none" stroke-linecap="round"/>` +
       signArms(120, iconBoat, iconCave) + at(470, -10, .6, PUFFIN)),
@@ -3771,6 +3786,7 @@ async function marchTo(placeId, {guards = 0, pot = false, dur = 2600} = {}){
   const steps = setInterval(() => SFX.step(), 420 * SPEED);
   await Promise.all(anims.map(a => a.finished.catch(() => {})));
   clearInterval(steps);
+  ck();                                                     // a march abandoned by Home must not write over the next sitting's scene
   $("#party").classList.remove("walk");
   $$(".lay").forEach(el => { el.getAnimations().forEach(a => a.cancel()); el.style.transform = `translateX(${G.lay[el.dataset.l]}px)`; });
   $("#placeWrap").getAnimations().forEach(a => a.cancel()); next.getAnimations().forEach(a => a.cancel());
@@ -3795,10 +3811,12 @@ function nutRain(d){
 const SLOTS = [...[140, 86, 32, -22, 194].map(x => ({x, foot:626, s:.9, z:5})), ...[166, 112, 58, 4, 220].map(x => ({x, foot:596, s:.76, z:2})),
   ...[124, 70, 16, -38, 178].map(x => ({x, foot:566, s:.68, z:1})), ...[150, 96, 42, -12, 204].map(x => ({x, foot:540, s:.6, z:0}))];   // up to 20
 function slotStyle(i){ const s = SLOTS[i] || SLOTS[SLOTS.length - 1]; return `left:${s.x}px;top:${s.foot - 204}px;transform:scale(${s.s});z-index:${s.z}`; }
-/* Arc 3: every ten soldiers march as a company under a banner, behind the loose ones (up to ten companies). */
 /* Arc 3: every ten soldiers march as a company under a banner, in rows behind a short line of loose soldiers
-   (up to ten companies). The loose ones are drawn smaller, so the banners stay in view. */
-const COMPANY_SLOTS = [...[70, -60, 200].map(x => ({x, foot:592, s:1.08, z:2})), ...[135, 5, -125, 265].map(x => ({x, foot:562, s:.94, z:1})), ...[70, -60, 200].map(x => ({x, foot:534, s:.8, z:0}))];
+   (up to ten companies). The loose ones are drawn smaller, so the banners stay in view. The slots fill the
+   on-screen ones first: a 4:3 tablet shows nothing left of x = 0, so companies 8–10 are the ones at the edge. */
+const CO = (x, foot, s, z) => ({x, foot, s, z});
+const COMPANY_SLOTS = [CO(70, 592, 1.08, 2), CO(200, 592, 1.08, 2), CO(135, 562, .94, 1), CO(265, 562, .94, 1), CO(5, 562, .94, 1), CO(70, 534, .8, 0), CO(200, 534, .8, 0),
+  CO(-60, 592, 1.08, 2), CO(-125, 562, .94, 1), CO(-60, 534, .8, 0)];
 const LOOSE_SLOTS = [150, 112, 74, 36, -2, -40, 188, 226, 264].map((x, i) => ({x, foot:634 - (i % 2) * 6, s:.56, z:6}));
 const looseStyle = j => { const s = LOOSE_SLOTS[j] || LOOSE_SLOTS[0]; return `left:${s.x}px;top:${s.foot - 204}px;transform:scale(${s.s});z-index:${s.z}`; };
 const inCompanies = () => arcNow() >= 3 && !G.practice;
@@ -3811,10 +3829,12 @@ function partyHTML(){
 }
 /* "We have 3 companies and 4 soldiers!" (arc 3 says the army in companies, so no number past 10 is needed) */
 function armyWords(n = P.party.length){
-  if (!inCompanies() || n < 10) return ["num_" + n, n === 1 && inCompanies() ? "w_soldier" : "w_soldiers"];
+  if (!inCompanies() || n < 10) return ["num_" + n, n === 1 ? "w_soldier" : "w_soldiers"];
   const co = Math.floor(n / 10), lo = n % 10;
   return ["num_" + co, co === 1 ? "w_company" : "w_companies", ...(lo ? ["and", "num_" + lo, lo === 1 ? "w_soldier" : "w_soldiers"] : [])];
 }
+/* a thing's name after a number: "3… chickens!", "1… chicken!" */
+const nounWord = (noun, n) => (n === 1 ? "w1_" : "w_") + noun;
 function renderParty(){
   G.ahead = 0;
   $("#stage").style.setProperty("--banner", P.banner);
@@ -3873,7 +3893,7 @@ function renderPips(n, done){ $("#pips").innerHTML = Array.from({length:n}, (_, 
 
 /* ================= tasks ================= */
 function knownTop(kind){ const k = P.known[kind] || []; let t = 0; while (k.includes(t + 1)) t++; return t; }
-function activeNums(kind){ const L = LV(); return range(1, Math.min(L.max, Math.max(3, knownTop(kind) + 2))); }
+function activeNums(kind){ const L = LV(); return G.practice ? range(1, L.max) : range(1, Math.min(L.max, Math.max(3, knownTop(kind) + 2))); }   // try-it shows the whole level
 const today = () => Math.floor((Date.now() - new Date().getTimezoneOffset() * 60000) / 86400000);
 const isDue = key => { const b = P.boxes[key]; return !b || b.due <= today(); };
 function pickTarget(kind, pool){
@@ -4113,7 +4133,7 @@ async function correct(el){
       if (G.session !== sess) return;
       await countAlong(G.thingPos, t.noun, t.target);
       if (G.session !== sess) return;
-      await say([150, "num_" + t.target, "w_" + t.noun, 120, ...praise(first)]);
+      await say([150, "num_" + t.target, nounWord(t.noun, t.target), 120, ...praise(first)]);
     } else await say([200, "num_" + t.target, 120, ...praise(first)]);
   }
   if (G.session !== sess) return;
@@ -4534,8 +4554,8 @@ async function runSiege(stop){
     if (part === "ladders") {
       while (S.ladders < minL) {
         const before = S.ladders;
-        await runSet(TB, async () => addLadder(S)); ck();
-        if (S.ladders === before) addLadder(S);
+        await runSet(TB, () => addLadder(S)); ck();
+        if (S.ladders === before) { await addLadder(S); ck(); }
         if (S.ladders < minL) { await say(["h_one_more_ladder"]); ck(); }
       }
     } else if (part === "ram") {
@@ -4650,7 +4670,7 @@ function addLadder(S){
   const spot = (PL.ladders || [])[S.ladders]; S.ladders++;
   if (!spot) return;
   $("#ladders").insertAdjacentHTML("beforeend", `<g transform="translate(${spot[0]} ${spot[1]})${spot[2] ? ` scale(${spot[2]})` : ""}"><g class="flagup">${LADDER}</g></g>`);   // tall walls get longer ladders
-  SFX.pop(); say(["h_a_ladder"]);
+  SFX.pop(); return say(["h_a_ladder"]);                    // awaited by the caller, or the next prompt would cut it off
 }
 function addRam(S){
   S.ram = Math.min(4, S.ram + 1);
@@ -4660,7 +4680,11 @@ function addRam(S){
 }
 
 /* ================= a sitting: march from stop to stop until camp ================= */
-function sceneFor(){ const ch = CHAPTERS[P.ch]; renderLand(ch.land); renderParty(); renderRoad(); hideTask(); $("#placeWrap").innerHTML = ""; $("#fx").innerHTML = ""; $("#pips").innerHTML = ""; $("#marchBtn").hidden = true; $("#placeWrap").classList.remove("camp"); }
+function sceneFor(){
+  const ch = CHAPTERS[P.ch]; renderLand(ch.land); renderParty(); renderRoad(); hideTask();
+  for (const el of [$("#placeWrap"), $("#placeNext")]) { el.getAnimations().forEach(a => a.cancel()); el.innerHTML = ""; el.style.transform = ""; }   // an abandoned march may still be sliding
+  $("#party").classList.remove("walk"); $("#fx").innerHTML = ""; $("#pips").innerHTML = ""; $("#marchBtn").hidden = true; $("#placeWrap").classList.remove("camp");
+}
 const canAdvance = () => P.ch + 1 < CHAPTERS.length && P.level >= CHAPTERS[P.ch + 1].level;
 async function openChapter(){
   const ck = guard$(), ch = CHAPTERS[P.ch];
@@ -4881,7 +4905,7 @@ $("#startBtn").addEventListener("click", () => {
   SFX.star(); renderHome(); show("home"); startMusic();
 });
 function goHome(){
-  stopSpeech(); G.session++; G.busy = true; G.task = null; G.practice = null; G.forkPick = G.forkAsk = null; clearInterval(G.forkTimer);
+  stopSpeech(); G.session++; G.busy = true; G.hearing = false; G.repeats = 0; G.task = null; G.practice = null; G.forkPick = G.forkAsk = null; clearInterval(G.forkTimer);
   if (G.resolve) { const r = G.resolve; G.resolve = null; r({first:false}); }
   $("#confetti").innerHTML = ""; renderHome(); show("home");
 }
@@ -4946,7 +4970,8 @@ function stoneG(x, y, n){
 }
 /* three to four answer cards: the answer and its next-door numbers */
 function nearCards(t, n, max){
-  const pool = range(1, Math.max(max, t + 2)).filter(x => x !== t).sort((a, b) => Math.abs(a - t) - Math.abs(b - t) || Math.random() - .5);
+  const top = max - 1 >= n - 1 ? max : Math.max(max, t + n - 1);        // stay inside the level's numbers unless there aren't enough
+  const pool = range(1, top).filter(x => x !== t).sort((a, b) => Math.abs(a - t) - Math.abs(b - t) || Math.random() - .5);
   return [t, ...pool.slice(0, n - 1)].sort((a, b) => a - b);
 }
 /* ---- the hero hops from stone to stone ---- */
@@ -5042,7 +5067,7 @@ const TASKS2 = {
       const top = Math.max(5, LV().max);
       const t = top > 12 && Math.random() < .35 ? rand([10, 11, 20]) : pickTarget("next", range(3, top));
       const run = range(t - (t >= 4 && Math.random() < .5 ? 3 : 2), t - 1);
-      const cards = t >= 20 ? [18, 19, 20] : [t - 1, t, t + 1];
+      const cards = t >= top ? [t - 2, t - 1, t] : [t - 1, t, t + 1];
       return {type:"next", target:t, run, cards, prompt:["whats_next", ...run.map(n => "num_" + n)], key:"next:" + t};
     },
     render(t){ renderStones(t, false); },
@@ -5164,7 +5189,7 @@ const TASKS2 = {
     make(noun){
       const L = LV(), max = L.addMax || 5, t = 2 + Math.floor(Math.random() * (max - 1)), b = 1 + Math.floor(Math.random() * Math.min(t - 1, 4)), a = t - b;
       return {type:"add", noun, a, b, target:t, sentence:!!L.sentence, count:true, cards:nearCards(t, L.sentence ? 4 : 3, Math.max(6, t + 2)),
-        prompt:["num_" + a, "w_" + noun, "and", "num_" + b, "more", "how_many_now"], key:`+:${a}+${b}`};
+        prompt:["num_" + a, nounWord(noun, a), "and", "num_" + b, "more", "how_many_now"], key:`+:${a}+${b}`};
     },
     render(t){
       const pos = layout(t.noun, t.target, t.target <= 5 ? "row" : "frames", thingRect(t, t.target));
@@ -5174,7 +5199,7 @@ const TASKS2 = {
       renderNumCards(t, "shield");
     },
     async intro(t, live){
-      showPieces(0); await say(["num_" + t.a, "w_" + t.noun]); if (!live()) return true;
+      showPieces(0); await say(["num_" + t.a, nounWord(t.noun, t.a)]); if (!live()) return true;
       // the newcomers trot in from the right with a hop
       [...$$("#things .arr")].slice(t.a).forEach((g, i) => {
         g.style.opacity = 1;
@@ -5191,16 +5216,16 @@ const TASKS2 = {
       await wait(200); if (!live()) return;
       await countAlong(G.thingPos, t.noun, t.target); if (!live()) return;
       if (t.sentence) { fillAnswer(t.target); await say([150, "num_" + t.a, "plus", "num_" + t.b, "is", "num_" + t.target, 120, ...praise(first)]); }
-      else await say([150, "num_" + t.target, "w_" + t.noun, 120, ...praise(first)]);
+      else await say([150, "num_" + t.target, nounWord(t.noun, t.target), 120, ...praise(first)]);
     }
   },
   sub:{
     make(noun){
       const L = LV(), always = L.sentence === "always", late = G.practice || always || P.stop >= 4, max = late ? 10 : (L.subMax || 5);
       const n = 2 + Math.floor(Math.random() * (max - 1)), k = 1 + Math.floor(Math.random() * Math.min(n - 1, 5)), left = n - k;
-      const g = subGo(noun, arcNow()), go = GO_BEFORE.has(g) ? [g, "num_" + k] : ["num_" + k, g];
+      const g = subGo(noun, arcNow()), go = GO_BEFORE.has(g) ? [g, "num_" + k] : ["num_" + k, k === 1 ? g + "_1" : g];   // "1… stomps off!"
       return {type:"sub", noun, n, k, target:left, go, eaten:g === "troll_eats" || g === "pony_eats", sentence:!!L.sentence && late, count:true, cards:nearCards(left, 4, Math.max(6, n)),
-        prompt:["num_" + n, "w_" + noun, ...go, "how_many_left"], key:`-:${n}-${k}`};
+        prompt:["num_" + n, nounWord(noun, n), ...go, "how_many_left"], key:`-:${n}-${k}`};
     },
     render(t){
       const pos = layout(t.noun, t.n, t.n <= 5 ? "row" : "frames", thingRect(t, t.n));
@@ -5210,7 +5235,7 @@ const TASKS2 = {
       renderNumCards(t, "shield");
     },
     async intro(t, live){
-      showPieces(0); await say(["num_" + t.n, "w_" + t.noun]); if (!live()) return true;
+      showPieces(0); await say(["num_" + t.n, nounWord(t.noun, t.n)]); if (!live()) return true;
       // the last few leave: a troll eats the pies (a pony the apples); everything else goes off to the right
       [...$$("#things .arr")].slice(t.target).forEach((g, i) => {
         g.querySelector(".thing")?.classList.replace("thing", "gone");
@@ -5228,7 +5253,7 @@ const TASKS2 = {
       await wait(200); if (!live()) return;
       await countAlong(G.thingPos, t.noun, t.target); if (!live()) return;
       if (t.sentence) { fillAnswer(t.target); await say([150, "num_" + t.n, "minus", "num_" + t.k, "is", "num_" + t.target, 120, ...praise(first)]); }
-      else await say([150, "num_" + t.target, "w_" + t.noun, "left", 120, ...praise(first)]);
+      else await say([150, "num_" + t.target, nounWord(t.noun, t.target), "left", 120, ...praise(first)]);
     }
   }
 };
@@ -5266,7 +5291,7 @@ Object.assign(TASKS2, {
   ten:{
     make(){
       const n = pickTarget("ten", range(levelNow() >= 10 ? 1 : 3, 9));
-      return {type:"ten", n, target:10 - n, cards:nearCards(10 - n, 4, 9), prompt:["num_" + n, "w_soldiers", "h_more_company"], key:"ten:" + n};
+      return {type:"ten", n, target:10 - n, cards:nearCards(10 - n, 4, 9), prompt:["num_" + n, n === 1 ? "w_soldier" : "w_soldiers", "h_more_company"], key:"ten:" + n};
     },
     render(t){
       const b = P.banner, d = darken(b, .2);
@@ -5361,7 +5386,7 @@ Object.assign(TASKS2, {
         lightDot(t.seen + i); SFX.count(t.seen + i);
       }});
       if (!live()) return;
-      await say([150, "num_" + t.target, "were_hiding"]); if (!live()) return;
+      await say([150, "num_" + t.target, t.target === 1 ? "were_hiding_1" : "were_hiding"]); if (!live()) return;
       await say(["num_" + t.seen, "and", "num_" + t.target, "makes", "num_" + t.total, 120, ...praise(first)]);
     },
     async help(t, el, live){
@@ -5462,7 +5487,7 @@ Object.assign(TASKS2, {
   miss:{
     make(){
       const T = 3 + Math.floor(Math.random() * 8), a = 1 + Math.floor(Math.random() * (T - 1)), b = T - a;
-      return {type:"miss", a, total:T, target:b, cards:nearCards(b, 4, T), prompt:["num_" + a, "plus", "what_makes", "num_" + T], key:`miss:${a}+${b}`};
+      return {type:"miss", a, total:T, target:b, cards:nearCards(b, 4, Math.max(6, T)), prompt:["num_" + a, "plus", "what_makes", "num_" + T], key:`miss:${a}+${b}`};
     },
     render(t){
       const gap = Math.min(58, 540 / t.total), x0 = 875 - (t.total - 1) * gap / 2;
@@ -5477,7 +5502,7 @@ Object.assign(TASKS2, {
       }});
       if (!live()) return;
       fillQ(t.target); SFX.flag();
-      await say([150, "num_" + t.a, "plus", "num_" + t.target, "makes", "num_" + t.total, 120, ...praise(first)]);
+      await say([150, "num_" + t.a, "plus", "num_" + t.target, "makes_1", "num_" + t.total, 120, ...praise(first)]);
     },
     async help(t, el, live){
       if (G.misses === 1) return "fade";
@@ -5548,10 +5573,12 @@ async function processBlob(blob){
     storeErr = ""; return wav(normalize(d), buf.sampleRate); } catch(e) { return null; }
 }
 const STORE_ERR = {quiet:"That was too quiet to hear. Move a little closer to the microphone and try again.",
-  short:"That was too short. Say it once, clearly, then stop.", unreadable:"That recording couldn’t be read. Try again."};
+  short:"That was too short. Say it once, clearly, then stop.", unreadable:"That recording couldn’t be read. Try again.",
+  store:"That recording couldn’t be saved on this device (the storage is full or blocked), so it would be lost next time. Free some space, or try another browser, then record it again."};
 async function storeClip(k, blob){
   const out = await processBlob(blob); if (!out) return false;
-  clipBlobs.set(k, out); buffers.delete(k); broken.delete(k); await store.put(k, out);
+  if (!await store.put(k, out)) { storeErr = "store"; return false; }      // a take that can't be kept isn't reported as saved
+  clipBlobs.set(k, out); buffers.delete(k); broken.delete(k);
   if (CLIPS[k] && CLIPS[k].steward) state.clipVariant[k] = state.steward;
   const sg = sigOf(k); if (sg) state.clipSig[k] = sg; else delete state.clipSig[k];
   const role = CLIPS[k] ? CLIPS[k].role : "herald"; state.unsaved[role] = (state.unsaved[role] || 0) + 1;
@@ -5566,26 +5593,31 @@ async function narratePreview(k){
   const s = ac.createBufferSource(); s.buffer = buf; s.connect(voiceOut); curSrc = s; s.start();
 }
 let mic = null, rec = null, recKey = null, recTimer = null;
+/* Start or stop a take. Every way it can fail tells the caller (onDone(false, why)), so a guide never sits on "Recording…". */
 async function toggleRecord(k, btn, onDone){
   if (rec && recKey === k) { rec.stop(); return; }
   if (rec) return;
   ensureAudio(); stopSpeech();
+  const fail = why => { btn.classList.remove("recording"); status(why); if (onDone) onDone(false, why); };
+  if (mic && mic.getTracks().some(t => t.readyState === "ended")) releaseMic();     // a locked screen ends the track on iPads: open it again
   try { if (!mic) mic = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false, noiseSuppression:true, autoGainControl:false}}); }
-  catch(e) { status(`The microphone couldn’t start (${e && e.name ? e.name : "error"}). Tap “Test microphone” to see why.`); return; }
-  const chunks = [];
-  try { rec = new MediaRecorder(mic); } catch(e) { status("This browser can’t record here. Use “Import files” instead."); return; }
-  recKey = k; btn.classList.add("recording"); btn.setAttribute("aria-label", "Stop recording");
-  rec.ondataavailable = ev => { if (ev.data && ev.data.size) chunks.push(ev.data); };
-  rec.onstop = async () => {
+  catch(e) { return fail(`The microphone couldn’t start (${e && e.name ? e.name : "error"}). Tap “Test microphone” to see why.`); }
+  const chunks = []; let r;
+  try { r = new MediaRecorder(mic); } catch(e) { return fail("This browser can’t record here. Use “Import files” instead."); }
+  r.ondataavailable = ev => { if (ev.data && ev.data.size) chunks.push(ev.data); };
+  r.onstop = async () => {
     clearTimeout(recTimer); btn.classList.remove("recording");
-    const type = (rec && rec.mimeType) || "audio/webm"; rec = null; recKey = null;
-    const ok = await storeClip(k, new Blob(chunks, {type}));
-    status(ok ? `Saved ${clipName(k)}.` : STORE_ERR[storeErr] || STORE_ERR.unreadable);
+    if (rec === r) { rec = null; recKey = null; }
+    const ok = await storeClip(k, new Blob(chunks, {type:r.mimeType || "audio/webm"}));
+    const why = ok ? "" : STORE_ERR[storeErr] || STORE_ERR.unreadable;
+    status(ok ? `Saved ${clipName(k)}.` : why);
     refreshClipRow(k); if (ok) playAny(k);
-    if (onDone) onDone(ok);
+    if (onDone) onDone(ok, why);
   };
-  rec.start(); status(`Recording ${clipName(k)}… tap the red button to stop.`);
-  recTimer = setTimeout(() => { if (rec && recKey === k) rec.stop(); }, CLIPS[k] && CLIPS[k].role === "narrator" ? 15000 : 7000);
+  try { r.start(); } catch(e) { releaseMic(); return fail("The microphone stopped. Tap the red button to try again."); }
+  rec = r; recKey = k; btn.classList.add("recording"); btn.setAttribute("aria-label", "Stop recording");
+  status(`Recording ${clipName(k)}… tap the red button to stop.`);
+  recTimer = setTimeout(() => { if (rec === r) r.stop(); }, CLIPS[k] && CLIPS[k].role === "narrator" ? 15000 : 7000);
 }
 async function micTest(){
   const out = [], line = (ok, text) => out.push(`${ok === true ? "✅" : ok === false ? "❌" : "•"} ${text}`);
@@ -5607,7 +5639,7 @@ async function micTest(){
     : "Something outside the page is blocking it. Check the browser’s site settings and the device’s microphone permission, then test again.";
   status(out.join("\n") + "\n\n" + verdict);
 }
-function releaseMic(){ if (rec) { try { rec.stop(); } catch(e) {} } if (mic) { mic.getTracks().forEach(t => t.stop()); mic = null; } }
+function releaseMic(){ if (rec) { const r = rec; rec = null; recKey = null; try { r.stop(); } catch(e) {} } if (mic) { mic.getTracks().forEach(t => t.stop()); mic = null; } }
 const keyFromFile = name => name.toLowerCase().replace(/\.[a-z0-9]+$/, "").trim().replace(/[\s-]+/g, "_");
 $("#fileMany").addEventListener("change", async e => {
   const files = [...e.target.files]; e.target.value = ""; if (!files.length) return;
@@ -5672,6 +5704,9 @@ $("#fileBackup").addEventListener("change", async e => {
         n++; }
       stampSigs(); save(); renderParent(); status(`Added ${n} ${j.role} clip${n === 1 ? "" : "s"}. Other recordings were kept.`); return;
     }
+    // a full backup replaces everything here, so a device with recordings or progress on it is asked first
+    const played = state.profiles.filter(p => p.ch || p.stop || p.party.length).length;
+    if ((clipBlobs.size || played) && !await askConfirm(`Replace everything on this device with this backup? ${plural(clipBlobs.size, "recording")} and ${plural(state.profiles.length, "player")} here will be removed first. (A voice backup adds recordings without removing anything.)`, "Replace everything")) { status("Nothing was changed."); return; }
     if (Array.isArray(j.profiles) && j.profiles.length) {
       Object.assign(state, j.settings || {}); state.profiles = j.profiles.map(p => fixProfile(Object.assign(newProfile(), p)));
       state.editId = state.profiles[0].id; P = state.profiles[0]; buildClips();
@@ -5699,9 +5734,9 @@ function askConfirm(msg, ok = "Yes", cancel = "Cancel"){
 const MIC_OK = (() => { const fp = document.permissionsPolicy || document.featurePolicy;
   return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) && !(fp && fp.allowsFeature && !fp.allowsFeature("microphone")); })();
 let recFilter = "all";
-function status(msg){ const s = $("#recStatus"); if (s) s.textContent = msg; }
+function status(msg){ const s = (guide && $("#gStatus")) || $("#recStatus"); if (s) s.textContent = msg; }   // the guide covers the panel, so it shows the message
 function openParent(){
-  stopSpeech(); G.session++; stopMusic(); G.locked = false; G.sittings = 0; G.practice = null; if (!profById(state.editId)) state.editId = state.profiles[0].id;
+  stopSpeech(); G.session++; stopMusic(); G.locked = false; G.sittings = 0; G.practice = null; G.hearing = false; G.repeats = 0; if (!profById(state.editId)) state.editId = state.profiles[0].id;
   // The settings must always open, even if some part of them can't be drawn: then offer the way out.
   try { renderParent(); }
   catch (e) {
@@ -5749,7 +5784,8 @@ function refreshClipRow(k){
 let recVoice = "both";                       // both voices, or just the herald or the narrator
 const openSecs = new Set();                  // which parts of the list are open
 const HERALD_GROUPS = ["Numbers","Commands","Words","Praise","March and story","Battles","Camp","Names","Numbers for later arcs","Whole numbers 21–99"];
-const GROUP_NOTE = {"Numbers for later arcs":"Not needed yet. The tens (30, 40 … 100) come with arc 3, where the army counts in companies; zero comes later still. With 1–9, the tens also make every number from 21 to 99.",
+const GROUP_NOTE = {"Numbers":"The tens (30, 40 … 100) are for arc 3, where the army counts in companies; with 1–9 they also make every number from 21 to 99.",
+  "Numbers for later arcs":"Not needed yet: zero comes with a later arc.",
   "Whole numbers 21–99":"Optional. To say 33 the game joins “thirty” and “three”. Record a whole number here only if the joined one sounds odd."};
 const lastCh = () => CHAPTERS[CHAPTERS.length - 1].n;
 const later = k => CLIPS[k].from == null || CLIPS[k].from > lastCh();     // not needed by any chapter built yet
@@ -5788,7 +5824,7 @@ function renderRecCounts(){
 function upcoming(p){
   const cis = [p.ch, p.ch + 1].filter(ci => ci < CHAPTERS.length), need = new Set(cis.flatMap(neededBy));
   const out = {herald:[], narrator:[], cis};
-  for (const k of Object.keys(CLIPS)) if (need.has(k) && todo(k) && (!k.startsWith("child_") || k === "child_" + p.slug)) out[CLIPS[k].role].push(k);
+  for (const k of Object.keys(CLIPS)) if (need.has(k) && todo(k) && (!k.startsWith("child_") || k === "child_" + p.slug) && (!k.startsWith("title_") || k === titleKey(p))) out[CLIPS[k].role].push(k);
   out.herald.sort((a, b) => (CLIPS[a].from || 0) - (CLIPS[b].from || 0));
   return out;
 }
@@ -5968,8 +6004,12 @@ $("#pBody").addEventListener("click", async e => {
       const ci = +v;
       if (ci !== E.ch || E.stop || E.blocked) {
         if ((E.stop || E.party.length) && !await askConfirm(`Move ${E.name || "this player"} to the start of chapter ${CHAPTERS[ci].n}? The army and treasures are kept.`)) return;
-        const arc = CHAPTERS[ci].arc;
+        const arc = CHAPTERS[ci].arc, forward = ci > E.ch;
         E.ch = ci; E.stop = 0; E.blocked = false; E.camped = false; E.level = CHAPTERS[ci].level; E.recent = []; E.guessy = [];
+        if (forward && ci > 0) {                                      // the numbers the chapters skipped would have taught count as known
+          const top = LEVELS[CHAPTERS[ci - 1].level].max;
+          for (const kind of ["q", "n"]) E.known[kind] = [...new Set([...(E.known[kind] || []), ...range(1, top)])].sort((a, b) => a - b);
+        }
         if (ci > 0) { E.metGoblins = true; E.firstTapDone = true; }
         if (CHAPTERS.findIndex(c => c.arc === arc) < ci) { E.metTrolls = E.metTrolls || arc >= 2; E.metGuards = E.metGuards || arc >= 3; }
         if (arc >= 3) E.metTrolls = true;
@@ -6097,7 +6137,7 @@ $("#parent").addEventListener("click", async e => {
     b.dataset.counting = "1"; stopSpeech();
     for (const n of ["3", "2", "1"]) { b.textContent = n; st.textContent = "Get ready…"; await wait(550); if (!b.isConnected) return; }
     delete b.dataset.counting; b.textContent = "Stop"; st.textContent = "Recording… say it once, then tap Stop.";
-    toggleRecord(k, b, ok => { if (guide) { renderGuide(); const s2 = $("#gStatus"); if (s2) s2.textContent = ok ? "Saved. Listen: does it sound right?" : STORE_ERR[storeErr] || "That didn’t record. Try again."; } });
+    toggleRecord(k, b, (ok, why) => { if (guide) { renderGuide(); const s2 = $("#gStatus"); if (s2) s2.textContent = ok ? "Saved. Listen: does it sound right?" : why || "That didn’t record. Try again."; } });
   }
 });
 
