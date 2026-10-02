@@ -38,7 +38,7 @@ goblins at stop 3, and ends with the first siege.
 | ⛺ | *Camp: chapter end* | | | |
 
 The party starts at 0 soldiers (just the hero and Buckleberry). It reaches at least 5 (4 villages + the shepherd) and up to
-the cap of 10. After the cap, right answers in villages give gear (§5.5 of the design doc).
+the cap of 5. After the cap, right answers in villages give gear (§5.5 of the design doc).
 
 ## Level 1 tasks
 
@@ -65,7 +65,7 @@ the cap of 10. After the cap, right answers in villages give gear (§5.5 of the 
   widely)* `st1_1_03` · *steward line*
 - **N:** "'Goblins are bothering the border villages,' said {Uncle Grimbald|Aunt Grimhilda}. 'Go and help
   them, and don't hurry back!'" `st1_1_04` · *steward line*
-- **H:** "Ta-ra! I'm Buckleberry, the royal herald! I'll march with you, **[Hero]**!" `h_intro` + title + name
+- **H:** "Ta-daa! I'm Buckleberry, the royal herald! I'll march with you, **[Hero]**!" `h_intro` + title + name
 - **H:** "Forward, march!" `h_forward_march`
 
 ## 1 · Millbrook (village)
@@ -215,7 +215,7 @@ long pointy nose and a wonky crown. A woodpile sits beside the road.*
 **Build round** (3 tasks, can't fail)
 - ★★ Find: banners on the woodpile
 - ★ Count: "How many logs?" `how_many_logs`
-- ★ More: "Which pile has more logs?" `which_more_logs`
+- ★ More: "Which side has more logs?" `which_more_logs`
 - **Each first-try right answer:** soldiers carry a ladder to the wall and lean it there. **H:** "A ladder!"
   `h_a_ladder`
 - **End:**
@@ -265,7 +265,7 @@ running:
 - **H:** "Goblins are back! To the village!" `h_raid`
 - A skirmish set, as at the lookout.
 - **Won:** the villagers cheer and give a **camp treasure**. **H:** "A present for our camp!" `h_camp_gift`
-- **Camp treasures, in order:** a flag · a drum · a lantern · bunting · a goat · a bigger tent · a cooking pot · a
+- **Camp treasures, in order:** a flag · a drum · bunting · a goat · a bigger tent · a cooking pot · a
   bench · a banner pole · a pony. Later chapters continue the list.
 - **Make camp** after the usual number of stops.
 
@@ -285,7 +285,7 @@ ever differ, the panel is right.
 
 | Key | Line |
 |---|---|
-| `h_intro` | "Ta-ra! I'm Buckleberry, the royal herald! I'll march with you," *(+ Hero)* |
+| `h_intro` | "Ta-daa! I'm Buckleberry, the royal herald! I'll march with you," *(+ Hero)* |
 | `h_forward_march` | "Forward, march!" |
 | `h_onward` | "Onward!" |
 | `h_hello_village` | "Hello, villagers! Who will join us?" |
@@ -307,7 +307,7 @@ ever differ, the panel is right.
 | `h_road_blocked` / `h_road_clear` / `h_raid` | "The road is blocked! We'll find a way soon." / "The road is clear! Onward!" / "Goblins are back! To the village!" |
 | `find_banner` | "Find the banner with…" |
 | `how_many_*` | "How many villagers / chickens / ducks / goblins / sheep / baskets / logs?" (7) |
-| `which_more_*` | "Which side has more chickens / ducks / goblins / sheep / berries?" and "Which pile has more logs?" (6) |
+| `which_more_*` | "Which side has more chickens / ducks / goblins / sheep / berries?" and "Which side has more logs?" (6) |
 | `this_side_has` / `thats` / `not_quite` | "This side has…" / "That's…" / "Not quite!" |
 | `lets_count` | "Let's count together!" |
 | `w_*` | "soldiers", "villagers", "chickens", "ducks", "goblins", "sheep", "baskets", "logs" (8, for "3 ducks!") |

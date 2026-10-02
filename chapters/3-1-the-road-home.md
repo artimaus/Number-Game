@@ -21,7 +21,8 @@ Conventions (N:, H:, [Hero], ★★/★, clip keys, {uncle|aunt} steward lines) 
   the whole army (say 34); the herald says it in companies: "We have 3 companies and 4 soldiers!" That way he never
   needs a number past 10 to say it.
 - **Recruiting in arc 3:**
-  - A village with half or more right first time (3 of 5) sends a group: the number right, plus 2 (5 to 7).
+  - A village with half or more right first time (3 of 5) sends a group: one friend for each right answer (3 to 5).
+    (About 20 a chapter in all, as each castle needs 2 companies more than the last, so the fork's choice matters.)
   - A fork's recruit stop sends a whole company if half or more are right (5 soldiers if not).
   - A special stop sends 3 soldiers and a camp treasure.
   - Guards beaten at a skirmish join.
@@ -34,7 +35,7 @@ Conventions (N:, H:, [Hero], ★★/★, clip keys, {uncle|aunt} steward lines) 
   - If the army is short by less than ten, working out the gap is a make-a-company task: "3 companies and 6 soldiers.
     How many more make 4 companies?"
   - Then the army marches back to the branch it skipped, recruits there and returns.
-  - Still short after both branches? The loyal villages send the rest ("Harvest Hollow sent more friends!"). Nobody is
+  - Still short after both branches? The loyal villages send the rest ("The loyal villages sent more friends!"). Nobody is
     ever stuck.
 - **5 tasks per stop.** A fight is won with 3 or more right on the first try.
 - A player who starts in arc 3 (a grown-up setting) brings **2 companies** (20 soldiers) from the hills.
@@ -46,14 +47,14 @@ Conventions (N:, H:, [Hero], ★★/★, clip keys, {uncle|aunt} steward lines) 
 | # | Stop | Kind | Sets | Earns |
 |---|---|---|---|---|
 | 0 | Home from the hills | Opening (first play only) | – | – |
-| 1 | Harvest Hollow | Village | 1 | 5–7 recruits |
+| 1 | Harvest Hollow | Village | 1 | 3–5 recruits |
 | 2 | The Grey Bridge | Skirmish: the first Grey Guards | 1+ | The guards join |
 | 3 | The Crossroads | **Fork** | – | Pick a branch |
 | 3a | Windmill Hill | Recruit stop | 1 | A whole company |
 | 3b | The Apple Orchard | Special | 1 | 3 recruits and a **big orange pumpkin** for the camp |
 | ⛺ | *Camp* | | | |
 | 4 | The Hay Wagons | Skirmish | 1+ | The guards join |
-| 5 | Market Cross | Village | 1 | 5–7 recruits; the steward's big lie |
+| 5 | Market Cross | Village | 1 | 3–5 recruits; the steward's big lie |
 | 6 | The Toll Castle | Troop check, then siege | 3+ | The castle, and the chapter |
 | ⛺ | *Camp: chapter end* | | | |
 
@@ -90,7 +91,7 @@ gathers about 25 more; through the Apple Orchard, about 18, so a small army may 
 ## 0 · Home from the hills (opening)
 *The storm clouds roll away. The army marches down into golden autumn fields; far off, the towers of Brightvale's
 capital.*
-- **N:** "At last the storm blew away, and the army marched down from the hills, toward home." `st3_1_01`
+- **N:** "At last the storm blew away, and the army marched down from the hills, towards home." `st3_1_01`
 - **N:** "But at the first bridge stood guards in grey cloaks. 'By order of the steward,' they said, 'nobody passes!'"
   `st3_1_02`
 - **N:** "{Uncle Grimbald|Aunt Grimhilda} was sitting on the king's throne. 'The crown has been stolen,' {he|she} said,
@@ -103,17 +104,17 @@ capital.*
 - **H:** *(fanfare)* "Hello, villagers! Who will join us?" `h_hello_village`
 - ★★ Adding: "3 pumpkins… and 4 more! How many now?" · ★ Count: "How many haystacks?" `how_many_haystacks` · ★
   Taking away (crows fly off with ears of corn) · ★ Find
-- **Half or more right:** a group of farmers marches over, pitchforks and all. **H:** "5 friends join us!" `num_5` +
-  `h_join_us`. The gold disc goes up by 5 at once (20 → 25).
+- **Half or more right:** a group of farmers marches over, pitchforks and all. **H:** "4 friends join us!" `num_4` +
+  `h_join_us`. The gold disc goes up by 4 at once (20 → 24).
 - **N:** "The farmers of Harvest Hollow joined the march." `st3_1_05`
 
 ## 2 · The Grey Bridge (skirmish): the first Grey Guards
 *A stone bridge over a brook. Guards in grey cloaks and wobbly grey helmets cross their pikes across it.*
 
 **Arrive**
-- **N:** "Grey guards stood on the bridge. 'Halt! Nobody passes, by order of the steward!'" `st3_1_06`
+- **N:** "Grey Guards stood on the bridge. 'Halt! Nobody passes, by order of the steward!'" `st3_1_06`
 - **H:** "Guards in grey! Don't worry, [Hero]. Let's show them how clever we are!" `h_guards_first` + title + name +
-  `h_show_clever`. (Later skirmishes: "Grey guards! Let's be clever!" `h_guards`.)
+  `h_show_clever`. (Later skirmishes: "Grey Guards! Let's be clever!" `h_guards`.)
 
 **Tasks** (5)
 - ★★ Taking away: "8 guards… 3 go home for tea! How many are left?" `num_8` + `w_guards` + `num_3` + `go_home` +
@@ -130,7 +131,7 @@ capital.*
 - **N:** "'We never liked those scratchy cloaks anyway,' said the guards, and they joined the march." `st3_1_07`
 
 **Not yet (0 to 2 of 5)**
-- The retreat, as in arcs 1–2. **N:** "Oops! The grey guards held the bridge that time." `st_retreat_guards` (shared by
+- The retreat, as in arcs 1–2. **N:** "Oops! The Grey Guards held on that time." `st_retreat_guards` (shared by
   all of arc 3). **H:** "That's all right. Let's try again!" `h_try_again`
 
 ## 3 · The Crossroads (fork)
@@ -154,10 +155,10 @@ capital.*
 - **N:** "The millers dusted off their hats and joined the march." `st3_1_10`
 
 ## 3b · The Apple Orchard (special)
-*Rows of apple trees, ladders, baskets. The grey guards have kicked the baskets over, and apples have rolled
+*Rows of apple trees, ladders, baskets. The Grey Guards have kicked the baskets over, and apples have rolled
 everywhere.*
-- **N:** "In the orchard, the grey guards had kicked over the apple baskets!" `st3_1_11`
-- **H:** "Let's pick up the apples!" `h_pick_apples`
+- **N:** "In the orchard, the Grey Guards had kicked over the apple baskets!" `st3_1_11`
+- **H:** "Let's pick up the apples!" `h_apples_back` (the same call as the Stolen Cart in chapter 4)
 - ★★ Adding: "4 apples in the basket… and 3 more!" · ★ Taking away: "9 apples… a pony eats 2!" `pony_eats` · ★ Make a
   company (a basket with ten places) · ★ Count apples · ★ Which number is bigger?
 - **Each first-try right answer:** a few apples roll back into a basket.
@@ -170,9 +171,9 @@ As before; at camp the herald says the army in companies: "We have 3 companies a
 `w_companies` + `and` + `num_1` + `w_soldier`. The pumpkin (if won) sits by the fire.
 
 ## 4 · The Hay Wagons (skirmish)
-*Hay wagons stopped on the road, and grey guards poking the hay with their pikes, looking for "the crown thief".*
-- **N:** "Grey guards were poking through the hay wagons. 'We're looking for the crown thief!' they said." `st3_1_13`
-- **H:** "Grey guards! Let's be clever!" `h_guards`
+*Hay wagons stopped on the road, and Grey Guards poking the hay with their pikes, looking for "the crown thief".*
+- **N:** "Grey Guards were poking through the hay wagons. 'We're looking for the crown thief!' they said." `st3_1_13`
+- **H:** "Grey Guards! Let's be clever!" `h_guards`
 - ★★ Adding · ★ Make a company · ★ Taking away · ★ Count guards · ★ What comes next?
 - **Won:** the cloaks fly off; the guards join. **N:** "The guards jumped down from the hay, and joined our march
   instead." `st3_1_14`
@@ -199,11 +200,11 @@ round man with a moustache and enormous boots, stomping.*
   soldiers!" (the gold disc pops), then "We need 4 companies!" `h_we_need` + `num_4` + `w_companies`
 - **Enough:** "Enough soldiers! Let's take the castle!" `h_enough`
 - **Short, by less than ten:** a make-a-company task with the loose soldiers on the company banner: "6 soldiers. How
-  many more make a company?" Right: "4 more!" `num_4` + `more_q`. Then: "Let's go back for more friends!"
+  many more make a company?" Right: "4 more!" `num_4` + `more`. Then: "Let's go back for more friends!"
   `h_go_back`
   - The army marches back to the crossroads and down the branch it skipped (Windmill Hill or the Apple Orchard), then
     returns and counts again.
-  - Still short after both branches: "Harvest Hollow sent more friends!" `h_loyal_send`, and they march in until the
+  - Still short after both branches: "The loyal villages sent more friends!" `h_loyal_send`, and they march in until the
     army has enough.
 
 **Build 1: ladders** (5 tasks, can't fail) · minimum **3**
@@ -235,11 +236,11 @@ If the child isn't at level 10 yet when the castle falls:
 
 | Raid | Scene | Narrator | Favoured |
 |---|---|---|---|
-| Harvest Hollow | Grey guards "inspecting" the pumpkins, and dropping them | "Oh no! Grey guards were bothering Harvest Hollow!" `st3_1_r1` | Adding |
-| Windmill Hill | Guards jamming the windmill sails | "Oh no! Grey guards had stopped the windmill!" `st3_1_r2` | Make a company |
-| Market Cross | Guards pinning up "Wanted: the crown thief" posters | "Oh no! Grey guards were putting up silly posters in Market Cross!" `st3_1_r3` | Taking away |
+| Harvest Hollow | Grey Guards "inspecting" the pumpkins, and dropping them | "Oh no! Grey Guards were bothering Harvest Hollow!" `st3_1_r1` | Adding |
+| Windmill Hill | Guards jamming the windmill sails | "Oh no! Grey Guards had stopped the windmill!" `st3_1_r2` | Make a company |
+| Market Cross | Guards pinning up "Wanted: the crown thief" posters | "Oh no! Grey Guards were putting up silly posters in Market Cross!" `st3_1_r3` | Taking away |
 
-- **H:** "Grey guards are back! To the village!" `h_raid_guards`. Beaten raiders run off (they don't join).
+- **H:** "Grey Guards are back! To the village!" `h_raid_guards`. Beaten raiders run off (they don't join).
 - **Cleared (level 10):** **N:** "The millers pulled together, and down came the drawbridge!" `st3_1_22` · **H:**
   "The road is clear! Onward!" `h_road_clear`
 
@@ -252,14 +253,15 @@ If the child isn't at level 10 yet when the castle falls:
   - The fork: `h_which_way` "Which way shall we go?", `or` "…or…", `h_come_back` "We can come back for the other one!",
     `fork_windmill` "Windmill Hill", `fork_orchard` "the Apple Orchard"
   - Troop check: `h_count_army` "Let's count our army!", `h_we_need` "We need…", `h_enough` "Enough soldiers! Let's
-    take the castle!", `more_q` "more!", `h_go_back` "Let's go back for more friends!", `h_loyal_send` "The loyal
+    take the castle!", `h_go_back` "Let's go back for more friends!", `h_loyal_send` "The loyal
     villages sent more friends!"
-  - Guards: `h_guards_first` "Guards in grey! Don't worry,", `h_guards` "Grey guards! Let's be clever!",
-    `h_cloaks_off` "They threw off their grey cloaks! They're on our side!", `h_raid_guards` "Grey guards are back! To
+  - Guards: `h_guards_first` "Guards in grey! Don't worry,", `h_guards` "Grey Guards! Let's be clever!",
+    `h_cloaks_off` "They threw off their grey cloaks! They're on our side!", `h_raid_guards` "Grey Guards are back! To
     the village!", `h_castle_ours` "Hooray! The castle is ours!"
   - Make a company: `h_more_company` "How many more make a company?", `make_ten` "make ten!"
-  - `h_find_crown` "Let's find that crown!", `h_pick_apples` "Let's pick up the apples!", `go_home` "…go home for
-    tea!", `pony_eats` "A pony eats…"
+  - `h_find_crown` "Let's find that crown!", `go_home` "…go home for
+    tea!", `pony_eats` "A pony eats…", `are_sold` "…are sold!", `roll_away` "…roll away!" (and `go_away` "…go away!"
+    for anything else that leaves). Flour sacks use arc 2's "We give away…".
   - `how_many_haystacks`, `w_guards`, `w_haystacks`, `w_pumpkins` and the which-more clips for the new things
 - **Narrator:** `st3_1_01` … `st3_1_22`, `st3_1_r1` … `st3_1_r3`, and the shared `st_retreat_guards`. That's 26
   lines.

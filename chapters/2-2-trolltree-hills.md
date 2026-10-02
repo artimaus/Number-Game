@@ -110,7 +110,7 @@ As before. The squirrel nibbles a nut by the fire.
 ## 5 · The Big Nut Pile (skirmish)
 *A mountain of stolen nuts, and trolls with sacks guarding it.*
 - **N:** "Trolls were piling up stolen nuts for King Nuttletusk. What a big pile!" `st2_2_09`
-- ★★ Count and compare: "Which pile has more nuts?" `which_more_nuts` · ★ Count trolls · ★ Which number is bigger?
+- ★★ Count and compare: "Which side has more nuts?" `which_more_nuts` · ★ Count trolls · ★ Which number is bigger?
   · ★ Find
 - **Won:** **N:** "The trolls ran off, and the villagers took back their nuts." `st2_2_10`
 
@@ -131,7 +131,7 @@ huge square teeth.*
 - **Build 2: the ram**, as in chapter 5. Minimum **the log and the wheels**.
 - **Assault:** ★★ Count trolls · ★ Which number is bigger? · ★ Count and compare · ★ Look closely
 - **Won:** *BOOM… BOOM… CRASH!*, then the dust cloud. **H:** "Hooray! The fort is ours!" `h_fort_ours`
-  - **N:** "Crackjaw was so surprised, he dropped his walnut, bonk, right on his own toe! Then he hopped all the
+  - **N:** "Crackjaw was so surprised, he dropped his walnut, bonk, right on his own toe! Off he hopped, all the
     way to the Echo Pass." `st2_2_14`
 - **Chapter end:** **N:** "Trolltree Hills were quiet again, and the nut trees kept their nuts." `st2_2_15`, then
   the victory screen and camp.

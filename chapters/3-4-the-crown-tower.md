@@ -15,14 +15,14 @@ the whole army: **10 companies, 100 soldiers**. Conventions are as in [chapter 1
 | # | Stop | Kind | Sets | Earns |
 |---|---|---|---|---|
 | 0 | To the sea cliffs | Opening (first play only) | – | – |
-| 1 | Puffin Point | Village | 1 | 5–7 recruits |
+| 1 | Puffin Point | Village | 1 | 3–5 recruits |
 | 2 | The Cliff Path | Skirmish | 1+ | The guards join |
 | 3 | The Lookout Stone | **Fork** | – | Pick a branch |
 | 3a | The Fishing Village | Recruit stop | 1 | A whole company of fisherfolk |
 | 3b | The Smugglers' Cove | Special | 1 | 3 recruits and a **sea chest** for the camp |
 | ⛺ | *Camp* | | | |
 | 4 | The Signal Fires | Skirmish | 1+ | The guards join |
-| 5 | Tower Town | Village | 1 | 5–7 recruits; a warning about the tower |
+| 5 | Tower Town | Village | 1 | 3–5 recruits; a warning about the tower |
 | 6 | The Crown Tower | Troop check, then siege | 3+ | **The crown**, and the arc |
 | 🎉 | *The crown feast (arc end)* | | | The **Crown Medal** and a **royal banner** for the camp; then bad news from the capital |
 
@@ -71,15 +71,15 @@ tower.*
 *Cottages on the clifftop, puffins everywhere: on the roofs, the walls, the washing lines.*
 - **N:** "Puffin Point was a village where the puffins walked about as if they owned it." `st3_4_03`
 - ★★ The missing number · ★ Count the companies · ★ Just the numbers · ★ Hiding (puffins in their burrows) · ★
-  Adding
+  Adding · ★ Taking away ("3 puffins fly away!")
 - **Half or more right:** a group joins. **N:** "The people of Puffin Point joined the march, and so did one very
   determined puffin." `st3_4_04`
 
 ## 2 · The Cliff Path (skirmish)
-*A narrow path along the cliffs, with the sea below. Grey guards in a line across it, holding onto their helmets in the
+*A narrow path along the cliffs, with the sea below. Grey Guards in a line across it, holding onto their helmets in the
 wind.*
-- **N:** "On the cliff path, grey guards held on to their helmets in the wind. 'Nobody passes!'" `st3_4_05`
-- **H:** "Grey guards! Let's be clever!" `h_guards`
+- **N:** "On the cliff path, Grey Guards held on to their helmets in the wind. 'Nobody passes!'" `st3_4_05`
+- **H:** "Grey Guards! Let's be clever!" `h_guards`
 - ★★ The missing number · ★ How many more · ★ Taking away · ★ Count the companies · ★ Hiding
 - **Won:** the cloaks fly off (and blow away over the sea); the guards join. **N:** "The wind blew the grey cloaks
   away over the sea, and the guards cheered and joined the march." `st3_4_06`
@@ -116,9 +116,9 @@ teddy bears, a rocking horse.*
 As before. The sea chest sits by the tent; the camp is getting crowded with treasures.
 
 ## 4 · The Signal Fires (skirmish)
-*Beacon fires on the cliffs, and grey guards running to light them to warn the tower.*
-- **N:** "Grey guards were lighting signal fires to warn the steward that the army was coming!" `st3_4_12`
-- **H:** "Grey guards! Let's be clever!" `h_guards`
+*Beacon fires on the cliffs, and Grey Guards running to light them to warn the tower.*
+- **N:** "Grey Guards were lighting signal fires to warn the steward that the army was coming!" `st3_4_12`
+- **H:** "Grey Guards! Let's be clever!" `h_guards`
 - ★★ Count the companies · ★ The missing number · ★ Just the numbers · ★ How many more · ★ Countdown
 - **Each first-try right answer:** a guard's fire goes out with a puff of smoke.
 - **Won:** the cloaks fly off; the guards join. **N:** "The guards put out their fires, and joined the march
@@ -129,7 +129,7 @@ As before. The sea chest sits by the tent; the camp is getting crowded with trea
 - **N:** "Tower Town sat at the foot of the Crown Tower." `st3_4_14`
 - ★★ The missing number · ★ Count the companies · ★ Adding · ★ Taking away · ★ Hiding
 - **Half or more right:** a group joins.
-- **N:** "'There's a light at the top of the tower every night,' whispered the townsfolk. 'Sir Snivelwick goes up and
+- **N:** "'There's a light at the top of the tower,' whispered the townsfolk. 'Sir Snivelwick goes up and
   down with his keys, jingle jangle!'" `st3_4_15`
 
 ## 6 · The Crown Tower (troop check, then siege: arc finale)
@@ -185,8 +185,8 @@ fisherfolk, even the puffin. The crown sits on a cushion in the middle.*
 
 | Raid | Narrator | Favoured |
 |---|---|---|
-| Puffin Point | "Oh no! Grey guards were chasing the puffins at Puffin Point!" `st3_4_r1` | The missing number |
-| Tower Town | "Oh no! Grey guards were back in Tower Town, looking for the keys!" `st3_4_r2` | Count the companies |
+| Puffin Point | "Oh no! Grey Guards were chasing the puffins at Puffin Point!" `st3_4_r1` | The missing number |
+| Tower Town | "Oh no! Grey Guards were back in Tower Town, looking for the keys!" `st3_4_r2` | Count the companies |
 
 ## New clips in this chapter
 - **Herald:**
@@ -197,7 +197,7 @@ fisherfolk, even the puffin. The crown sits on a cushion in the middle.*
   - The fork: `fork_fishing` "the Fishing Village", `fork_cove` "the Smugglers' Cove"
   - `h_crown_tower` "The crown must be in that tower!", `h_give_back` "Let's give everything back!", `h_everyone`
     "That's everyone!", `h_tower_ours` "Hooray! The tower is ours!", `h_to_capital` "To the capital!"
-  - `w_puffins`, `w_teddies`, `w_boats` and the which-more clips for them
+  - `w_puffins`, `w_teddies` and the which-more clips for them
 - **Narrator:** `st3_4_01` … `st3_4_23`, `st3_4_r1`, `st3_4_r2`. That's 25 lines.
 
 ## Arc 3 totals

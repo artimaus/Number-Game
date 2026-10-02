@@ -4,7 +4,7 @@
 companies · about 11 sets.
 
 The note in the empty chest said "Hide the crown in the Grey Forest", the steward's own hunting forest: tall grey-green
-trees, drifting mist, and grey guards behind every trunk. Two new tasks arrive: **just the numbers** (adding and taking
+trees, drifting mist, and Grey Guards behind every trunk. Two new tasks arrive: **just the numbers** (adding and taking
 away with no pictures) and **how many more?** (the difference between two groups). The captain here is **Lady
 Thistlewhip**, who blows her hunting horn at everything. Conventions are as in [chapter 1](1-1-the-border-road.md),
 [chapter 5](2-1-the-stone-bridge.md) and [chapter 9](3-1-the-road-home.md).
@@ -14,14 +14,14 @@ Thistlewhip**, who blows her hunting horn at everything. Conventions are as in [
 | # | Stop | Kind | Sets | Earns |
 |---|---|---|---|---|
 | 0 | Into the Grey Forest | Opening (first play only) | – | – |
-| 1 | Fernhollow | Village | 1 | 5–7 recruits |
+| 1 | Fernhollow | Village | 1 | 3–5 recruits |
 | 2 | The Hunting Path | Skirmish | 1+ | The guards join |
 | 3 | The Forked Oak | **Fork** | – | Pick a branch |
 | 3a | The Charcoal Burners | Recruit stop | 1 | A whole company |
 | 3b | The Deer Meadow | Special | 1 | 3 recruits and a **carved wooden deer** for the camp |
 | ⛺ | *Camp* | | | |
 | 4 | The Log Bridge | Skirmish | 1+ | The guards join |
-| 5 | Mossgate | Village | 1 | 5–7 recruits; a warning about Lady Thistlewhip |
+| 5 | Mossgate | Village | 1 | 3–5 recruits; a warning about Lady Thistlewhip |
 | 6 | The Grey Lodge | Troop check, then siege | 3+ | The lodge, the second note, and the chapter |
 | ⛺ | *Camp: chapter end* | | | |
 
@@ -62,7 +62,7 @@ rest), plus:
 ## 0 · Into the Grey Forest (opening)
 *Tall grey-green trees, mist drifting between them, a hunting horn far off: toot-toooot.*
 - **N:** "The road led into the Grey Forest, where the steward liked to go hunting." `st3_3_01`
-- **N:** "The trees were tall, the mist was thick, and grey guards hid behind every trunk." `st3_3_02`
+- **N:** "The trees were tall, the mist was thick, and Grey Guards hid behind every trunk." `st3_3_02`
 - **H:** "Stay together, everyone! Forward, march!" `h_stay_together` + `h_forward_march`
 
 ## 1 · Fernhollow (village)
@@ -73,17 +73,17 @@ rest), plus:
 - **Half or more right:** a group joins. **N:** "The foresters shouldered their axes and joined the march." `st3_3_04`
 
 ## 2 · The Hunting Path (skirmish)
-*A path through the trees; grey guards with hunting horns, blowing them to scare the birds.*
-- **N:** "Grey guards were blowing hunting horns and scaring all the birds. Toot! Toot!" `st3_3_05`
-- **H:** "Grey guards! Let's be clever!" `h_guards`
+*A path through the trees; Grey Guards with hunting horns, blowing them to scare the birds.*
+- **N:** "Grey Guards were blowing hunting horns and scaring all the birds. Toot! Toot!" `st3_3_05`
+- **H:** "Grey Guards! Let's be clever!" `h_guards`
 - ★★ Just the numbers · ★ How many more (two lines of guards) · ★ Taking away · ★ Hiding (guards behind the trees) ·
   ★ Make a company
 - **Won:** the cloaks fly off; the guards join. **N:** "The guards put down their horns, and the birds came back to
   sing." `st3_3_06`
 
 ## 3 · The Forked Oak (fork)
-*A huge oak whose trunk splits in two, with a path going each way: one toward smoke rising from the woods, the other
-toward a sunny clearing.*
+*A huge oak whose trunk splits in two, with a path going each way: one towards smoke rising from the woods, the other
+towards a sunny clearing.*
 - **N:** "At the Forked Oak, one path led to the charcoal burners' camp, and one to the deer meadow." `st3_3_07`
 - **H:** "Which way shall we go? The Charcoal Burners… or the Deer Meadow?" `h_which_way` + `fork_charcoal` + `or` +
   `fork_meadow`
@@ -113,8 +113,8 @@ As before. The wooden deer stands by the tent.
 
 ## 4 · The Log Bridge (skirmish)
 *A log bridge over a deep ravine, guards on the far side, rolling more logs to block it.*
-- **N:** "Grey guards were rolling logs onto the log bridge, so nobody could cross." `st3_3_12`
-- **H:** "Grey guards! Let's be clever!" `h_guards`
+- **N:** "Grey Guards were rolling logs onto the log bridge, so nobody could cross." `st3_3_12`
+- **H:** "Grey Guards! Let's be clever!" `h_guards`
 - ★★ Taking away (logs rolling off) · ★ Just the numbers · ★ How many more · ★ Make a company · ★ Hiding
 - **Won:** the cloaks fly off; the guards join. **N:** "The guards rolled the logs away again, and joined the march."
   `st3_3_13`
@@ -153,9 +153,9 @@ Thistlewhip in a tall hat with a thistle on top, tooting her horn.*
 
 | Raid | Narrator | Favoured |
 |---|---|---|
-| Fernhollow | "Oh no! Grey guards were trampling the ferns in Fernhollow!" `st3_3_r1` | How many more |
-| The Charcoal Burners | "Oh no! Grey guards were kicking over the charcoal sacks!" `st3_3_r2` | Just the numbers |
-| Mossgate | "Oh no! Grey guards were pulling the moss off Mossgate's roofs!" `st3_3_r3` | Hiding |
+| Fernhollow | "Oh no! Grey Guards were trampling the ferns in Fernhollow!" `st3_3_r1` | How many more |
+| The Charcoal Burners | "Oh no! Grey Guards were kicking over the charcoal sacks!" `st3_3_r2` | Just the numbers |
+| Mossgate | "Oh no! Grey Guards were pulling the moss off Mossgate's roofs!" `st3_3_r3` | Hiding |
 
 **Cleared (level 12):** **N:** "The foresters and the charcoal burners sawed up the trees, and the road was open!"
 `st3_3_21` · **H:** `h_road_clear`
@@ -167,5 +167,5 @@ Thistlewhip in a tall hat with a thistle on top, tooting her horn.*
   - The fork: `fork_charcoal` "the Charcoal Burners", `fork_meadow` "the Deer Meadow"
   - `h_stay_together` "Stay together, everyone!", `h_find_fawns` "Let's help the fawns find their mother!",
     `h_lodge_ours` "Hooray! The lodge is ours!", `h_to_tower` "The Crown Tower! Onward!"
-  - `how_many_mushrooms`, `w_deer`, `w_logs`, `w_fawns` and the which-more clips for them
+  - `w_deer`, `w_fawns` and the which-more clips for them
 - **Narrator:** `st3_3_01` … `st3_3_21`, `st3_3_r1` … `st3_3_r3`. That's 24 lines.
