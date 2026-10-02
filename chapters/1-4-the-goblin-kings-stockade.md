@@ -78,7 +78,7 @@ As before.
 
 ## 6 · The Goblin Kitchen (skirmish)
 *A giant bubbling pot of green soup, with goblins stirring it with oars.*
-- **N:** "Goblins were stirring a giant pot of stinky soup. Pee-yew!" `st1_4_11`
+- **N:** "Goblins were stirring a giant pot of stinky soup. Pooh, what a pong!" `st1_4_11`
 - **Won:** **N:** "The goblins ran off, leaving their stinky soup behind!" `st1_4_12`
 
 ## 7 · The Gate Guards (skirmish)

@@ -103,7 +103,7 @@ peers over the side.*
 
 **Arrive**
 - **N:** "At a little stone bridge, a big voice rumbled: 'Nobody crosses MY bridge!'" `st2_1_06`
-- **H:** "A troll! Don't worry, [Hero]. Let's show him how clever we are!" `h_troll_first` + title + name +
+- **H:** "A troll! Don't worry, [Hero]. Let's show them how clever we are!" `h_troll_first` + title + name +
   `h_show_clever`. (Later skirmishes use "Trolls! Let's be clever!" `h_trolls`.)
 
 **Tasks** (4)
@@ -136,8 +136,8 @@ muddled.)
   - **N:** "The goatherd joined the army, and gave them a big round cheese." `st2_1_09`
 
 ## 4 · Pebbleford (village)
-*A shallow stream full of smooth pebbles, a mill wheel turning, children skipping stones.*
-- **N:** "In Pebbleford, the children were skipping stones. Plip, plop!" `st2_1_10`
+*A shallow stream full of smooth pebbles, a mill wheel turning, children skimming stones.*
+- **N:** "In Pebbleford, the children were skimming stones. Plip, plop!" `st2_1_10`
 - ★★ Count: "How many stones?" `how_many_stones` · ★ What comes next? (stepping stones) · ★ Find the sign · ★ More
   or fewer: "Which side has more stones?" `which_more_stones`
 - **N:** "More brave friends joined the march." `st_joined`

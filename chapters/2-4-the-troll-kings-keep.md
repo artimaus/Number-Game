@@ -148,11 +148,13 @@ and her baby, and even King Nuttletusk, sharing.*
   - **H:** "The crown?! We must go home!" `h_crown_stolen`
 - Then camp.
 
-## After arc 2 (until arc 3 is built)
+## After arc 2
 - **N:** "But a great storm closed the mountain road home. The army would have to wait for it to pass…" `st2_4_20`
 - **H:** "The road is blocked! We'll find a way soon." `h_road_blocked`
 - Every stop is then a **raid** on any freed village from the whole arc (all the raids of chapters 5–8). Raids keep
-  giving camp treasures. The level stays capped at 8 until arc 3 exists.
+  giving camp treasures, until the child reaches level 9.
+- **When the road clears:** **N:** "The storm blew itself out, and the mountain road was open again." `st2_4_21`,
+  then **H:** "The road is clear! Onward!" `h_road_clear`, and chapter 9 (The Road Home) opens.
 
 | Raid | Narrator | Favoured |
 |---|---|---|

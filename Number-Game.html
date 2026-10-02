@@ -21,10 +21,10 @@
   box-sizing:border-box;
 }
 @media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){ --panel:#162030; --panel-2:#1D2A3D; --line:#2B3950; --ok:#3BC07F; --pink-ink:#EAF2FF; --warn:#F2B233; }
+  :root:not([data-theme="light"]){ --panel:#162030; --panel-2:#1D2A3D; --line:#2B3950; --ok:#3BC07F; --pink-ink:#EAF2FF; --warn:#F2B233; --muted:#A7B6CC; }
   :root:not([data-theme="light"]) #parent{ color:#EAF2FF }
 }
-:root[data-theme="dark"]{ --panel:#162030; --panel-2:#1D2A3D; --line:#2B3950; --ok:#3BC07F; --warn:#F2B233 }
+:root[data-theme="dark"]{ --panel:#162030; --panel-2:#1D2A3D; --line:#2B3950; --ok:#3BC07F; --warn:#F2B233; --muted:#A7B6CC }
 :root[data-theme="dark"] #parent{ color:#EAF2FF }
 body.digits-school .num{font-feature-settings:"cv01","cv04"}
 *,*::before,*::after{box-sizing:inherit}
@@ -127,7 +127,6 @@ button:focus-visible{outline:4px solid var(--blue);outline-offset:3px}
 #things{position:absolute;left:0;top:0;width:1180px;height:820px;pointer-events:none}
 #things .thing{transition:transform .25s,filter .25s}
 #things .thing.lit{filter:drop-shadow(0 0 8px #F6D36B) brightness(1.08)}
-#things .glowspot{opacity:.55}
 .side{position:absolute;border-radius:30px;border:5px dashed rgba(29,43,79,.28);background:rgba(255,255,255,.72);padding:0;touch-action:none;-webkit-touch-callout:none}
 .side:active{transform:scale(.98)}
 .side.win{border-style:solid;border-color:var(--yellow);background:rgba(233,162,15,.18);animation:pop .55s}
@@ -264,7 +263,7 @@ button:focus-visible{outline:4px solid var(--blue);outline-offset:3px}
 #things .stone{transition:filter .25s}
 #things .stone.lit{filter:drop-shadow(0 0 9px #F6D36B)}
 #things .stone.lit .top{fill:#F3E3AE}
-#things .stone.blank .q{animation:qpulse 1.3s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 50%}
+#things .stone.blank .q,#things .board .q{animation:qpulse 1.3s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 50%}
 @keyframes qpulse{50%{transform:scale(1.18)}}
 .hopper{position:absolute;left:0;top:0;width:80px;height:80px;z-index:8;pointer-events:none}
 .hopper svg{width:100%;height:100%;display:block;filter:drop-shadow(0 4px 3px rgba(29,43,79,.25))}
@@ -386,7 +385,7 @@ button:focus-visible{outline:4px solid var(--blue);outline-offset:3px}
 .screen:not(#parent){-webkit-touch-callout:none}
 @media (prefers-reduced-motion: reduce){
   .walk .fig .bob,.fig.talk .bob,.card.win,.card.wiggle,.card.hint,.side.hint,.trophy svg,.brawl .dp,.cheer .fig .bob,.gob.run,.gob.hop,.disc .bob,
-  .gob.puzzled,.gob.bonked,.messenger.gallop .bob,#things .stone.blank .q{animation:none}
+  .gob.puzzled,.gob.bonked,.messenger.gallop .bob,#things .stone.blank .q,#things .board .q{animation:none}
 }
 </style>
 </head>
@@ -560,12 +559,12 @@ const NARR = {
   st1_1_01:"Once upon a time, in the kingdom of Brightvale…",
   st1_1_02:"…the king and queen set sail on a voyage of peace.",
   st1_1_03:{uncle:"They left Uncle Grimbald in charge.", aunt:"They left Aunt Grimhilda in charge."},
-  st1_1_04:{uncle:"“Goblins are bothering the border villages,” said Uncle Grimbald. “Go and help them, and don't hurry back!”",
-            aunt:"“Goblins are bothering the border villages,” said Aunt Grimhilda. “Go and help them, and don't hurry back!”"},
+  st1_1_04:{uncle:"“Goblins are bothering the border villages,” said Uncle Grimbald. “Go and help them, and don’t hurry back!”",
+            aunt:"“Goblins are bothering the border villages,” said Aunt Grimhilda. “Go and help them, and don’t hurry back!”"},
   st1_1_05:"The first stop was Millbrook, where the big windmill turns.",
   st1_1_06:"The people of Millbrook cheered as the little army marched on.",
   st1_1_07:"Next came Duckpond. Quack, quack!",
-  st1_1_08:"Duckpond's bravest friends joined the march.",
+  st1_1_08:"Duckpond’s bravest friends joined the march.",
   st1_1_09:"Up in a rickety tree house sat… goblins!",
   st1_1_10:"The goblins ran off into the bushes, and the lookout flew our flag.",
   st1_1_11:"In the meadow, a shepherd was worried. The goblins had scattered her sheep!",
@@ -577,14 +576,14 @@ const NARR = {
   st1_1_17:"Bellhill had a big bell. Ding, dong!",
   st1_1_18:"“The goblin fort is just over the hill,” the villagers whispered.",
   st1_1_19:"Over the hill stood Stumpy Fort, and on top was the goblin chief, Snagglenose!",
-  st1_1_20:"Snagglenose ran into the Whispering Woods, shouting, “You haven't seen the last of me!”",
+  st1_1_20:"Snagglenose ran into the Whispering Woods, shouting, “You haven’t seen the last of me!”",
   st1_1_21:"The Border Road was safe again. But deep in the Whispering Woods, more goblins were waiting…",
   st1_1_22:"A great tree had fallen across the road into the Whispering Woods.",
   st1_1_23:"The woodcutters cleared the fallen tree!",
-  st1_1_r1:"Oh no! Goblins were spinning on Millbrook's windmill!",
-  st1_1_r2:"Oh no! Goblins were chasing Duckpond's ducks!",
-  st1_1_r3:"Oh no! Goblins were eating all of Berrybush's berries!",
-  st1_1_r4:"Oh no! Goblins were ringing Bellhill's bell!",
+  st1_1_r1:"Oh no! Goblins were spinning on Millbrook’s windmill!",
+  st1_1_r2:"Oh no! Goblins were chasing Duckpond’s ducks!",
+  st1_1_r3:"Oh no! Goblins were eating all of Berrybush’s berries!",
+  st1_1_r4:"Oh no! Goblins were ringing Bellhill’s bell!",
 
   st1_2_01:"Beyond the Border Road lay the Whispering Woods. The trees whispered: shhh…",
   st1_2_02:"Somewhere in the woods, Snagglenose was hiding.",
@@ -601,21 +600,21 @@ const NARR = {
   st1_2_13:"On Acorn Hill stood a cottage under a giant oak tree.",
   st1_2_14:"In a thorny thicket, goblins were hiding… badly! Their ears stuck out.",
   st1_2_15:"Out popped the goblins, and away they ran.",
-  st1_2_16:"Deep in the woods stood a giant hollow tree with a fort around it. Snagglenose's hideout!",
-  st1_2_17:"Snagglenose squeezed out of a hole in the back of the tree and ran off toward the marshes.",
+  st1_2_16:"Deep in the woods stood a giant hollow tree with a fort around it. Snagglenose’s hideout!",
+  st1_2_17:"Snagglenose squeezed out of a hole in the back of the tree and ran off towards the marshes.",
   st1_2_18:"The Whispering Woods were quiet again. Shhh…",
   st1_2_19:"A thick fog rolled in from the marsh, and nobody could see the way.",
   st1_2_20:"The fog lifted, and the path to the marsh appeared!",
   st1_2_r1:"Oh no! Goblins were hiding in the woodpile!",
-  st1_2_r2:"Oh no! Goblins were stealing Hollowell's mushrooms!",
+  st1_2_r2:"Oh no! Goblins were stealing Hollowell’s mushrooms!",
   st1_2_r3:"Oh no! Goblins were throwing acorns at Acorn Hill!",
 
   st1_3_01:"Past the woods lay the misty marsh, where villages stood on stilts above the water.",
   st1_3_02:"The goblins had built rafts, and were paddling from village to village causing trouble.",
-  st1_3_03:"Reedby's houses stood on tall stilts. Ribbit!",
+  st1_3_03:"Reedby’s houses stood on tall stilts. Ribbit!",
   st1_3_04:"Goblins were paddling rafts across the water, splashing everyone!",
   st1_3_05:"The goblins paddled away as fast as they could!",
-  st1_3_06:"The ferryman's boats had floated away.",
+  st1_3_06:"The ferryman’s boats had floated away.",
   st1_3_07:"The grateful ferryman rowed everyone across, then joined the army. He gave them a little boat for the camp.",
   st1_3_08:"In Frogmore, the frogs sang all day long.",
   st1_3_09:"Mistwater was so misty you could hardly see the houses.",
@@ -630,10 +629,10 @@ const NARR = {
   st1_3_18:"The marsh villages were safe. Now only the Goblin King was left…",
   st1_3_19:"The marsh water rose too high to cross.",
   st1_3_20:"The water went down, and a dry path appeared!",
-  st1_3_r1:"Oh no! Goblins were bouncing on Reedby's lily pads!",
-  st1_3_r2:"Oh no! Goblins were chasing Frogmore's frogs!",
-  st1_3_r3:"Oh no! Goblins were hiding in Mistwater's mist!",
-  st1_3_r4:"Oh no! Goblins were stealing Heronby's fish!",
+  st1_3_r1:"Oh no! Goblins were bouncing on Reedby’s lily pads!",
+  st1_3_r2:"Oh no! Goblins were chasing Frogmore’s frogs!",
+  st1_3_r3:"Oh no! Goblins were hiding in Mistwater’s mist!",
+  st1_3_r4:"Oh no! Goblins were stealing Heronby’s fish!",
 
   st1_4_01:"At the far edge of the kingdom, in the Rocky Hills, stood the great stockade of the Goblin King, Grubbins the Great.",
   st1_4_02:"Snagglenose had run to tell him everything.",
@@ -644,18 +643,18 @@ const NARR = {
   st1_4_07:"The villagers were so happy, they gave the army a cart full of apples.",
   st1_4_08:"Two goblin towers guarded the road.",
   st1_4_09:"Down came the goblins, and off they ran!",
-  st1_4_10:"Lastfield was the very last village before the Goblin King's stockade.",
-  st1_4_11:"Goblins were stirring a giant pot of stinky soup. Pee-yew!",
+  st1_4_10:"Lastfield was the very last village before the Goblin King’s stockade.",
+  st1_4_11:"Goblins were stirring a giant pot of stinky soup. Pooh, what a pong!",
   st1_4_12:"The goblins ran off, leaving their stinky soup behind!",
-  st1_4_13:"The Goblin King's guards were waiting outside the stockade.",
+  st1_4_13:"The Goblin King’s guards were waiting outside the stockade.",
   st1_4_14:"The guards ran inside and slammed the gate!",
   st1_4_15:"There it was: the Great Stockade! On top stood Grubbins the Great, with Snagglenose beside him.",
   st1_4_16:"Grubbins the Great ran all the way over the mountains, and the goblins never bothered the border again.",
   st1_4_17:"The villages held a great feast for our hero and the brave little army.",
   st1_4_18:"And the border was safe at last.",
   st1_4_19:"Beyond the border, snow covered the path to the Troll Hills. The army would have to wait for spring…",
-  st1_4_r1:"Oh no! Goblins were painting silly faces on Stonybrook's walls!",
-  st1_4_r2:"Oh no! Goblins were dancing in Lastfield's cabbage patch!",
+  st1_4_r1:"Oh no! Goblins were painting silly faces on Stonybrook’s walls!",
+  st1_4_r2:"Oh no! Goblins were dancing in Lastfield’s cabbage patch!",
   st1_4_20:"The sun came out, and the snow began to melt…",
 
   st2_1_01:"Spring came to the border. The snow melted, drip, drop, and the path to the Troll Hills opened at last.",
@@ -665,7 +664,7 @@ const NARR = {
   st2_1_05:"The mountain folk of Goatsby joined the march.",
   st2_1_06:"At a little stone bridge, a big voice rumbled: “Nobody crosses MY bridge!”",
   st2_1_07:"The troll stomped off into the hills, grumbling about clever children.",
-  st2_1_08:"The trolls had chased the goats up the tall rocks, and now they couldn't get down!",
+  st2_1_08:"The trolls had chased the goats up the tall rocks, and now they couldn’t get down!",
   st2_1_09:"The goatherd joined the army, and gave them a big round cheese.",
   st2_1_10:"In Pebbleford, the children were skipping stones. Plip, plop!",
   st2_1_11:"Trolls were rolling boulders onto the road. Rumble, rumble, BUMP!",
@@ -675,9 +674,9 @@ const NARR = {
   st2_1_15:"There stood the Great Stone Bridge, with a troll tower and a great wooden gate. On top stood Grumbleguts!",
   st2_1_16:"Grumbleguts stomped across the bridge and off into Trolltree Hills, where the nut trees grow.",
   st2_1_17:"The Great Stone Bridge was open. And beyond it, in the hills, something went thud… thud… thud…",
-  st2_1_18:"A great flock of sheep sat down in the middle of the bridge, and wouldn't budge!",
+  st2_1_18:"A great flock of sheep sat down in the middle of the bridge, and wouldn’t budge!",
   st2_1_19:"The shepherd whistled, and the sheep trotted off the bridge!",
-  st2_1_r1:"Oh no! Trolls were sitting on Goatsby's roofs!",
+  st2_1_r1:"Oh no! Trolls were sitting on Goatsby’s roofs!",
   st2_1_r2:"Oh no! Trolls were splashing everyone in Pebbleford!",
   st2_1_r3:"Oh no! Trolls were muddling the signs at Crossways!",
 
@@ -687,20 +686,20 @@ const NARR = {
   st2_2_04:"In the grove, trolls were shaking the nut trees. Thud, thud, thud! Nuts rained down everywhere.",
   st2_2_05:"The trolls stomped off, rubbing their heads.",
   st2_2_06:"The trolls had shaken the squirrels' tree, and all their nuts had tumbled out!",
-  st2_2_07:"The littlest squirrel liked Buckleberry's hat so much, it came along!",
+  st2_2_07:"The littlest squirrel liked Buckleberry’s hat so much, it came along!",
   st2_2_08:"On Chestnut Green, the children played conkers under the big chestnut tree.",
   st2_2_09:"Trolls were piling up stolen nuts for King Nuttletusk. What a big pile!",
   st2_2_10:"The trolls ran off, and the villagers took back their nuts.",
-  st2_2_11:"Walnut End was the last village before Crackjaw's fort.",
-  st2_2_12:"“Listen,” whispered the villagers. Crack! Crunch! “That's Crackjaw, cracking nuts with his teeth!”",
+  st2_2_11:"Walnut End was the last village before Crackjaw’s fort.",
+  st2_2_12:"“Listen,” whispered the villagers. Crack! Crunch! “That’s Crackjaw, cracking nuts with his teeth!”",
   st2_2_13:"On the hilltop stood the Nutcracker Fort, and on top sat Crackjaw, cracking nuts with his teeth. Crunch!",
-  st2_2_14:"Crackjaw was so surprised, he dropped his walnut, bonk, right on his own toe! Then he hopped all the way to the Echo Pass.",
+  st2_2_14:"Crackjaw was so surprised, he dropped his walnut, bonk, right on his own toe! Off he hopped, all the way to the Echo Pass.",
   st2_2_15:"Trolltree Hills were quiet again, and the nut trees kept their nuts.",
   st2_2_16:"A rockslide had covered the road to the Echo Pass.",
   st2_2_17:"The villagers and the soldiers cleared the rocks away together!",
-  st2_2_r1:"Oh no! Trolls were shaking Hazelhurst's trees again!",
+  st2_2_r1:"Oh no! Trolls were shaking Hazelhurst’s trees again!",
   st2_2_r2:"Oh no! Trolls were pinching the conkers on Chestnut Green!",
-  st2_2_r3:"Oh no! Trolls were cracking walnuts on Walnut End's roofs!",
+  st2_2_r3:"Oh no! Trolls were cracking walnuts on Walnut End’s roofs!",
 
   st2_3_01:"High in the mountains, the road wound through the Echo Pass. Hello… hello… hello…",
   st2_3_02:"Up here lived Old Rumbletum, whose tummy rumbled so loudly it echoed for miles.",
@@ -708,43 +707,43 @@ const NARR = {
   st2_3_04:"Trolls were banging rocks together to make the biggest echo. BOOM… boom… boom…",
   st2_3_05:"The trolls stomped away, and their echoes stomped away too.",
   st2_3_06:"Inside a cave, somebody was crying. It was a baby troll, lost in the dark!",
-  st2_3_07:"The baby troll's mum was so happy, she gave the army her big mountain horn.",
+  st2_3_07:"The baby troll’s mum was so happy, she gave the army her big mountain horn.",
   st2_3_08:"Not every troll was grumpy after all.",
-  st2_3_09:"At Windy Top, the wind blew so hard, everyone's hats flew away!",
+  st2_3_09:"At Windy Top, the wind blew so hard, everyone’s hats flew away!",
   st2_3_10:"Trolls had put a barrier across the road. “Pay the toll!” they shouted. “Ten nuts each!”",
   st2_3_11:"The trolls stomped off, and the soldiers lifted the barrier.",
   st2_3_12:"Highmeadow was full of mountain flowers and humming bees.",
   st2_3_13:"“Old Rumbletum guards the Echo Gate,” said the villagers. “Listen to his tummy!” RUMBLE… rumble… rumble…",
   st2_3_14:"The Echo Gate blocked the pass. On the wall sat Old Rumbletum, and his tummy was rumbling.",
-  st2_3_15:"Old Rumbletum's tummy rumbled so hard, he ran all the way home for his dinner!",
+  st2_3_15:"Old Rumbletum’s tummy rumbled so hard, he ran all the way home for his dinner!",
   st2_3_16:"Beyond the pass, on the highest hill of all, stood the Great Walnut Tree.",
   st2_3_17:"A big cloud sat down on the road, and nobody could see a thing.",
   st2_3_18:"The wind blew the cloud away!",
-  st2_3_r1:"Oh no! Trolls were bouncing on Cloudcap's clouds!",
+  st2_3_r1:"Oh no! Trolls were bouncing on Cloudcap’s clouds!",
   st2_3_r2:"Oh no! Trolls were stealing the kites at Windy Top!",
-  st2_3_r3:"Oh no! Trolls were stomping on Highmeadow's flowers!",
+  st2_3_r3:"Oh no! Trolls were stomping on Highmeadow’s flowers!",
 
   st2_4_01:"On the highest hill grew the Great Walnut Tree, the biggest tree in the whole world.",
   st2_4_02:"Inside lived the Troll King, King Nuttletusk, with every nut in the hills. And Grubbins the Great was counting them for him.",
-  st2_4_03:"But Grubbins wasn't very good at counting!",
-  st2_4_04:"In Nutley, the houses had roofs like walnut shells. But there wasn't a single nut left to eat!",
+  st2_4_03:"But Grubbins wasn’t very good at counting!",
+  st2_4_04:"In Nutley, the houses had roofs like walnut shells. But there wasn’t a single nut left to eat!",
   st2_4_05:"In the troll kitchen, trolls were baking giant nut pies for the king. Sniff, sniff… yum!",
   st2_4_06:"The trolls ran off, and left their pies behind. Yum!",
-  st2_4_07:"Under the Great Walnut Tree was the king's nut store, full of every nut in the hills!",
+  st2_4_07:"Under the Great Walnut Tree was the king’s nut store, full of every nut in the hills!",
   st2_4_08:"At the bottom of the store stood an old wooden nutcracker soldier. “He belongs in your army!” said the villagers.",
   st2_4_09:"Rootsby was a village hidden in the roots of the Great Walnut Tree.",
   st2_4_10:"Up in the branches, trolls were bouncing on a wobbly rope bridge. Boing, boing!",
   st2_4_11:"The trolls bounced all the way down, and stomped off.",
-  st2_4_12:"The Troll King's guards stood outside the great door, wearing walnut shells as helmets.",
+  st2_4_12:"The Troll King’s guards stood outside the great door, wearing walnut shells as helmets.",
   st2_4_13:"The guards ran inside and slammed the great door!",
   st2_4_14:"There it was: the Great Walnut Keep! On a branch sat King Nuttletusk, with Grubbins the Great beside him.",
   st2_4_15:"King Nuttletusk got stuck in his own front door! Pop! He tumbled out, right into a pile of nuts.",
-  st2_4_16:"“All right, all right,” he grumbled. “I'll share.”",
+  st2_4_16:"“All right, all right,” he grumbled. “I’ll share.”",
   st2_4_17:"Everyone in the hills came to a great feast, even the trolls. And King Nuttletusk shared his nuts.",
   st2_4_18:"Just then, a royal messenger came galloping up the hill.",
   st2_4_19:"“Come home at once!” he cried. “The crown has been stolen!”",
   st2_4_20:"But a great storm closed the mountain road home. The army would have to wait for it to pass…",
-  st2_4_r1:"Oh no! Trolls were stealing Nutley's nuts again!",
+  st2_4_r1:"Oh no! Trolls were stealing Nutley’s nuts again!",
   st2_4_r2:"Oh no! Trolls were knocking on every door in Rootsby!",
 
   st_joined:"More brave friends joined the march.",
@@ -753,23 +752,23 @@ const NARR = {
   st_camp_1:"As the sun went down, the army made camp.",
   st_camp_2:"The stars came out, and the army made camp.",
   st_camp_3:"After a long march, the army made camp.",
-  st2_4_21:"At last the wind dropped, and the snow on the mountain road began to melt.",
+  st2_4_21:"The storm blew itself out, and the mountain road was open again.",
 
   // ---- arc 3: the Stolen Crown ----
-  st3_1_01:"At last the storm blew away, and the army marched down from the hills, toward home.",
+  st3_1_01:"At last the storm blew away, and the army marched down from the hills, towards home.",
   st3_1_02:"But at the first bridge stood guards in grey cloaks. “By order of the steward,” they said, “nobody passes!”",
-  st3_1_03:{uncle:"Uncle Grimbald was sitting on the king's throne. “The crown has been stolen,” he said, “so I shall rule until it is found!”",
-            aunt:"Aunt Grimhilda was sitting on the king's throne. “The crown has been stolen,” she said, “so I shall rule until it is found!”"},
+  st3_1_03:{uncle:"Uncle Grimbald was sitting on the king’s throne. “The crown has been stolen,” he said, “so I shall rule until it is found!”",
+            aunt:"Aunt Grimhilda was sitting on the king’s throne. “The crown has been stolen,” she said, “so I shall rule until it is found!”"},
   st3_1_04:"In Harvest Hollow the farmers were bringing in the harvest.",
   st3_1_05:"The farmers of Harvest Hollow joined the march.",
-  st3_1_06:"Grey guards stood on the bridge. “Halt! Nobody passes, by order of the steward!”",
+  st3_1_06:"Grey Guards stood on the bridge. “Halt! Nobody passes, by order of the steward!”",
   st3_1_07:"“We never liked those scratchy cloaks anyway,” said the guards, and they joined the march.",
   st3_1_08:"At the crossroads, the road split in two.",
   st3_1_09:"On Windmill Hill, the millers were grinding flour. They were very strong from carrying all those sacks!",
   st3_1_10:"The millers dusted off their hats and joined the march.",
-  st3_1_11:"In the orchard, the grey guards had kicked over the apple baskets!",
+  st3_1_11:"In the orchard, the Grey Guards had kicked over the apple baskets!",
   st3_1_12:"The apple pickers joined the march, and gave the army the biggest pumpkin in Brightvale.",
-  st3_1_13:"Grey guards were poking through the hay wagons. “We're looking for the crown thief!” they said.",
+  st3_1_13:"Grey Guards were poking through the hay wagons. “We’re looking for the crown thief!” they said.",
   st3_1_14:"The guards jumped down from the hay, and joined our march instead.",
   st3_1_15:"In Market Cross, the town crier was ringing his bell. “Hear ye! The steward says our hero stole the crown!”",
   st3_1_16:"“Nonsense!” cried the market folk. “Our hero would never do that!”",
@@ -779,94 +778,94 @@ const NARR = {
   st3_1_20:"The road home was open. And somewhere in Brightvale, the real crown was hidden…",
   st3_1_21:"Sergeant Stompwell had wound up the drawbridge on the river road, and nobody could lower it.",
   st3_1_22:"The millers pulled together, and down came the drawbridge!",
-  st3_1_r1:"Oh no! Grey guards were bothering Harvest Hollow!",
-  st3_1_r2:"Oh no! Grey guards had stopped the windmill!",
-  st3_1_r3:"Oh no! Grey guards were putting up silly posters in Market Cross!",
+  st3_1_r1:"Oh no! Grey Guards were bothering Harvest Hollow!",
+  st3_1_r2:"Oh no! Grey Guards had stopped the windmill!",
+  st3_1_r3:"Oh no! Grey Guards were putting up silly posters in Market Cross!",
 
   st3_2_01:"Beyond the drawbridge lay the River Towns, where boats sailed and mill wheels turned.",
-  st3_2_02:"“We saw the steward's boat,” whispered the river folk. “It carried a heavy locked chest up the river.”",
+  st3_2_02:"“We saw the steward’s boat,” whispered the river folk. “It carried a heavy locked chest up the river.”",
   st3_2_03:"In Riverbend, the river folk were fishing from the quay.",
   st3_2_04:"The river folk put down their fishing rods and joined the march.",
-  st3_2_05:"Grey guards had shut the lock gates, and the boats were stuck!",
+  st3_2_05:"Grey Guards had shut the lock gates, and the boats were stuck!",
   st3_2_06:"The guards opened the lock gates, and the boats sailed through. Toot toot!",
   st3_2_07:"Where the river split in two, so did the road.",
   st3_2_08:"The harbour was full of ships, and the sailors were cross: the steward had taken all their sails!",
   st3_2_09:"The sailors tied their knots, and joined the march. Heave-ho!",
-  st3_2_10:"The steward's guards had blown out the lighthouse lamps. Ships couldn't find their way home!",
+  st3_2_10:"The steward’s guards had blown out the lighthouse lamps. Ships couldn’t find their way home!",
   st3_2_11:"The lighthouse keeper gave the army a tiny ship in a bottle.",
-  st3_2_12:"At the fish market, grey guards were hiding behind the barrels. They thought nobody could see them!",
+  st3_2_12:"At the fish market, Grey Guards were hiding behind the barrels. They thought nobody could see them!",
   st3_2_13:"The guards came out from behind the barrels, smelling rather fishy, and joined the march.",
   st3_2_14:"In Willowford, the children were skipping across the stepping stones.",
   st3_2_15:"“Watergate Castle is next,” said the teacher. “Captain Plume guards it. Listen: A-CHOO!”",
-  st3_2_16:"Watergate Castle stood right across the river. On the tower, Captain Plume's feather tickled his nose. A-CHOO!",
-  st3_2_17:"Inside the castle stood the steward's chest. It was open, and empty! Just a note inside.",
+  st3_2_16:"Watergate Castle stood right across the river. On the tower, Captain Plume’s feather tickled his nose. A-CHOO!",
+  st3_2_17:"Inside the castle stood the steward’s chest. It was open, and empty! Just a note inside.",
   st3_2_18:"The note said: “Hide the crown in the Grey Forest.”",
   st3_2_19:"Captain Plume sneezed all the way to the Grey Forest. A-CHOO! A-CHOO!",
   st3_2_20:"A thick river fog rolled over the road, and nobody could see the way.",
   st3_2_21:"The lighthouse shone through the fog, and showed the way!",
-  st3_2_r1:"Oh no! Grey guards were tangling up the fishing nets in Riverbend!",
-  st3_2_r2:"Oh no! Grey guards were rolling barrels into the harbour!",
-  st3_2_r3:"Oh no! Grey guards were blocking the stepping stones at Willowford!",
+  st3_2_r1:"Oh no! Grey Guards were tangling up the fishing nets in Riverbend!",
+  st3_2_r2:"Oh no! Grey Guards were rolling barrels into the harbour!",
+  st3_2_r3:"Oh no! Grey Guards were blocking the stepping stones at Willowford!",
 
   st3_3_01:"The road led into the Grey Forest, where the steward liked to go hunting.",
-  st3_3_02:"The trees were tall, the mist was thick, and grey guards hid behind every trunk.",
+  st3_3_02:"The trees were tall, the mist was thick, and Grey Guards hid behind every trunk.",
   st3_3_03:"In Fernhollow, the foresters lived among ferns taller than a knight!",
   st3_3_04:"The foresters shouldered their axes and joined the march.",
-  st3_3_05:"Grey guards were blowing hunting horns and scaring all the birds. Toot! Toot!",
+  st3_3_05:"Grey Guards were blowing hunting horns and scaring all the birds. Toot! Toot!",
   st3_3_06:"The guards put down their horns, and the birds came back to sing.",
   st3_3_07:"At the Forked Oak, one path led to the charcoal burners' camp, and one to the deer meadow.",
   st3_3_08:"The charcoal burners were covered in soot from top to toe. They were very brave, and very sooty!",
   st3_3_09:"The charcoal burners wiped their faces, which made them even sootier, and joined the march.",
   st3_3_10:"In the meadow, the little fawns had hidden in the tall grass, scared of the hunting horns.",
   st3_3_11:"The forest wardens gave the army a little wooden deer, carved just like the mother deer.",
-  st3_3_12:"Grey guards were rolling logs onto the log bridge, so nobody could cross.",
+  st3_3_12:"Grey Guards were rolling logs onto the log bridge, so nobody could cross.",
   st3_3_13:"The guards rolled the logs away again, and joined the march.",
   st3_3_14:"Mossgate was a village with roofs of soft green moss.",
-  st3_3_15:"“That's Lady Thistlewhip's horn,” said the villagers. “She guards the Grey Lodge, and she toots at everything!”",
+  st3_3_15:"“That’s Lady Thistlewhip’s horn,” said the villagers. “She guards the Grey Lodge, and she toots at everything!”",
   st3_3_16:"Deep in the forest stood the Grey Lodge. On the balcony, Lady Thistlewhip tooted her horn. TOOT-TOOOOT!",
   st3_3_17:"Inside the lodge, over the fireplace, hung another note.",
   st3_3_18:"It said: “Take the crown to the Crown Tower, where nobody will ever find it.”",
   st3_3_19:"Lady Thistlewhip tooted her horn all the way to the sea cliffs. TOOT! TOOT!",
-  st3_3_20:"Lady Thistlewhip's guards had chopped down trees across the road.",
+  st3_3_20:"Lady Thistlewhip’s guards had chopped down trees across the road.",
   st3_3_21:"The foresters and the charcoal burners sawed up the trees, and the road was open!",
-  st3_3_r1:"Oh no! Grey guards were trampling the ferns in Fernhollow!",
-  st3_3_r2:"Oh no! Grey guards were kicking over the charcoal sacks!",
-  st3_3_r3:"Oh no! Grey guards were pulling the moss off Mossgate's roofs!",
+  st3_3_r1:"Oh no! Grey Guards were trampling the ferns in Fernhollow!",
+  st3_3_r2:"Oh no! Grey Guards were kicking over the charcoal sacks!",
+  st3_3_r3:"Oh no! Grey Guards were pulling the moss off Mossgate’s roofs!",
 
   st3_4_01:"Beyond the forest, the road climbed to the sea cliffs. On the highest cliff stood the Crown Tower.",
-  st3_4_02:{uncle:"Uncle Grimbald was there, with Sir Snivelwick, who carried all the steward's keys.",
-            aunt:"Aunt Grimhilda was there, with Sir Snivelwick, who carried all the steward's keys."},
+  st3_4_02:{uncle:"Uncle Grimbald was there, with Sir Snivelwick, who carried all the steward’s keys.",
+            aunt:"Aunt Grimhilda was there, with Sir Snivelwick, who carried all the steward’s keys."},
   st3_4_03:"Puffin Point was a village where the puffins walked about as if they owned it.",
   st3_4_04:"The people of Puffin Point joined the march, and so did one very determined puffin.",
-  st3_4_05:"On the cliff path, grey guards held on to their helmets in the wind. “Nobody passes!”",
+  st3_4_05:"On the cliff path, Grey Guards held on to their helmets in the wind. “Nobody passes!”",
   st3_4_06:"The wind blew the grey cloaks away over the sea, and the guards cheered and joined the march.",
   st3_4_07:"From the Lookout Stone, they could see a fishing village, and a secret cove.",
   st3_4_08:"In the fishing village, the fisherfolk were mending their nets.",
   st3_4_09:"The fisherfolk left their nets on the beach, and joined the march.",
-  st3_4_10:"In the cove was the steward's secret boat, full of things taken from the villages!",
-  st3_4_11:"At the bottom of the boat was an old sea chest. “Keep it,” said the villagers. “You've earned it!”",
-  st3_4_12:"Grey guards were lighting signal fires to warn the steward that the army was coming!",
+  st3_4_10:"In the cove was the steward’s secret boat, full of things taken from the villages!",
+  st3_4_11:"At the bottom of the boat was an old sea chest. “Keep it,” said the villagers. “You’ve earned it!”",
+  st3_4_12:"Grey Guards were lighting signal fires to warn the steward that the army was coming!",
   st3_4_13:"The guards put out their fires, and joined the march instead.",
   st3_4_14:"Tower Town sat at the foot of the Crown Tower.",
-  st3_4_15:"“There's a light at the top of the tower every night,” whispered the townsfolk. “Sir Snivelwick goes up and down with his keys, jingle jangle!”",
+  st3_4_15:"“There’s a light at the top of the tower,” whispered the townsfolk. “Sir Snivelwick goes up and down with his keys, jingle jangle!”",
   st3_4_16:{uncle:"There stood the Crown Tower. On top stood Uncle Grimbald, with Sir Snivelwick jingling his keys.",
             aunt:"There stood the Crown Tower. On top stood Aunt Grimhilda, with Sir Snivelwick jingling his keys."},
-  st3_4_17:"At the very top of the tower was a locked chest. One of Sir Snivelwick's keys fitted, and inside was… the crown!",
+  st3_4_17:"At the very top of the tower was a locked chest. One of Sir Snivelwick’s keys fitted, and inside was… the crown!",
   st3_4_18:{uncle:"Uncle Grimbald had hidden it himself, and told everyone it was stolen!", aunt:"Aunt Grimhilda had hidden it herself, and told everyone it was stolen!"},
   st3_4_19:"The steward jumped on a horse, and galloped away to the capital.",
   st3_4_20:"Every loyal town in Brightvale came to a feast by the sea, to see the crown safe at last.",
-  st3_4_21:"Then a rider came with news. The steward had locked the gates of the capital, and wouldn't let anyone in.",
+  st3_4_21:"Then a rider came with news. The steward had locked the gates of the capital, and wouldn’t let anyone in.",
   st3_4_22:"“The king and queen will be home soon,” said our hero. “We must open those gates!”",
-  st3_4_23:"The capital's great gates were shut and barred. The army made camp, and got ready for the siege…",
-  st3_4_r1:"Oh no! Grey guards were chasing the puffins at Puffin Point!",
-  st3_4_r2:"Oh no! Grey guards were back in Tower Town, looking for the keys!",
+  st3_4_23:"The capital’s great gates were shut and barred. The army made camp, and got ready for the siege…",
+  st3_4_r1:"Oh no! Grey Guards were chasing the puffins at Puffin Point!",
+  st3_4_r2:"Oh no! Grey Guards were back in Tower Town, looking for the keys!",
 
   st_morning:"Morning came, bright and early.",
-  st_retreat_guards:"Oops! The grey guards held on that time."
+  st_retreat_guards:"Oops! The Grey Guards held on that time."
 };
 
 /* ================= the campaign: arc 1 ================= */
-/* A stop's tasks: [type, nouns, weight]. "find" needs no noun (banners). */
+/* A stop’s tasks: [type, nouns, weight]. "find" needs no noun (banners). */
 const T_SKIRM = [["more",["goblins"],2],["count",["goblins"],1],["find",null,1]];
 const T_COUNT_GOB = [["count",["goblins"],2],["more",["goblins"],1],["find",null,1]];
 const T_BUILD = [["find",null,2],["count",["logs"],1],["more",["logs"],1]];
@@ -901,7 +900,7 @@ const CHAPTERS = [
      {id:"brook", name:"The Babbling Brook", kind:"skirmish", place:"brook", arrive:"st1_2_11", won:"st1_2_12", t:T_SKIRM},
      village("acornhill","Acorn Hill","acornhill","st1_2_13","st_joined",["villagers"],["mushrooms"]),
      {id:"thicket", name:"The Goblin Thicket", kind:"skirmish", place:"thicket", arrive:"st1_2_14", won:"st1_2_15", t:T_COUNT_GOB},
-     {id:"hideout", name:"Snagglenose's Hideout", kind:"siege", place:"hideout", arrive:"st1_2_16", won:"st1_2_17", need:"h_need_ladders", build:["ladders"]}
+     {id:"hideout", name:"Snagglenose’s Hideout", kind:"siege", place:"hideout", arrive:"st1_2_16", won:"st1_2_17", need:"h_need_ladders", build:["ladders"]}
    ],
    end:"st1_2_18", blocked:"st1_2_19", cleared:"st1_2_20",
    raids:[{at:"woodcutters", line:"st1_2_r1", t:T_COUNT_GOB}, {at:"hollowell", line:"st1_2_r2", t:T_SKIRM}, {at:"acornhill", line:"st1_2_r3", t:T_SKIRM}]},
@@ -922,7 +921,7 @@ const CHAPTERS = [
    end:"st1_3_18", blocked:"st1_3_19", cleared:"st1_3_20",
    raids:[{at:"reedby", line:"st1_3_r1", t:T_COUNT_GOB}, {at:"frogmore", line:"st1_3_r2", t:T_SKIRM},
           {at:"mistwater", line:"st1_3_r3", t:T_COUNT_GOB}, {at:"heronby", line:"st1_3_r4", t:T_SKIRM}]},
-  {n:4, arc:1, finale:1, name:"The Goblin King's Stockade", level:4, land:"hills",
+  {n:4, arc:1, finale:1, name:"The Goblin King’s Stockade", level:4, land:"hills",
    open:["st1_4_01","st1_4_02"],
    stops:[
      village("stonybrook","Stonybrook","stonybrook","st1_4_03","st_joined",["villagers"],["chickens"]),
@@ -1011,20 +1010,20 @@ const CHAPTERS = [
    raids:[{at:"cloudcap", line:"st2_3_r1", t:[["add",["trolls"],2],["count",["trolls"],1],["back",null,1],["find",null,1]]},
           {at:"windytop", line:"st2_3_r2", t:[["count",["trolls"],2],["add",["kites"],1],["big",null,1],["look",null,1]]},
           {at:"highmeadow", line:"st2_3_r3", t:[["back",null,2],["count",["trolls"],1],["add",["flowers"],1],["find",null,1]]}]},
-  {n:8, arc:2, finale:2, name:"The Troll King's Keep", level:8, land:"highhill",
+  {n:8, arc:2, finale:2, name:"The Troll King’s Keep", level:8, land:"highhill",
    open:["st2_4_01","st2_4_02","st2_4_03"],
    stops:[
      {id:"nutley", name:"Nutley", kind:"village", place:"nutley", arrive:"st2_4_04", leave:"st_joined",
       t:[["add",["villagers"],2],["sub",["nuts"],1],["count",["villagers"],1],["big",null,1]]},
      {id:"trollkitchen", name:"The Troll Kitchen", kind:"skirmish", place:"trollkitchen", arrive:"st2_4_05", won:"st2_4_06",
       t:[["sub",["pies"],2],["add",["trolls"],1],["count",["trolls"],1],["back",null,1]]},
-     {id:"nutstore", name:"The King's Nut Store", kind:"special", place:"nutstore", arrive:"st2_4_07", done:"st2_4_08", hLine:"h_share_nuts",
+     {id:"nutstore", name:"The King’s Nut Store", kind:"special", place:"nutstore", arrive:"st2_4_07", done:"st2_4_08", hLine:"h_share_nuts",
       recruit:false, treasure:"nutcracker", t:[["sub",["sacks"],2],["add",["sacks"],1],["count",["sacks"],1],["find",null,1]]},
      {id:"rootsby", name:"Rootsby", kind:"village", place:"rootsby", arrive:"st2_4_09", leave:"st_joined",
       t:[["count",["villagers"],2],["add",["villagers"],1],["sub",["nuts"],1],["look",null,1]]},
      {id:"branchbridge", name:"The Branch Bridge", kind:"skirmish", place:"branchbridge", arrive:"st2_4_10", won:"st2_4_11",
       t:[["add",["trolls"],2],["cmpc",["trolls"],1],["sub",["trolls"],1],["look",null,1]]},
-     {id:"kingsguards", name:"The King's Guards", kind:"skirmish", place:"kingsguards", arrive:"st2_4_12", won:"st2_4_13",
+     {id:"kingsguards", name:"The King’s Guards", kind:"skirmish", place:"kingsguards", arrive:"st2_4_12", won:"st2_4_13",
       t:[["count",["trolls"],2],["big",null,1],["sub",["trolls"],1],["add",["trolls"],1]]},
      {id:"walnutkeep", name:"The Great Walnut Keep", kind:"siege", place:"walnutkeep", arrive:"st2_4_14", won:["st2_4_15","st2_4_16"], wonH:"h_keep_ours",
       need:"h_need_ladders_ram", build:["ladders","ram"], minLadders:3,
@@ -1166,7 +1165,7 @@ let state = null;
 try { const raw = localStorage.getItem(SKEY); if (raw) state = JSON.parse(raw); } catch(e) {}
 if (!state) { const p = newProfile(""); state = {profiles:[p], editId:p.id}; }
 const DEFAULTS = {steward:"uncle", campAfter:4, breakOn:false, breakAfter:2, music:false, fullscreen:true, autoTrim:true, digits:"school", setSize:0, clipVariant:{},
-  clipSig:{}, remind:{narrator:true, herald:"auto"}, recSnooze:{}, unsaved:{herald:0, narrator:0}};
+  clipSig:{}, sigVer:0, remind:{narrator:true, herald:"auto"}, recSnooze:{}, unsaved:{herald:0, narrator:0}};
 for (const [k, v] of Object.entries(DEFAULTS)) if (state[k] == null) state[k] = v;
 const fixProfile = p => {
   if (p.arcDone && !p.arcsDone) p.arcsDone = [1];                               // saved before arc 2 existed
@@ -1183,82 +1182,82 @@ const profById = id => state.profiles.find(p => p.id === id);
 let P = state.profiles[0];
 
 /* ================= clip catalogue ================= */
-/* Two voices. The herald speaks every command (the device's robot voice fills in anything not recorded).
+/* Two voices. The herald speaks every command (the device’s robot voice fills in anything not recorded).
    The narrator tells the story; unrecorded narration stays silent while its caption shows. */
 const HERALD = [
   // [key, text, group, hint]
-  ["h_intro","Ta-ra! I'm Buckleberry, the royal herald! I'll march with you,","March and story","The hero's title and name play right after it."],
+  ["h_intro","Ta-daa! I’m Buckleberry, the royal herald! I’ll march with you,","March and story","The hero’s title and name play right after it."],
   ["h_forward_march","Forward, march!","March and story"],
   ["h_onward","Onward!","March and story"],
   ["h_hello_village","Hello, villagers! Who will join us?","March and story"],
   ["h_new_soldier","A new soldier!","March and story"],
   ["h_welcome","Welcome to the army!","March and story"],
-  ["h_still_thinking","They're still thinking it over. On we go!","March and story","At a village, when fewer than half were right first time: nobody joins this time."],
-  ["we_have","We have…","March and story","A number and “soldiers” play right after it."],
+  ["h_still_thinking","They’re still thinking it over. On we go!","March and story","At a village, when fewer than half were right first time: nobody joins this time."],
+  ["we_have","We have…","March and story","A number and “soldiers” play right after it (arc 3: “3… companies… and… 4… soldiers”)."],
   ["h_helmet","A helmet!","March and story","Gear, once the army is full."],
   ["h_shield","A shield!","March and story"],
   ["h_cape","A cape!","March and story"],
   ["h_camp_gift","A present for our camp!","March and story"],
-  ["h_sheep_home","Let's bring the sheep home!","March and story"],
-  ["h_owls_sleep","Shh! Let's help the owls sleep.","March and story"],
-  ["h_boats_back","Let's bring the boats back!","March and story"],
-  ["h_apples_back","Let's pick up the apples!","March and story"],
-  ["h_road_blocked","The road is blocked! We'll find a way soon.","March and story"],
+  ["h_sheep_home","Let’s bring the sheep home!","March and story"],
+  ["h_owls_sleep","Shh! Let’s help the owls sleep.","March and story"],
+  ["h_boats_back","Let’s bring the boats back!","March and story"],
+  ["h_apples_back","Let’s pick up the apples!","March and story"],
+  ["h_road_blocked","The road is blocked! We’ll find a way soon.","March and story"],
   ["h_road_clear","The road is clear! Onward!","March and story"],
   ["h_road_clearing","The road is getting clearer!","March and story","While the road is blocked, after a good raid (a dot lights under the block)."],
   ["h_raid","Goblins are back! To the village!","March and story"],
-  ["h_three_cheers","Three cheers for…","March and story","The hero's title and name play right after it."],
+  ["h_three_cheers","Three cheers for…","March and story","The hero’s title and name play right after it."],
   ["h_hip_hooray","Hip hip, hooray!","March and story"],
   ["h_go_find","Go find a grown-up to march again!","March and story","After the last camp, when “Take a break” is on."],
   ["h_raid_trolls","Trolls are back! To the village!","March and story","Arc 2."],
-  ["h_goats_down","Let's help the goats down!","March and story"],
+  ["h_goats_down","Let’s help the goats down!","March and story"],
   ["h_mind_heads","Mind your heads!","March and story","Trolltree Hills: nuts falling."],
-  ["h_nuts_back","Let's put the nuts back!","March and story"],
+  ["h_nuts_back","Let’s put the nuts back!","March and story"],
   ["h_hello_echo","Hello, Echo Pass!","March and story","The echo is added by the game."],
-  ["h_troll_home","Let's help the baby troll find its way home!","March and story"],
-  ["h_share_nuts","Let's give the nuts back to everyone!","March and story"],
+  ["h_troll_home","Let’s help the baby troll find its way home!","March and story"],
+  ["h_share_nuts","Let’s give the nuts back to everyone!","March and story"],
   ["h_crown_stolen","The crown?! We must go home!","March and story","After the arc 2 feast."],
-  ["h_goblins_first","Goblins! Don't worry,","Battles","The first goblins ever. The hero's name and “Let's show them…” follow."],
-  ["h_show_clever","Let's show them how clever we are!","Battles"],
-  ["h_goblins","Goblins! Let's be clever!","Battles"],
+  ["h_goblins_first","Goblins! Don’t worry,","Battles","The first goblins ever. The hero’s name and “Let’s show them…” follow."],
+  ["h_show_clever","Let’s show them how clever we are!","Battles"],
+  ["h_goblins","Goblins! Let’s be clever!","Battles"],
   ["h_charge","Charge!","Battles"],
   ["h_ran_away","Hooray! They ran away!","Battles"],
   ["h_retreat","Retreat! Retreat!","Battles","Said in a funny, flustered way."],
-  ["h_try_again","That's all right. Let's try again!","Battles"],
+  ["h_try_again","That’s all right. Let’s try again!","Battles"],
   ["h_need_ladders","A goblin fort! We need ladders!","Battles"],
   ["h_need_ladders_ram","The gate is shut tight! We need ladders and a battering ram!","Battles"],
   ["h_a_ladder","A ladder!","Battles"],
   ["h_one_more_ladder","We need one more ladder!","Battles"],
   ["h_up_the_ladders","Ready! Up the ladders!","Battles"],
-  ["h_need_ram","Now let's build a battering ram!","Battles"],
+  ["h_need_ram","Now let’s build a battering ram!","Battles"],
   ["h_ram_part","A piece of the ram!","Battles"],
   ["h_ram_more","The ram needs one more piece!","Battles"],
   ["h_ram_ready","Ready! Bang the gate!","Battles"],
   ["h_fort_ours","Hooray! The fort is ours!","Battles"],
-  ["h_troll_first","A troll! Don't worry,","Battles","The first troll ever. The hero's name and “Let's show them…” follow."],
-  ["h_trolls","Trolls! Let's be clever!","Battles"],
+  ["h_troll_first","A troll! Don’t worry,","Battles","The first troll ever. The hero’s name and “Let’s show them…” follow."],
+  ["h_trolls","Trolls! Let’s be clever!","Battles"],
   ["h_stomped_away","Hooray! They stomped away!","Battles"],
   ["h_keep_ours","Hooray! The keep is ours!","Battles"],
   ["h_make_camp","Make camp!","Camp"],
-  ["h_rest_now","Rest now, brave…","Camp","The hero's title and name play right after it."],
+  ["h_rest_now","Rest now, brave…","Camp","The hero’s title and name play right after it."],
   ["h_good_night","Good night!","Camp"],
   ["h_wake_up","Wake up! The march goes on!","Camp"],
   ["find_banner","Find the banner with…","Commands","A number plays right after it: “Find the banner with… 4!”"],
-  ["lets_count","Let's count together!","Commands"],
+  ["lets_count","Let’s count together!","Commands"],
   ["not_quite","Not quite!","Commands","After a wrong tap."],
-  ["thats","That's…","Commands","Before a number, after a wrong tap: “That's… 5.”"],
+  ["thats","That’s…","Commands","Before a number, after a wrong tap: “That’s… 5.”"],
   ["this_side_has","This side has…","Commands","Before a number."],
   ["h_first_signs","Look! Signs! Every sign means something.","Commands","The first time signs turn up."],
   ["find_the","Find the…","Commands","A sign plays right after it: “Find the… plus!”"],
-  ["sign_plus","plus!","Commands","Just the sign's name."],
+  ["sign_plus","plus!","Commands","Just the sign’s name."],
   ["sign_minus","minus!","Commands"],
   ["sign_equals","equals!","Commands"],
   ["plus_means","Plus means more are coming!","Commands"],
   ["minus_means","Minus means some go away!","Commands"],
   ["equals_means","Equals means the same!","Commands"],
   ["whats_next","What comes next?","Commands"],
-  ["lets_count_down","Let's count down!","Commands"],
-  ["lets_count_both","Let's count both sides!","Commands"],
+  ["lets_count_down","Let’s count down!","Commands"],
+  ["lets_count_both","Let’s count both sides!","Commands"],
   ["which_bigger","Which number is bigger?","Commands"],
   ["look_closely","Look closely!","Commands"],
   ["how_many_now","How many now?","Commands","After “…and 2 more!”"],
@@ -1278,9 +1277,9 @@ const HERALD = [
   ["praise_huzzah","Huzzah!","Praise"],
   ["praise_hooray","Hooray!","Praise"],
   ["praise_splendid","Splendid!","Praise"],
-  ["praise_thats_it","That's it!","Praise"],
+  ["praise_thats_it","That’s it!","Praise"],
   ["praise_bravo","Bravo!","Praise"],
-  ["praise_well_done","Well done,","Praise","The hero's title and name play right after it."],
+  ["praise_well_done","Well done,","Praise","The hero’s title and name play right after it."],
   ["h_kept_trying","You kept trying!","Praise","Now and then, after a find with some help."],
   ["my_praise_1","Your own cheer 1 (optional)","Praise","Anything you like. Only plays if you record it.",""],
   ["my_praise_2","Your own cheer 2 (optional)","Praise","",""],
@@ -1288,7 +1287,7 @@ const HERALD = [
   ["title_prince","Prince","Names"],
   ["title_princess","Princess","Names"],
   // ---- arc 3 ----
-  ["h_find_crown","Let's find that crown!","March and story","Chapter 9's opening, after “Forward, march!”"],
+  ["h_find_crown","Let’s find that crown!","March and story","Chapter 9's opening, after “Forward, march!”"],
   ["w_company","company","Words","After “1”: “We have… 1… company!”"],
   ["w_companies","companies","Words","After a number: “We have… 3… companies…”"],
   ["w_soldier","soldier","Words","After “1”: “…and… 1… soldier!”"],
@@ -1298,17 +1297,17 @@ const HERALD = [
   ["h_which_way","Which way shall we go?","March and story","The two places' names follow, with “or” between."],
   ["or","…or…","Words","Between the two places at a fork."],
   ["h_come_back","We can come back for the other one!","March and story","The first fork ever."],
-  ["fork_windmill","Windmill Hill","March and story","A fork's place name."],
-  ["fork_orchard","the Apple Orchard","March and story","A fork's place name."],
-  ["h_count_army","Let's count our army!","Battles","Before a castle."],
+  ["fork_windmill","Windmill Hill","March and story","A fork’s place name."],
+  ["fork_orchard","the Apple Orchard","March and story","A fork’s place name."],
+  ["h_count_army","Let’s count our army!","Battles","Before a castle."],
   ["h_we_need","We need…","Battles","A number and “companies” follow."],
-  ["h_enough","Enough soldiers! Let's take the castle!","Battles"],
-  ["h_go_back","Let's go back for more friends!","Battles"],
+  ["h_enough","Enough soldiers! Let’s take the castle!","Battles"],
+  ["h_go_back","Let’s go back for more friends!","Battles"],
   ["h_loyal_send","The loyal villages sent more friends!","Battles"],
-  ["h_guards_first","Guards in grey! Don't worry,","Battles","The first Grey Guards ever. The hero's name and “Let's show them…” follow."],
-  ["h_guards","Grey guards! Let's be clever!","Battles"],
-  ["h_cloaks_off","They threw off their grey cloaks! They're on our side!","Battles"],
-  ["h_raid_guards","Grey guards are back! To the village!","March and story"],
+  ["h_guards_first","Guards in grey! Don’t worry,","Battles","The first Grey Guards ever. The hero’s name and “Let’s show them…” follow."],
+  ["h_guards","Grey Guards! Let’s be clever!","Battles"],
+  ["h_cloaks_off","They threw off their grey cloaks! They’re on our side!","Battles"],
+  ["h_raid_guards","Grey Guards are back! To the village!","March and story"],
   ["h_castle_ours","Hooray! The castle is ours!","Battles"],
   ["h_more_company","How many more make a company?","Commands","After a number and “soldiers”."],
   ["make_ten","make ten!","Words","“7… and… 3… make ten!”"],
@@ -1336,29 +1335,29 @@ const HERALD = [
   ["fly_away_1","…flies away!","Commands","After “1”: “1… flies away!”"],
   ["were_hiding_1","…was hiding!","Words","After “1”: “1… was hiding!”"],
   ["makes_1","makes","Words","“4… plus… 5… makes… 9!”"],
-  ["fork_harbour","the Harbour","March and story","A fork's place name."],
-  ["fork_lighthouse","the Lighthouse","March and story","A fork's place name."],
-  ["h_light_lamps","Let's light the lamps!","March and story"],
-  ["h_to_forest","The Grey Forest! Let's go!","Battles","After Watergate Castle falls."],
+  ["fork_harbour","the Harbour","March and story","A fork’s place name."],
+  ["fork_lighthouse","the Lighthouse","March and story","A fork’s place name."],
+  ["h_light_lamps","Let’s light the lamps!","March and story"],
+  ["h_to_forest","The Grey Forest! Let’s go!","Battles","After Watergate Castle falls."],
   // chapter 11
   ["is_what","is… what?","Commands","“4… plus… 3… is… what?”"],
-  ["how_many_more","How many more…","Commands","The thing's name and “…are in the long row?” follow."],
+  ["how_many_more","How many more…","Commands","The thing’s name and “…are in the long row?” follow."],
   ["in_long_row","…are in the long row?","Commands"],
   ["more_than","more than","Words","“7… is… 3… more than… 4!”"],
-  ["fork_charcoal","the Charcoal Burners","March and story","A fork's place name."],
-  ["fork_meadow","the Deer Meadow","March and story","A fork's place name."],
+  ["fork_charcoal","the Charcoal Burners","March and story","A fork’s place name."],
+  ["fork_meadow","the Deer Meadow","March and story","A fork’s place name."],
   ["h_stay_together","Stay together, everyone!","March and story","Chapter 11's opening."],
-  ["h_find_fawns","Let's help the fawns find their mother!","March and story"],
+  ["h_find_fawns","Let’s help the fawns find their mother!","March and story"],
   ["h_lodge_ours","Hooray! The lodge is ours!","Battles"],
   ["h_to_tower","The Crown Tower! Onward!","Battles","After the Grey Lodge falls."],
   // chapter 12
   ["h_how_many_in","How many soldiers in…","Commands","A number and “companies” follow."],
   ["what_makes","what makes…","Commands","“4… plus… what makes… 9?”"],
-  ["fork_fishing","the Fishing Village","March and story","A fork's place name."],
-  ["fork_cove","the Smugglers' Cove","March and story","A fork's place name."],
+  ["fork_fishing","the Fishing Village","March and story","A fork’s place name."],
+  ["fork_cove","the Smugglers' Cove","March and story","A fork’s place name."],
   ["h_crown_tower","The crown must be in that tower!","March and story","Chapter 12's opening."],
-  ["h_give_back","Let's give everything back!","March and story"],
-  ["h_everyone","That's everyone!","Battles","At the Crown Tower: “We need 10 companies! That's everyone!”"],
+  ["h_give_back","Let’s give everything back!","March and story"],
+  ["h_everyone","That’s everyone!","Battles","At the Crown Tower: “We need 10 companies! That’s everyone!”"],
   ["h_tower_ours","Hooray! The tower is ours!","Battles"],
   ["h_to_capital","To the capital!","March and story","At the end of the crown feast."]
 ];
@@ -1368,7 +1367,7 @@ let CLIPS = {};
 const TENS = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
 const numWord = n => n <= 20 ? NUM_WORDS[n] : n >= 100 ? "one hundred" : TENS[Math.floor(n / 10)] + (n % 10 ? "-" + NUM_WORDS[n % 10] : "");
 const HERALD_KEYS = new Set(HERALD.map(h => h[0]));
-const ARC_TITLES = {1:"The Goblin Border", 2:"The Troll Hills", 3:"The Stolen Crown", 4:"Siege of the Capital", 5:"The Invasion"};
+const ARC_TITLES = {1:"The Goblin Border", 2:"The Troll Hills", 3:"The Stolen Crown", 4:"The Siege of the Capital", 5:"The Invasion"};
 /* Where each clip belongs, so recordings can be sorted and a grown-up reminded about the ones coming up:
    used in one chapter → that chapter ("c6"); in several chapters of one arc → that arc ("a2"); in more than one
    arc, or all through the game → "all". Most of it is worked out from the chapters; these are said by the game itself. */
@@ -1524,11 +1523,23 @@ const hasClip = k => recorded(k) && !stale(k) && !broken.has(k);
 /* Each recording remembers the words it was made for. If a game update changes a line, the recording still plays,
    and the grown-up panel asks for it to be recorded again. */
 const hashText = t => { let h = 5381; for (let i = 0; i < t.length; i++) h = ((h * 33) ^ t.charCodeAt(i)) >>> 0; return h.toString(36); };
+/* the words a recording was made for: a steward line's own variant; spelling that doesn't change the sound
+   (capitals, curly apostrophes, spacing) doesn't count as a change */
+const sigText = k => { const c = CLIPS[k]; return c.role === "narrator" ? (typeof NARR[k] === "object" ? NARR[k][state.clipVariant[k] || "uncle"] : NARR[k]) : c.tts || ""; };
+const normText = t => String(t || "").replace(/’/g, "'").replace(/\s+/g, " ").trim().toLowerCase();
 const sigOf = k => { const c = CLIPS[k]; if (!c || k.startsWith("child_") || k.startsWith("my_praise")) return "";
-  return hashText(c.role === "narrator" ? JSON.stringify(NARR[k]) : c.tts || ""); };
+  return hashText(normText(sigText(k))); };
 const changed = k => recorded(k) && !!state.clipSig[k] && !!sigOf(k) && state.clipSig[k] !== sigOf(k);
 /* a recording saved before the words were tracked is taken to match them */
 function stampSigs(){ for (const k of clipBlobs.keys()) if (!state.clipSig[k] && CLIPS[k]) { const s = sigOf(k); if (s) state.clipSig[k] = s; } }
+/* signatures made the old way (raw text, both steward variants) carry over once, where the words haven't changed */
+function migrateSigs(){
+  if ((state.sigVer || 0) >= 2) return;
+  for (const k of clipBlobs.keys()) { const c = CLIPS[k]; if (!c || !state.clipSig[k]) continue;
+    const old = hashText(c.role === "narrator" ? JSON.stringify(NARR[k]) : c.tts || "");
+    if (state.clipSig[k] === old) state.clipSig[k] = sigOf(k); }
+  state.sigVer = 2;
+}
 /* still to record: missing, recorded for the other steward, unplayable here, or the words have changed */
 const todo = k => !hasClip(k) || changed(k);
 /* Reminders about what's coming up: the story from the start (unrecorded lines are silent); the herald once someone
@@ -1582,9 +1593,11 @@ function tts(text, gen, vol = 1){
   });
 }
 let speakGen = 0, curSrc = null;
+let echoSrcs = [];
 function stopSpeech(){
   speakGen++; clearRepeat();
   if (curSrc) { try { curSrc.stop(); } catch(e) {} curSrc = null; }
+  echoSrcs.forEach(s => { try { s.stop(); } catch(e) {} }); echoSrcs = [];
   if ("speechSynthesis" in window) speechSynthesis.cancel();
   talking(false);
 }
@@ -1621,7 +1634,7 @@ async function echo(k, gen){
   const buf = await getBuffer(k);
   if (gen !== speakGen) return;
   if (buf) {
-    [.36, .16].forEach((v, i) => { const s = ac.createBufferSource(), g = ac.createGain(); s.buffer = buf; g.gain.value = v; s.connect(g); g.connect(voiceOut); s.start(ac.currentTime + (i + 1) * Math.max(.05, buf.duration * .9)); });
+    [.36, .16].forEach((v, i) => { const s = ac.createBufferSource(), g = ac.createGain(); s.buffer = buf; g.gain.value = v; s.connect(g); g.connect(voiceOut); s.start(ac.currentTime + (i + 1) * Math.max(.05, buf.duration * .9)); echoSrcs.push(s); });
     return;
   }
   const w = clipText(k).replace(/[!.,…]/g, "").toLowerCase();
@@ -1673,7 +1686,7 @@ async function narrate(k, {keep = false} = {}){
       s.onended = fin; curSrc = s; s.start(); setTimeout(fin, buf.duration * 1000 + 300);
     }), skip]);
     if (skipped && curSrc) { try { curSrc.stop(); } catch(e) {} }
-  } else await Promise.race([wait(Math.min(7000, 1800 + text.length * 50)), skip]);   // not recorded (or unplayable): time to read it aloud
+  } else await Promise.race([wait(Math.min(14000, 1800 + text.length * 60)), skip]);   // not recorded (or unplayable): time to read it aloud
   capSkip = null;
   if (gen !== speakGen) return false;
   if (!keep) hideCaption();
@@ -3797,9 +3810,9 @@ async function marchTo(placeId, {guards = 0, pot = false, dur = 2600} = {}){
 }
 /* Trolltree Hills: the trolls are shaking the trees, and nuts come down on the marching army. Bonk! */
 function nutRain(d){
-  const n = 2 + Math.floor(Math.random() * 3);
+  const n = 2 + Math.floor(Math.random() * 3), sess = G.session;
   for (let i = 0; i < n; i++) setTimeout(() => {
-    if (!$("#party").classList.contains("walk")) return;
+    if (G.session !== sess || !$("#party").classList.contains("walk")) return;
     const nut = document.createElement("div"); nut.className = "nutfall"; nut.style.left = 30 + Math.random() * 360 + "px";
     nut.innerHTML = thingSVG("nuts", i); $("#fx").appendChild(nut);
     tween(nut, [{transform:"translateY(-90px) rotate(0deg)"}, {transform:"translateY(420px) rotate(260deg)", offset:.62}, {transform:"translateY(330px) rotate(330deg)", offset:.78},
@@ -3875,7 +3888,7 @@ const ROAD_ICON = {
 };
 /* a fork shows both of its branches, one over the other; the one taken stands out */
 function forkIcon(s, done){
-  const pick = (P.forks || {})[CHAPTERS[P.ch].n] || "";
+  const pick = (P.forks || {})[CHAPTERS[P.ch].n] || G.forkNow || "";
   return `<span class="st fk${done ? " done" : ""}">${["a", "b"].map(k => `<i class="${pick.includes(k) ? "on" : pick ? "off" : ""}">${ROAD_ICON[s[k].kind]}</i>`).join("")}</span>`;
 }
 /* While the road is blocked: how close the child is to the level that clears it, as dots under the block (one per stop
@@ -3899,13 +3912,12 @@ const isDue = key => { const b = P.boxes[key]; return !b || b.due <= today(); };
 function pickTarget(kind, pool){
   const rec = G.recent[kind] || (G.recent[kind] = []), fresh = pool.filter(n => !rec.includes(n)), cand = fresh.length ? fresh : pool;
   const due = cand.filter(n => isDue(kind + ":" + n)), from = due.length && Math.random() < .75 ? due : cand;
-  const t = shuffle(from).sort((a, b) => (G.asked[kind + n0(a)] || 0) - (G.asked[kind + n0(b)] || 0))[0];
+  const t = shuffle(from).sort((a, b) => (G.asked[kind + a] || 0) - (G.asked[kind + b] || 0))[0];
   G.asked[kind + t] = (G.asked[kind + t] || 0) + 1;
   rec.push(t); while (rec.length > Math.min(2, pool.length - 1)) rec.shift();
   return t;
 }
-const n0 = x => x;
-const clash = (a, b) => levelNow() <= 4 && LOOKALIKE.some(([x, y]) => (a === x && b === y) || (a === y && b === x));
+const clash =(a, b) => levelNow() <= 4 && LOOKALIKE.some(([x, y]) => (a === x && b === y) || (a === y && b === x));
 function numberCards(t, n, {near}){
   const L = LV(), pool = range(1, L.max).filter(x => x !== t && !clash(x, t)), out = [t];
   const ok = x => !out.some(o => clash(o, x)) && (near || out.every(o => Math.abs(o - x) >= 2));
@@ -3915,11 +3927,21 @@ function numberCards(t, n, {near}){
 }
 function morePair(max = LV().moreMax){
   const L = LV(), pairs = [];
-  for (let b = 2; b <= max; b++) for (let a = 1; a < b; a++) if (b / a >= L.ratio - 1e-9) pairs.push([a, b]);
+  for (let b = 2; b <= max; b++) for (let a = 1; a < b; a++) if (b / a >= L.ratio - 1e-9 && (!L.near || b <= a * 3)) pairs.push([a, b]);   // once it's "close amounts", no 1 against 12
   return rand(pairs);
 }
 const PRACTICE_NOUNS = {count:["villagers","chickens"], more:["goblins","chickens"], cmpc:["trolls","goats"], add:["goats","soldiers"], sub:["nuts","trolls","pies","sacks"], hide:["ducks","guards","villagers"], diff:["deer","guards","logs"]};
+/* The sums and the like have no spaced repetition of their own (the counted numbers do, in pickTarget), so at least
+   the same one doesn't come straight back. */
+const SUMS = new Set(["add", "sub", "num", "hide", "diff", "miss"]);
 function makeTask(spec){
+  G.recentKeys = G.recentKeys || [];
+  let t = makeTask1(spec);
+  for (let i = 0; i < 5 && SUMS.has(t.type) && G.recentKeys.includes(t.key); i++) t = makeTask1(spec);
+  if (SUMS.has(t.type)) { G.recentKeys.push(t.key); if (G.recentKeys.length > 3) G.recentKeys.shift(); }
+  return t;
+}
+function makeTask1(spec){
   // a task type waits for its level (the child may have dropped a level since the chapter began)
   const lv = levelNow(), ok = spec.filter(([type]) => !TYPE_LEVEL[type] || lv >= TYPE_LEVEL[type]);
   const opts = (ok.length ? ok : [["find", null, 1]]).map(([type, nouns, w]) => ({type, nouns, w:w * (type === G.lastType ? .5 : 1)}));
@@ -4035,7 +4057,7 @@ function dotsSVG(n, c, cx, cy, shape = "banner"){
   return out.join("");
 }
 function cardHTML(kind, n, c, dots, i){
-  const ttl = n >= 10 ? 64 : 80;
+  const ttl = n >= 100 ? 56 : n >= 10 ? 64 : 80;
   const face = kind === "banner"
     ? `<path d="M16 26 H124 V192 L70 168 L16 192 Z" fill="#D5DDEB"/>
        <g class="front"><path class="rim" d="M16 20 H124 V186 L70 162 L16 186 Z" fill="#fff" stroke="none"/><rect x="16" y="20" width="108" height="10" fill="${c}"/>
@@ -4074,17 +4096,23 @@ function armRepeat(){
   if (!G.prompt.length || G.repeats >= REPEAT_MAX) return;
   const step = G.step, sess = G.session;
   G.repeatTimer = setTimeout(() => {
-    if (G.step !== step || G.session !== sess || G.busy || G.hearing || document.hidden) return;
+    if (G.step !== step || G.session !== sess || G.busy || G.hearing) return;
+    if (document.hidden) return armRepeat();                // the tablet is locked: try again later
     G.repeats++; ask(G.prompt);
   }, REPEAT_MS * SPEED);
 }
+/* Back from a locked screen or another app with a task still up: the cut-off prompt is asked again. */
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden || !G.task || G.busy || !$("#play").classList.contains("on")) return;
+  hideCaption(); G.repeats = 0; ask(G.prompt);
+});
 $("#speakBtn").addEventListener("click", () => { ensureAudio(); if (G.forkAsk && !G.hearing) G.forkAsk(); else if (G.task && !G.busy && !G.hearing) { G.repeats = 0; ask(G.prompt); } });
 const bySide = t => t.type === "more" || !!t.sidesTask;
 const rightEl = () => G.task && (bySide(G.task) ? $(`.side[data-side="${G.task.target}"]`) : $(`.card[data-n="${G.task.target}"]`));
 /* One task: resolves with {first} once the right answer is found (with help if needed). */
 function runTask(t, first){
   return new Promise(res => {
-    G.task = t; G.resolve = res; G.step++; G.misses = 0; G.repeats = 0; G.busy = false; G.stepFirst = true;
+    G.task = t; G.resolve = res; G.step++; G.misses = 0; G.repeats = 0; G.busy = false;
     renderTask(t);
     ask(t.prompt, first, TASKS2[t.type] && TASKS2[t.type].intro);
   });
@@ -4146,7 +4174,7 @@ async function correct(el){
 async function wrong(el, val){
   const t0 = performance.now(), step = G.step, sess = G.session, t = G.task, X = TASKS2[t.type], live = () => G.session === sess && G.step === step;
   if (t0 - G.readyAt < RAPID_MS) G.rapid++;
-  G.stepFirst = false; G.misses++; G.busy = true;
+  G.misses++; G.busy = true;
   el.classList.remove("wiggle"); void el.offsetWidth; el.classList.add("wiggle");
   SFX.wrong();
   if (X && X.before) X.before(t, el, val);
@@ -4444,8 +4472,8 @@ async function battle(win, {fort = false, join = false} = {}){
 /* Grey guards beaten at a skirmish: they come out of the dust cloud, fling their grey cloaks in the air, and walk over
    to our side. */
 function joinUp(gobs){
-  const T = 2600 * SPEED;
-  setTimeout(() => gobs.forEach((o, i) => {
+  const T = 2600 * SPEED, sess = G.session;
+  setTimeout(() => G.session === sess && gobs.forEach((o, i) => {
     const in_ = o.g.querySelector(".gob"); in_.classList.remove("run", "shake");
     const opt = JSON.parse(in_.dataset.o || "{}"); in_.innerHTML = greyGuardInner({...opt, joined:true});
     const c = document.createElement("div"); c.className = "cloakfly"; c.style.left = 560 + Math.max(...gobs.map(g => g.ix)) + 120 + i * 40 + 60 * o.s - 40 + "px"; c.style.top = 140 + o.iy - 120 * o.s + "px";
@@ -4562,7 +4590,7 @@ async function runSiege(stop){
       await say(["h_need_ram"]); ck();
       while (S.ram < 2) {
         const before = S.ram;
-        await runSet(TB, async () => { addRam(S); await say(["h_ram_part"]); }); ck();
+        await runSet(TB, async () => { if (S.ram < 4) { addRam(S); await say(["h_ram_part"]); } }); ck();   // four parts make the ram
         if (S.ram === before) addRam(S);
         if (S.ram < 2) { await say(["h_ram_more"]); ck(); }
       }
@@ -4638,7 +4666,8 @@ function chooseFork(stop){
     $("#stage").classList.add("tasking");
     $("#cards").innerHTML = ["a", "b"].map((k, i) => `<button class="card in forkcard" data-fork="${k}" aria-label="${esc(stop[k].name)}" style="animation-delay:${i * .1}s"><span class="fkic">${PLACE_ICON[stop[k].icon] || ROAD_ICON[stop[k].kind]}</span><span class="fkname">${esc(stop[k].name)}</span></button>`).join("");
     G.forkAsk = () => say(q);
-    G.forkPick = k => { G.forkPick = G.forkAsk = null; clearInterval(G.forkTimer); res(k); };
+    G.forkPick = k => { G.forkPick = G.forkAsk = G.forkCancel = null; clearInterval(G.forkTimer); res(k); };
+    G.forkCancel = () => { G.forkPick = G.forkAsk = G.forkCancel = null; clearInterval(G.forkTimer); res(null); };   // Home settles the wait too
     SFX.fanfare();
     wait(650).then(() => { if (G.session === sess && G.forkPick) say(q); });
     let n = 0; clearInterval(G.forkTimer);
@@ -4651,11 +4680,12 @@ async function runFork(stop){
   const pick = await chooseFork(stop); ck();
   stopSpeech(); SFX.tap();
   const el = $(`.forkcard[data-fork="${pick}"]`); if (el) { el.classList.add("win"); $$(".forkcard").forEach(c => { if (c !== el) c.classList.add("dim"); }); }
-  P.forks[n] = pick; save(); renderRoad();
+  G.forkNow = pick; renderRoad();                           // the choice is kept only once the branch is played, so a sitting left mid-branch asks again
   await say([stop.ask[pick === "a" ? 0 : 1]]); ck();
   hideTask();
   if (!P.seenTypes.fork) { P.seenTypes.fork = 1; save(); await say(["h_come_back"]); ck(); }
   await runBranch(stop[pick]); ck();
+  P.forks[n] = pick; G.forkNow = null; save(); renderRoad();
 }
 /* one branch of a fork: a recruit stop or a special stop */
 async function runBranch(b){
@@ -4717,6 +4747,7 @@ async function sitting(){
   for (;;) {
     if (G.stopsThisSitting >= state.campAfter) return makeCamp();
     if (P.blocked) {
+      if (landName !== CHAPTERS[P.ch].land) renderLand(CHAPTERS[P.ch].land);   // a raid may have left another chapter's land up
       if (canAdvance()) {
         const ch = CHAPTERS[P.ch];
         $("#placeWrap").innerHTML = `<svg viewBox="0 0 620 460" width="620" height="460" overflow="visible">${BLOCKS[ch.n] || ""}</svg>`;
@@ -4795,7 +4826,7 @@ async function chapterEnd(){
     if (F.rider) { await messenger(F.rider.lines, F.rider.h); ck(); } else { for (const k of F.after) { await narrate(k); ck(); } }
     P.arcsDone.push(ch.arc); save();
   }
-  if (canAdvance()) { P.ch++; P.stop = 0; } else P.blocked = true;
+  if (canAdvance()) { P.ch++; P.stop = 0; topUpArmy(); renderParty(); } else P.blocked = true;   // the camp that follows counts the army the new arc's way
   save(); renderRoad();
 }
 /* each arc's victory feast: where, the story line, the medal the hero gets, the treasure, and what comes next */
@@ -4905,7 +4936,8 @@ $("#startBtn").addEventListener("click", () => {
   SFX.star(); renderHome(); show("home"); startMusic();
 });
 function goHome(){
-  stopSpeech(); G.session++; G.busy = true; G.hearing = false; G.repeats = 0; G.task = null; G.practice = null; G.forkPick = G.forkAsk = null; clearInterval(G.forkTimer);
+  stopSpeech(); G.session++; G.busy = true; G.hearing = false; G.repeats = 0; G.task = null; G.practice = null; G.forkNow = null;
+  if (G.forkCancel) G.forkCancel(); G.forkPick = G.forkAsk = null; clearInterval(G.forkTimer);
   if (G.resolve) { const r = G.resolve; G.resolve = null; r({first:false}); }
   $("#confetti").innerHTML = ""; renderHome(); show("home");
 }
@@ -4998,13 +5030,14 @@ function sentenceSVG(a, op, b){
   const nw = n => String(n).length * 36 + 8, parts = [["n", a, nw(a)], ["op", op, 60], ["n", b, nw(b)], ["op", "=", 60], ["q", "?", 44]];
   const total = parts.reduce((s, p) => s + p[2], 0) + 4 * 14;
   let x = 875 - total / 2, out = "";
+  const board = `<rect x="${875 - total / 2 - 26}" y="522" width="${total + 52}" height="90" rx="30" fill="#fff" opacity=".82"/>`;   // appears with the first number, not before
   parts.forEach(([k, v, w], i) => {
     const cx = x + w / 2;
-    out += `<g class="sp sp${i}" style="opacity:0">` + (k === "op" ? signBars(v, cx, 568, 40, 11, INK)
+    out += `<g class="sp sp${i}" style="opacity:0">` + (i === 0 ? board : "") + (k === "op" ? signBars(v, cx, 568, 40, 11, INK)
       : `<text x="${cx}" y="590" text-anchor="middle" font-family="Andika, sans-serif" font-weight="700" font-size="64" fill="${k === "q" ? "#E9A20F" : INK}">${v}</text>`) + `</g>`;
     x += w + 14;
   });
-  return `<g class="sentence"><rect x="${875 - total / 2 - 26}" y="522" width="${total + 52}" height="90" rx="30" fill="#fff" opacity=".82"/>${out}</g>`;
+  return `<g class="sentence">${out}</g>`;
 }
 function showPieces(...ix){ ix.forEach(i => { const g = $(`#things .sp${i}`); if (g) { g.style.opacity = 1; g.animate([{opacity:0}, {opacity:1}], {duration:250 * SPEED}); } }); }
 function fillAnswer(n){ const q = $("#things .sp4 text"); if (q) { q.textContent = n; q.parentNode.animate([{transform:"scale(1.4)"}, {transform:"none"}], {duration:400 * SPEED}); } }
@@ -5139,7 +5172,8 @@ const TASKS2 = {
     render(t){
       const cols = palette(), kinds = shuffle(["moss", "stone", "bark"]);
       $("#sides").innerHTML = ["L", "R"].map((sd, k) => `<button class="side bare" data-side="${sd}" aria-label="${t.sides[sd]}" style="left:${600 + k * 292}px;top:238px;width:270px;height:372px">
-        <svg viewBox="0 0 270 372"><g transform="translate(35 170)"><g class="gob">${trollInner({kind:kinds[k], arms:"up", look:k ? -1 : 1})}</g></g>${sideShield(t.sides[sd], cols[(t.sides[sd] + k) % cols.length], 70, 18, .87)}</svg></button>`).join("");
+        <svg viewBox="0 0 270 372">${arcNow() >= 3 ? `<g transform="translate(72 172) scale(1.05)"><g class="gob grey">${greyGuardInner({sk:k + 1, tu:k * 3, hs:k, hc:k + 1, look:k ? -1 : 1, pike:false})}</g></g>`
+          : `<g transform="translate(35 170)"><g class="gob">${trollInner({kind:kinds[k], arms:"up", look:k ? -1 : 1})}</g></g>`}${sideShield(t.sides[sd], cols[(t.sides[sd] + k) % cols.length], 70, 18, .87)}</svg></button>`).join("");
     },
     right(t, el, first){
       el.querySelector(".gob")?.classList.add("hop");
@@ -5221,7 +5255,7 @@ const TASKS2 = {
   },
   sub:{
     make(noun){
-      const L = LV(), always = L.sentence === "always", late = G.practice || always || P.stop >= 4, max = late ? 10 : (L.subMax || 5);
+      const L = LV(), always = L.sentence === "always", late = always || (!G.practice && P.stop >= 4), max = late ? 10 : (L.subMax || 5);   // try-it at level 8 shows the first taste
       const n = 2 + Math.floor(Math.random() * (max - 1)), k = 1 + Math.floor(Math.random() * Math.min(n - 1, 5)), left = n - k;
       const g = subGo(noun, arcNow()), go = GO_BEFORE.has(g) ? [g, "num_" + k] : ["num_" + k, k === 1 ? g + "_1" : g];   // "1… stomps off!"
       return {type:"sub", noun, n, k, target:left, go, eaten:g === "troll_eats" || g === "pony_eats", sentence:!!L.sentence && late, count:true, cards:nearCards(left, 4, Math.max(6, n)),
@@ -5377,7 +5411,7 @@ Object.assign(TASKS2, {
         coverSVG(COVER[t.noun] || "hedge") + dotRow(t.total);
       renderNumCards(t, "shield");
     },
-    sayOpts(t){ return {onStep:(i, k) => { if (k === "num_" + t.seen && i === 3) range(0, t.seen - 1).forEach(lightDot); }}; },
+    sayOpts(t){ return {onStep:(i, k) => { if (k === "num_" + t.seen) range(0, t.seen - 1).forEach(lightDot); }}; },   // the re-ask shifts the index
     async right(t, el, first, live){
       // the hidden ones come out, one by one, counting on from the ones we could see: "6, 7, 8!"
       range(0, t.seen - 1).forEach(lightDot);
@@ -5461,7 +5495,7 @@ Object.assign(TASKS2, {
   /* Count the companies: each banner is ten soldiers, so count in tens. */
   tens:{
     make(){
-      const n = pickTarget("tens", range(2, 9)), lo = Math.max(1, n - 3, Math.min(7, n - Math.floor(Math.random() * 4)));
+      const n = pickTarget("tens", range(2, 10)), lo = Math.max(1, n - 3, Math.min(7, n - Math.floor(Math.random() * 4)));   // up to the whole army, 100
       return {type:"tens", n, target:n * 10, cards:range(lo, lo + 3).map(x => x * 10), prompt:["h_how_many_in", "num_" + n, "w_companies"], key:"tens:" + n};
     },
     render(t){
@@ -5544,7 +5578,7 @@ function trim(data, sr){
   const peak = Math.max(...rms, 1e-6), th = Math.max(.008, peak * .12);
   const a = rms.findIndex(v => v > th); if (a < 0) return data;
   const b = rms.length - 1 - [...rms].reverse().findIndex(v => v > th);
-  const start = Math.max(0, a * win - Math.floor(sr * .03)), end = Math.min(data.length, (b + 1) * win + Math.floor(sr * .1));
+  const start = Math.max(0, a * win - Math.floor(sr * .03)), end = Math.min(data.length, (b + 1) * win + Math.floor(sr * .2));   // room for a soft last "s"
   const out = data.slice(start, end);
   const fi = Math.min(out.length, Math.floor(sr * .005)), fo = Math.min(out.length, Math.floor(sr * .03));
   for (let i = 0; i < fi; i++) out[i] *= i / fi;
@@ -5592,21 +5626,28 @@ async function narratePreview(k){
   const buf = await getBuffer(k); if (!buf || gen !== speakGen) return;
   const s = ac.createBufferSource(); s.buffer = buf; s.connect(voiceOut); curSrc = s; s.start();
 }
-let mic = null, rec = null, recKey = null, recTimer = null;
+let mic = null, rec = null, recKey = null, recTimer = null, recTick = null;
+const MIC_OPTS = {audio:{echoCancellation:false, noiseSuppression:true, autoGainControl:false}};
+const micError = e => `The microphone couldn’t start (${e && e.name ? e.name : "error"}). Tap “Test microphone” to see why.`;
+/* the microphone, opened once and kept while the panel is open (a locked screen ends the track on iPads: then it's opened again) */
+async function openMic(){
+  if (mic && mic.getTracks().some(t => t.readyState === "ended")) releaseMic();
+  if (!mic) mic = await navigator.mediaDevices.getUserMedia(MIC_OPTS);
+  return mic;
+}
+const takeLimit = k => CLIPS[k] && CLIPS[k].role === "narrator" ? 25000 : 7000;
 /* Start or stop a take. Every way it can fail tells the caller (onDone(false, why)), so a guide never sits on "Recording…". */
 async function toggleRecord(k, btn, onDone){
   if (rec && recKey === k) { rec.stop(); return; }
   if (rec) return;
   ensureAudio(); stopSpeech();
   const fail = why => { btn.classList.remove("recording"); status(why); if (onDone) onDone(false, why); };
-  if (mic && mic.getTracks().some(t => t.readyState === "ended")) releaseMic();     // a locked screen ends the track on iPads: open it again
-  try { if (!mic) mic = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false, noiseSuppression:true, autoGainControl:false}}); }
-  catch(e) { return fail(`The microphone couldn’t start (${e && e.name ? e.name : "error"}). Tap “Test microphone” to see why.`); }
+  try { await openMic(); } catch(e) { return fail(micError(e)); }
   const chunks = []; let r;
   try { r = new MediaRecorder(mic); } catch(e) { return fail("This browser can’t record here. Use “Import files” instead."); }
   r.ondataavailable = ev => { if (ev.data && ev.data.size) chunks.push(ev.data); };
   r.onstop = async () => {
-    clearTimeout(recTimer); btn.classList.remove("recording");
+    clearTimeout(recTimer); clearInterval(recTick); btn.classList.remove("recording");
     if (rec === r) { rec = null; recKey = null; }
     const ok = await storeClip(k, new Blob(chunks, {type:r.mimeType || "audio/webm"}));
     const why = ok ? "" : STORE_ERR[storeErr] || STORE_ERR.unreadable;
@@ -5616,8 +5657,10 @@ async function toggleRecord(k, btn, onDone){
   };
   try { r.start(); } catch(e) { releaseMic(); return fail("The microphone stopped. Tap the red button to try again."); }
   rec = r; recKey = k; btn.classList.add("recording"); btn.setAttribute("aria-label", "Stop recording");
-  status(`Recording ${clipName(k)}… tap the red button to stop.`);
-  recTimer = setTimeout(() => { if (rec === r) r.stop(); }, CLIPS[k] && CLIPS[k].role === "narrator" ? 15000 : 7000);
+  const limit = takeLimit(k), end = Date.now() + limit;
+  const tell = () => status(`Recording ${clipName(k)}… ${Math.max(0, Math.ceil((end - Date.now()) / 1000))} s left. Tap the red button to stop.`);
+  tell(); recTimer = setTimeout(() => { if (rec === r) r.stop(); }, limit);
+  recTick = setInterval(() => { if (rec !== r) return clearInterval(recTick); tell(); }, 1000);
 }
 async function micTest(){
   const out = [], line = (ok, text) => out.push(`${ok === true ? "✅" : ok === false ? "❌" : "•"} ${text}`);
@@ -5812,9 +5855,13 @@ function secBody(sec){
 }
 function recTree(){
   const part = sec => `<details class="rsec" data-sec="${sec}"${openSecs.has(sec) ? " open" : ""}><summary><b>${esc(secTitle(sec))}</b><span class="rcs">${secSummary(sec)}</span></summary><div class="rbody">${openSecs.has(sec) ? secBody(sec) : ""}</div></details>`;
+  const orphans = [...clipBlobs.keys()].filter(k => !CLIPS[k]).sort();     // recordings whose clip this version no longer has (renamed, or imported under a wrong name)
   return part("all") + ARCS.map(a => `<h3 class="rarc">Arc ${a} · ${ARC_TITLES[a]}</h3>` + (Object.keys(CLIPS).some(k => CLIPS[k].sec === "a" + a) ? part("a" + a) : "")
-    + CHAPTERS.filter(c => c.arc === a).map(c => part("c" + c.n)).join("")).join("");
+    + CHAPTERS.filter(c => c.arc === a).map(c => part("c" + c.n)).join("")).join("")
+    + (orphans.length ? `<details class="rsec"><summary><b>Recordings this version doesn’t use</b><span class="rcs"><span class="rc">${orphans.length}</span></span></summary><div class="rbody"><div class="rec-group"><p class="small">Nothing plays these; they only take up space and go into backups. Delete the ones you don’t need.</p>
+      ${orphans.map(k => `<div class="clip"><span class="dot has"></span><div class="lbl"><code>${esc(k)}</code></div><div class="acts"><button class="ic" data-orphan="${esc(k)}" aria-label="Delete recording">${ICON.del}</button></div></div>`).join("")}</div></div></details>` : "");
 }
+$("#parent").addEventListener("click", async e => { const o = e.target.closest("[data-orphan]"); if (!o) return; await deleteClip(o.dataset.orphan); status("Deleted."); renderParent(); });
 function renderRecCounts(){
   document.querySelectorAll("details.rsec").forEach(d => { const el = d.querySelector(".rcs"); if (el) el.innerHTML = secSummary(d.dataset.sec); });
   const up = $("#upNext"), E = profById(state.editId); if (up && E) up.outerHTML = upNextCard(E);
@@ -5826,6 +5873,7 @@ function upcoming(p){
   const out = {herald:[], narrator:[], cis};
   for (const k of Object.keys(CLIPS)) if (need.has(k) && todo(k) && (!k.startsWith("child_") || k === "child_" + p.slug) && (!k.startsWith("title_") || k === titleKey(p))) out[CLIPS[k].role].push(k);
   out.herald.sort((a, b) => (CLIPS[a].from || 0) - (CLIPS[b].from || 0));
+  out.narrator.sort((a, b) => (CLIPS[a].from || 0) - (CLIPS[b].from || 0));   // the shared lines (camp, morning) come where they're first heard
   return out;
 }
 const plural = (n, one, many = one + "s") => `${n} ${n === 1 ? one : many}`;
@@ -5835,7 +5883,7 @@ function upNextCard(E){
   const ch = CHAPTERS[E.ch], nx = CHAPTERS[E.ch + 1];
   const where = E.blocked && nx ? `waiting for the road to chapter ${nx.n} · ${nx.name}` : `on chapter ${ch.n} · ${ch.name}${nx ? `; next is chapter ${nx.n} · ${nx.name}` : ""}`;
   return `<div class="sec upnext" id="upNext"><h2>Record next</h2>
-    <p class="note">${esc(E.name || "This player")} is ${esc(where)}. Still to record for ${u.cis.map(ci => "chapter " + CHAPTERS[ci].n).join(" and ")}: ${[n ? plural(n, "story line") : "", h ? plural(h, "herald clip") : ""].filter(Boolean).join(" and ")}. Recording a chapter or so ahead keeps the whole story in your own voices.</p>
+    <p class="note">${esc(E.name || "This player")} is ${esc(where)}. ${u.cis.map(ci => "Chapter " + CHAPTERS[ci].n).join(" and ")} need${u.cis.length > 1 ? "" : "s"} ${[n ? plural(n, "story line") : "", h ? plural(h, "herald clip") : ""].filter(Boolean).join(" and ")} that aren't recorded yet${h > 20 ? " (most of the herald's are the everyday ones: numbers, commands and praise)" : ""}. Recording a chapter or so ahead keeps the whole story in your own voices.</p>
     <div class="rec-tools" style="margin:0">${n ? `<button class="btn primary" data-upguide="narrator">Record the story lines</button>` : ""}${h ? `<button class="btn${n ? "" : " primary"}" data-upguide="herald">Record the herald's clips</button>` : ""}</div></div>`;
 }
 function unsavedNote(){
@@ -5843,6 +5891,7 @@ function unsavedNote(){
   return n >= 5 && canBackup() ? `<p class="note" id="unsavedNote"><b>${plural(n, "new recording")} since the last backup.</b> Recordings live only on this device, so save a backup (below) now and then.</p>` : `<span id="unsavedNote"></span>`;
 }
 const robotOK = () => "speechSynthesis" in window && speechSynthesis.getVoices().length > 0;
+if ("speechSynthesis" in window) speechSynthesis.addEventListener("voiceschanged", () => { if (robotOK()) document.querySelectorAll(".norobot").forEach(el => el.remove()); });   // the voices load late on some tablets
 function progressTiles(E, prefix, units){
   return `<div class="prog">${units.map(u => { const s = E.stats[prefix + u];
     let cls = ""; if (s && s.n >= 2) { const r = s.f / s.n; cls = r >= .8 ? "g" : r >= .5 ? "y" : "r"; }
@@ -5865,7 +5914,7 @@ const LEVEL_TEXT = {1:"numbers 1–3, 3 cards with dots, things in a row", 2:"nu
   12:"count the companies in tens (to 100); the missing number (4 + ? = 9)"};
 /* the tasks a grown-up can try for each chapter (the new ones first) */
 const TRY_TASKS = {5:[["sign","Find the sign"],["next","What comes next?"],["cmpc","Count and compare"],["count","Count them"]],
-  6:[["big","Which number is bigger?"],["look","Look closely"],["count","Count to 20"],["find","Find the number"]],
+  6:[["big","Which number is bigger?"],["look","Look closely"],["sign","Find the sign (with =)"],["count","Count to 20"],["find","Find the number"]],
   7:[["add","First adding"],["back","Countdown"],["more","Which is more?"]], 8:[["add","Adding with the sentence"],["sub","Taking away"],["big","Which number is bigger?"]],
   9:[["ten","Make a company"],["add","Adding within 10"],["sub","Taking away within 10"],["count","Count to 20"]],
   10:[["hide","How many are hiding?"],["ten","Make a company"],["add","Adding"]], 11:[["num","Just the numbers"],["diff","How many more?"],["hide","Hiding"]],
@@ -5905,13 +5954,13 @@ function renderParent(){
     <p class="note">Each chapter needs its level before the road opens. Inside a chapter, the tasks follow the player's level. Tap a task to try it; practice doesn't count.</p>
     ${ARCS.map(a => `<h3>Arc ${a}: ${ARC_NAMES[a] || ""}${E.arcsDone.includes(a) ? " ✓" : ""}</h3>` + CHAPTERS.map((c, i) => c.arc !== a ? "" : `<div class="chrow${i === E.ch ? " cur" : ""}"><b>${c.n} · ${esc(c.name)}</b><span class="small">level ${c.level}</span>
       <span class="small">${c.stops.length} stops · ${LEVEL_TEXT[c.level]}</span>
-      <div class="achips">${(TRY_TASKS[c.n] || [["find","Find the number"],["count","Count them"],["more","Which is more?"], ...(c.level >= 3 ? [["fewer","Which is fewer?"]] : [])]).map(([t, l]) => `<button type="button" class="achip" data-try="${t}" data-lv="${c.level}">${l}</button>`).join("")}</div></div>`).join("")).join("")}
+      <div class="achips">${(TRY_TASKS[c.n] || [["find","Find the number"],["count","Count them"],["more","Which is more?"], ...(c.level >= 3 ? [["fewer","Which has fewer?"]] : [])]).map(([t, l]) => `<button type="button" class="achip" data-try="${t}" data-lv="${c.level}">${l}</button>`).join("")}</div></div>`).join("")).join("")}
   </div>
 
   <div class="sec">
     <h2>Numbers ${esc(who)} knows</h2>
     <p class="note">Counts (how many) and numerals (which number) are tracked apart. A number is marked known after it's right first time 5 of the last 6 times; tasks use the known numbers plus the next two. Tap to change any of them.</p>
-    <h3>Counts: reliably counts to ${qTop}</h3><div class="chips">${range(1, 20).map(n => `<button type="button" class="chip num" data-known="q" data-n="${n}" aria-pressed="${E.known.q.includes(n)}">${n}</button>`).join("")}</div>
+    <h3>Counts: ${qTop ? `reliably counts to ${qTop}` : "not yet"}</h3><div class="chips">${range(1, 20).map(n => `<button type="button" class="chip num" data-known="q" data-n="${n}" aria-pressed="${E.known.q.includes(n)}">${n}</button>`).join("")}</div>
     <h3>Numerals</h3><div class="chips">${range(1, 20).map(n => `<button type="button" class="chip num" data-known="n" data-n="${n}" aria-pressed="${E.known.n.includes(n)}">${n}</button>`).join("")}</div>
   </div>
 
@@ -5920,7 +5969,7 @@ function renderParent(){
     <p class="note">First-try answers out of all answers: green is 80% or more, yellow 50–79%, red below 50%. The small number is the review box (0–5): right first time on its review day moves it up a box, so it comes back later (next day, 2, 4, 10, then 21 days); a miss sends it back to box 1.</p>
     <h3>Counting (how many)</h3>${progressTiles(E, "q:", range(1, E.ch >= 4 ? 20 : 10))}
     <h3>Numerals (find the number)</h3>${progressTiles(E, "n:", range(1, E.ch >= 4 ? 20 : 10))}
-    <p class="small" style="margin-top:10px">Which is more: ${E.stats.cmp ? `${E.stats.cmp.f} of ${E.stats.cmp.n} right first time` : "not played yet"}. Which is fewer (from level 3): ${E.stats.cmpf ? `${E.stats.cmpf.f} of ${E.stats.cmpf.n} right first time` : "not played yet"}.</p>
+    <p class="small" style="margin-top:10px">Which is more: ${E.stats.cmp ? `${E.stats.cmp.f} of ${E.stats.cmp.n} right first time` : "not played yet"}. Which has fewer (from level 3):${E.stats.cmpf ? `${E.stats.cmpf.f} of ${E.stats.cmpf.n} right first time` : "not played yet"}.</p>
     ${E.ch >= 4 ? `<p class="small">Arc 2. Signs: ${typeStats(E, "sign:")}. What comes next: ${typeStats(E, "next:")}. Counting down: ${typeStats(E, "back:")}. Which number is bigger: ${typeStats(E, "big")}. Adding: ${typeStats(E, "+:")}. Taking away: ${typeStats(E, "-:")}.</p>` : ""}
     ${E.ch >= 8 ? `<p class="small">Arc 3. Make a company: ${typeStats(E, "ten:")}. Hiding: ${typeStats(E, "hide:")}. How many more: ${typeStats(E, "diff:")}. Counting in tens: ${typeStats(E, "tens:")}. The missing number: ${typeStats(E, "miss:")}.</p>` : ""}
     <p class="small">The army: ${E.party.length} soldier${E.party.length === 1 ? "" : "s"}${E.party.length ? `, ${E.party.filter(s => s.gear >= 3).length} fully kitted out` : ""}. Camp treasures: ${E.treasures.length ? E.treasures.map(t => TREASURE_NAMES[t]).join(", ") : "none yet"}${E.extras ? ` and ${E.extras} extra flag${E.extras > 1 ? "s" : ""}` : ""}.</p>
@@ -5941,7 +5990,7 @@ function renderParent(){
   <div class="sec" id="voicesSec">
     <h2>Voices</h2>
     <p class="note">Two voices, which can be two people. <b>Buckleberry the herald</b> gives every command; anything not recorded uses the device's robot voice. <b>The narrator</b> tells the story; lines not recorded stay silent while their caption shows, so a grown-up can read them aloud. The list is sorted the way the game needs it: what's used all through the game first, then each arc, chapter by chapter. Recordings stay on this device, so save a backup when you're done. Each voice can be saved and added on its own, so two people can record on two devices.</p>
-    ${robotOK() ? "" : `<p class="note warn"><b>This device has no robot voice.</b> Any herald clip that isn't recorded will be silent, so record the herald's numbers and commands first.</p>`}
+    ${robotOK() ? "" : `<p class="note warn norobot"><b>This device has no robot voice.</b> Any herald clip that isn't recorded will be silent, so record the herald's numbers and commands first.</p>`}
     ${MIC_OK ? "" : `<p class="note"><b>Recording isn't available in this viewer.</b> Record clips with any voice recorder (a phone's voice memo app works), name each file by its code (for example <code>num_3.m4a</code> or <code>st1_1_05.m4a</code>) and add them with Import files. Opening the game file directly in a browser lets you record here.</p>`}
     ${storeOk === false ? `<p class="note" style="color:var(--red)">This browser isn’t letting the game save anything when it’s opened this way, so recordings and progress will be lost when the page closes. Open the game from a web address instead.</p>` : ""}
     ${unsavedNote()}
@@ -6006,6 +6055,7 @@ $("#pBody").addEventListener("click", async e => {
         if ((E.stop || E.party.length) && !await askConfirm(`Move ${E.name || "this player"} to the start of chapter ${CHAPTERS[ci].n}? The army and treasures are kept.`)) return;
         const arc = CHAPTERS[ci].arc, forward = ci > E.ch;
         E.ch = ci; E.stop = 0; E.blocked = false; E.camped = false; E.level = CHAPTERS[ci].level; E.recent = []; E.guessy = [];
+        for (const c of CHAPTERS) if (c.n >= CHAPTERS[ci].n) { delete E.forks[c.n]; delete E.seenOpen[c.n]; }   // the chapter plays afresh: its opening and its fork
         if (forward && ci > 0) {                                      // the numbers the chapters skipped would have taught count as known
           const top = LEVELS[CHAPTERS[ci - 1].level].max;
           for (const kind of ["q", "n"]) E.known[kind] = [...new Set([...(E.known[kind] || []), ...range(1, top)])].sort((a, b) => a - b);
@@ -6135,6 +6185,8 @@ $("#parent").addEventListener("click", async e => {
     if (rec && recKey === k) { rec.stop(); return; }
     if (rec || b.dataset.counting) return;
     b.dataset.counting = "1"; stopSpeech();
+    try { await openMic(); } catch(e) { delete b.dataset.counting; st.textContent = micError(e); return; }   // the permission prompt comes before the countdown, not during the take
+    if (!b.isConnected) return;
     for (const n of ["3", "2", "1"]) { b.textContent = n; st.textContent = "Get ready…"; await wait(550); if (!b.isConnected) return; }
     delete b.dataset.counting; b.textContent = "Stop"; st.textContent = "Recording… say it once, then tap Stop.";
     toggleRecord(k, b, (ok, why) => { if (guide) { renderGuide(); const s2 = $("#gStatus"); if (s2) s2.textContent = ok ? "Saved. Listen: does it sound right?" : why || "That didn’t record. Try again."; } });
@@ -6146,7 +6198,7 @@ let storeOk = null;
 try { localStorage.setItem("numberknights.probe", "1"); localStorage.removeItem("numberknights.probe"); } catch(e) { storeOk = false; }
 if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
 store.open().then(ok => { if (storeOk !== false) storeOk = ok; if ($("#parent").classList.contains("on")) renderParent(); return ok ? store.all() : new Map(); })
-  .then(m => { clipBlobs = m; clipsLoaded = true; stampSigs(); save(); renderRecCounts(); recNote(); });
+  .then(m => { clipBlobs = m; clipsLoaded = true; stampSigs(); migrateSigs(); save(); renderRecCounts(); recNote(); });
 applyDigits();
 save();
 document.addEventListener("gesturestart", e => e.preventDefault());

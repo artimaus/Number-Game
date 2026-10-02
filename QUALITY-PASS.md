@@ -7,7 +7,7 @@ six screen sizes and in dark mode, hands-on interaction tests, and full regressi
 **Verdict:** the core is solid. About 150,000 generated tasks produced no wrong answers, no run threw a page error,
 playback chains can't hang, and the interaction edge cases (double taps, Home mid-task, rotating, speak-button spam,
 switching players) behaved. What was found is listed below, most important first. `[x]` means fixed; `[ ]` means
-still open. Line references are to the source parts in the build tree (`30-core.js`, `60-game.js`, …).
+still open (B was done in a second batch). Line references are to the source parts in the build tree (`30-core.js`, `60-game.js`, …).
 
 ## A. Fix first — a child or parent would hit these
 
@@ -56,74 +56,74 @@ still open. Line references are to the source parts in the build tree (`30-core.
 ## B. Worth doing
 
 ### Flow edges
-- [ ] B1. A fork choice is saved before the branch is played (`runFork`); quit mid-branch and the resumed fork can be
+- [x] B1. A fork choice is saved before the branch is played (`runFork`); quit mid-branch and the resumed fork can be
   answered the other way, after which the troop check sends the army "back" for a third helping of recruits. Record
-  the choice after the branch returns (keep a transient choice for the road strip).
-- [ ] B2. The camp right after the Troll King's Keep announces "1 company and 7 soldiers" before the army is topped
+  the choice after the branch returns (keep a transient choice for the road strip). Fixed: the choice is saved after the branch returns (the road strip shows it meanwhile).
+- [x] B2. The camp right after the Troll King's Keep announces "1 company and 7 soldiers" before the army is topped
   up to 20 (`chapterEnd` advances `P.ch` before `makeCamp`). Top up and redraw after `P.ch++`.
-- [ ] B3. "Start at chapter" leaves old fork choices (`forks`) and "opening seen" flags (`seenOpen`), so a replayed
+- [x] B3. "Start at chapter" leaves old fork choices (`forks`) and "opening seen" flags (`seenOpen`), so a replayed
   chapter skips its opening and shows both branches lit. Clear them for the chapter moved to.
-- [ ] B4. The blocked-road drawing can appear on the last raid's land (a snowdrift on chapter 1's meadow): re-render
+- [x] B4. The blocked-road drawing can appear on the last raid's land (a snowdrift on chapter 1's meadow): re-render
   the chapter's land before showing the block.
-- [ ] B5. Locking the tablet mid-narration leaves the cut caption over the next task, and the repeat timer disarms
+- [x] B5. Locking the tablet mid-narration leaves the cut caption over the next task, and the repeat timer disarms
   itself while hidden; on return the prompt isn't repeated (the speak button still works). Hide the caption when
-  `narrate` is cut; re-ask on `visibilitychange` → visible.
-- [ ] B6. Leaks that are only cosmetic: `joinUp`'s timer and `nutRain` can draw into a new session within a second;
+  `narrate` is cut; re-ask on `visibilitychange` → visible. Fixed: the repeat timer re-arms while hidden, and coming back with a task up asks the prompt again.
+- [x] B6. Leaks that are only cosmetic: `joinUp`'s timer and `nutRain` can draw into a new session within a second;
   `chooseFork`'s promise is never settled by Home; `addRam` caps at 4 but the fifth right answer still says
-  "h_ram_part"; `G.stepFirst` and `n0` are dead.
+  "h_ram_part"; `G.stepFirst` and `n0` are dead. Fixed: session checks in both timers, Home settles the fork wait, the ram stops at four parts, dead code removed.
 
 ### Pedagogy and tasks
-- [ ] B7. "Count the companies" never asks for 100 (100 is only ever a distractor).
-- [ ] B8. The arithmetic types (add, sub, num, hide, diff, miss) have no recent-list or spaced repetition, unlike
-  counting; the same sum can repeat back to back.
-- [ ] B9. Practice "Taking away" at level 8 is the harder stop-4+ version, not the "first taste"; "Find the sign"
+- [x] B7. "Count the companies" never asks for 100 (100 is only ever a distractor).
+- [x] B8. The arithmetic types (add, sub, num, hide, diff, miss) have no recent-list or spaced repetition, unlike
+  counting; the same sum can repeat back to back. Fixed: the sums keep a short recent list and are regenerated if they would repeat.
+- [x] B9. Practice "Taking away" at level 8 is the harder stop-4+ version, not the "first taste"; "Find the sign"
   can only be tried at level 5, so the `=` version can't be tried. `sub.sentence` is an object in practice (code
-  smell: `late = G.practice || …`).
-- [ ] B10. "Which number is bigger?" draws trolls holding the shields in arc 3; the scripts say guards.
-- [ ] B11. `hide.sayOpts` lights the seen dots by prompt index, which shifts on the re-ask (no visible effect; test
+  smell: `late = G.practice || …`). Fixed: practice at level 8 is the first taste; "Find the sign (with =)" is a level 6 try-it button.
+- [x] B10. "Which number is bigger?" draws trolls holding the shields in arc 3; the scripts say guards. Fixed: Grey Guards hold the shields from arc 3.
+- [x] B11. `hide.sayOpts` lights the seen dots by prompt index, which shifts on the re-ask (no visible effect; test
   the key only). "Which is more?" at level 6 can pair 1 vs 12 while the level text says "close amounts".
 
 ### Recording polish
-- [ ] B12. Record-next narrator lines aren't in the order they're heard: the camp and retreat lines a chapter 1
+- [x] B12. Record-next narrator lines aren't in the order they're heard: the camp and retreat lines a chapter 1
   child hears on day one are items 50–54 of the guide. Sort narrator lines by `from` like the herald's.
-- [ ] B13. The guide's 3-2-1 countdown runs before the microphone permission prompt, so the first-ever take is
+- [x] B13. The guide's 3-2-1 countdown runs before the microphone permission prompt, so the first-ever take is
   "too short". Acquire the mic before the countdown.
-- [ ] B14. 15 s narrator cap with no warning (the longest lines read storybook-slow get close); suggest 25 s and a
-  visible countdown. Silence trimming at −18 dB with a 100 ms tail may clip a final "s"; use 200 ms.
-- [ ] B15. Editing an aunt line flags the uncle recording as changed (`sigOf` hashes both variants); the caption
+- [x] B14. 15 s narrator cap with no warning (the longest lines read storybook-slow get close); suggest 25 s and a
+  visible countdown. Silence trimming at −18 dB with a 100 ms tail may clip a final "s"; use 200 ms. Fixed: 25 s for the narrator with a ticking "N s left", 200 ms tail.
+- [x] B15. Editing an aunt line flags the uncle recording as changed (`sigOf` hashes both variants); the caption
   fallback is capped at 7 s, too short for long lines; declining the download prompt still clears the "unsaved"
   count; `echo()` buffers can't be stopped by `stopSpeech`; imported clips with unknown keys stay in IndexedDB
-  invisibly; `robotOK()` reads voices before `voiceschanged` and can wrongly warn there's no robot voice.
-- [ ] B16. "Record next" wording: "Still to record for chapter 12: 31 story lines and 155 herald clips" counts
+  invisibly; `robotOK()` reads voices before `voiceschanged` and can wrongly warn there's no robot voice. Fixed except the download count: a declined download can't be detected, so the "since the last backup" count still resets when the file is offered. Also: recordings whose clip this version no longer uses are listed at the end of the tree with a delete button; signatures now ignore capitals, curly apostrophes and spacing, and carry over once (`sigVer`) where the words didn't change.
+- [x] B16. "Record next" wording: "Still to record for chapter 12: 31 story lines and 155 herald clips" counts
   every clip the chapter uses, most of them the everyday ones; say so.
 
 ### Words and docs
-- [ ] B17. British spelling: "toward" ×2 (`st1_2_17`, `st3_1_01`) → "towards"; "skipping stones" (`st2_1_10`) →
-  "skimming"; "Pee-yew!" (`st1_4_11`) is American; "Ta-ra!" (`h_intro`) reads as "bye" in Britain.
-- [ ] B18. Chapter 8→9 join: "At last… / At last…" back to back (`st2_4_21`, `st3_1_01`), and `st2_4_21` mentions
-  snow while the block is a storm. Suggested: "The storm blew itself out, and the mountain road was open again."
-- [ ] B19. Panel copy: "Counts: reliably counts to 0" on a fresh profile; "Which is fewer?" → "Which has fewer?";
-  the age table ("…8+ → 9") disagrees with DESIGN.md §5.4's; `we_have`'s hint doesn't mention companies.
-- [ ] B20. Straight and curly apostrophes are mixed across NARR/HERALD/panel; "Grey Guards" vs "grey guards" is
-  inconsistent (pick proper name or description); "Siege of the Capital" is the only arc title without "The".
-- [ ] B21. Chapter scripts vs game: "Which pile/rock has more…" (game says "Which side"); "Let's show him" (clip says
+- [x] B17. British spelling: "toward" ×2 (`st1_2_17`, `st3_1_01`) → "towards"; "skipping stones" (`st2_1_10`) →
+  "skimming"; "Pee-yew!" (`st1_4_11`) is American; "Ta-ra!" (`h_intro`) reads as "bye" in Britain. Fixed: towards, skimming, "Pooh, what a pong!", "Ta-daa!".
+- [x] B18. Chapter 8→9 join: "At last… / At last…" back to back (`st2_4_21`, `st3_1_01`), and `st2_4_21` mentions
+  snow while the block is a storm. Suggested: "The storm blew itself out, and the mountain road was open again." Fixed with the suggested line.
+- [x] B19. Panel copy: "Counts: reliably counts to 0" on a fresh profile; "Which is fewer?" → "Which has fewer?";
+  the age table ("…8+ → 9") disagrees with DESIGN.md §5.4's; `we_have`'s hint doesn't mention companies. Fixed; the age table in DESIGN.md now matches the panel's.
+- [x] B20. Straight and curly apostrophes are mixed across NARR/HERALD/panel; "Grey Guards" vs "grey guards" is
+  inconsistent (pick proper name or description); "Siege of the Capital" is the only arc title without "The". Fixed in the story and herald texts (the panel's own strings still mix straight and curly apostrophes); "Grey Guards" is a proper name everywhere; "The Siege of the Capital".
+- [x] B21. Chapter scripts vs game: "Which pile/rock has more…" (game says "Which side"); "Let's show him" (clip says
   "them"); "Harvest Hollow sent more friends!" (clip: "The loyal villages sent…"); chapter 1 says "cap of 10" (it's
   5); a lantern listed as a raid treasure; "New clips" lists in arc 3 name old clips; 2-4's "after arc 2" section is
-  stale now that arc 3 exists.
-- [ ] B22. DESIGN.md staleness: example lines that aren't in the game (§4 "The woodcutters cleared the road!",
+  stale now that arc 3 exists. Fixed.
+- [x] B22. DESIGN.md staleness: example lines that aren't in the game (§4 "The woodcutters cleared the road!",
   "Which camp has more goblins?", "n_4"/"well_done" keys), "(proposal)" markers on settled things (camp after 4,
   two ladders, §5.4, the steward warning), §5.4's age table vs the panel's, "3rd grade", gear list (five pieces;
   the game has three), card counts (Find 3–9 banners → 3–4, Look closely 4–9 → up to 6), "Numbers to 100 from 29
   recordings" (28), "one palette per chapter (meadow, woods, marsh, hills, pass)" (twelve lands plus night),
-  "more or less" → "more or fewer".
-- [ ] B23. Longest narrator lines (23–25 words with a quote) — `st3_4_15`, `st2_2_14` — could lose a clause for a
-  four-year-old listening.
+  "more or less" → "more or fewer". Fixed.
+- [x] B23. Longest narrator lines (23–25 words with a quote) — `st3_4_15`, `st2_2_14` — could lose a clause for a
+  four-year-old listening. Fixed: "every night" dropped; Crackjaw's line ends "Off he hopped, all the way to the Echo Pass."
 
 ### Visual
-- [ ] B24. Dark mode: `--muted` isn't redefined, so the panel's helper text is dark grey on dark navy.
-- [ ] B25. The number-sentence board shows as a blank white strip for about a second before "9 − 3 = ?" writes
+- [x] B24. Dark mode: `--muted` isn't redefined, so the panel's helper text is dark grey on dark navy.
+- [x] B25. The number-sentence board shows as a blank white strip for about a second before "9 − 3 = ?" writes
   itself in; draw it with the first piece.
-- [ ] B26. "100" slightly overruns the shield face (`ttl` 64 → 56 for three digits); the board "?" doesn't pulse
+- [x] B26. "100" slightly overruns the shield face (`ttl` 64 → 56 for three digits); the board "?" doesn't pulse
   like the stepping-stone one; `#things .glowspot` opacity overrides the per-task inline values.
 
 ## C. iPad-only — reasoned from the code; needs a real-device test

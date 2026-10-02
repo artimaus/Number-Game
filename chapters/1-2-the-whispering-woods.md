@@ -102,7 +102,7 @@ Snagglenose on a high branch.*
 - **Build round:** as in chapter 1 (find ★★, count logs ★, more logs ★). Minimum **2 ladders**.
 - **Assault round:** count goblins ★★, more ★, find ★.
 - **Won:** **H:** "Hooray! The fort is ours!" `h_fort_ours`
-  - **N:** "Snagglenose squeezed out of a hole in the back of the tree and ran off toward the marshes." `st1_2_17`
+  - **N:** "Snagglenose squeezed out of a hole in the back of the tree and ran off towards the marshes." `st1_2_17`
 - **Chapter end:** **N:** "The Whispering Woods were quiet again. Shhh…" `st1_2_18`, then the victory screen
   and camp.
 
